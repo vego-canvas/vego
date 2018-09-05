@@ -8,7 +8,9 @@
 </template>
 
 <script type="text/javascript">
+	import circle from './src/core/circle.vue';
 	export default {
+		components:{"my-circle": circle},
 		data(){
 			return {
 				title: 'MVVM Canvas',

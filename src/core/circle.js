@@ -2,15 +2,28 @@ import Vue from 'vue';
 
 const vm1 = Vue.component('my-circle', {
 	props: ['x', 'y', 'r', 'color'],
+	draw(ctx, data){
+		const {
+			x, y, r, color
+		} = data;
+		ctx.beginPath();
+		ctx.save();
+		ctx.fillStyle = color;
+		ctx.arc(x, y, r, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.restore();		
+	},
 	mounted(){
 		//console.log(this.$parent.$el);
 	},
-	renderCanvas(c){
+	render(c){
 		return c('circle', {
-			x: this.x,
-			y: this.y,
-			r: this.r,
-			color: this.color
+			props:{
+				x: this.x,
+				y: this.y,
+				r: this.r,
+				color: this.color
+			}
 		})
 	}
 });
