@@ -3,6 +3,7 @@ import Vue from 'vue';
 const vm1 = Vue.component('my-circle', {
 	props: ['x', 'y', 'r', 'color'],
 	draw(ctx, data){
+		console.log('draw')
 		const {
 			x, y, r, color
 		} = data;
