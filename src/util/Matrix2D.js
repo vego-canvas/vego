@@ -3,11 +3,10 @@
  */
 
 class Matrix2D {
-	static DEG_TO_RAD = Math.PI/180
-	static identity = null
 	constructor(a,b,c,d,tx,ty){
 		this.setValues(a,b,c,d,tx,ty);
 	}
+
 
 	setValues(a, b, c, d, tx, ty){
 		this.a = (a == null) ? 1 : a;
@@ -228,4 +227,7 @@ class Matrix2D {
 		return "[Matrix2D (a="+this.a+" b="+this.b+" c="+this.c+" d="+this.d+" tx="+this.tx+" ty="+this.ty+")]";
 	};
 }
+Matrix2D.DEG_TO_RAD = Math.PI/180;
 Matrix2D.identity = new Matrix2D();
+
+export default Matrix2D

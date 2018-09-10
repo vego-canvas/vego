@@ -6,7 +6,8 @@
 
 <script>
 import Stack from '../proto/stack';
-
+import { findContainer } from '../util/common.js';
+import Matrix2D from '../util/Matrix2D';
 export default {
 	name: 'my-container',
 	props:{
@@ -19,20 +20,33 @@ export default {
 			default: 0,
 		},
 	},
-	
+	// computed:{
+	// 	matrix(){
+
+	// 		return [1,0,0,1,]
+	// 	}
+	// },
 	draw(ctx){
+		const m = this.matrix;
 		this.stack.setPre(this._uid, () => {
-			ctx.setTransform(1,0,0,1,this.x, this.y);
+			ctx.setTransform(m.a,m.b,m.c,m.d,m.tx, m.ty);
 		});
 		this.stack.setAfter(this._uid, () => {
 			ctx.setTransform();
 		});
 		return this.stack;
 	},
-	mounted(){
-		console.log(this.$slots)
-		const stack = this.stack = new Stack();
+	updated(){
+		this.matrix = this.parentMatrix.clone().append(1,0,0,1,this.x,this.y);
+	},
+	created(){
+		this.stack = new Stack();
+		this.parentMatrix = findContainer(this).matrix;
+		this.matrix = this.parentMatrix.clone().append(1,0,0,1,this.x,this.y);
 		this.$options.draw.type = "container";
+	},
+	mounted(){
+		
 	},
 }
 </script>

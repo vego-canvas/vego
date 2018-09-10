@@ -1,28 +1,39 @@
 import Vue from 'vue';
 import Render from './core/render.js';
+import {findCanvas, findContainer} from './util/common.js';
+
 
 const VNODE = Symbol('_vCanvasNode');
 const VCTX = Symbol('_vCanvasContext');
 const VSTACK = Symbol('_vStack');
-const cachedCanvas = null;
 const noop = () => {};
+
+
+const _cvs = document.createElement("canvas"); 
+const _hitTestContext = _cvs.getContext('2d');
+_cvs.width = _cvs.height = 1;
+
 
 // const PaintStack = new Stack();
 
-function findCanvas(vm){
-	let t = vm.$parent;
-	while(t && t.$el.tagName !== "CANVAS"){
-		t = t.$parent;
-	}
-	return t;
-}
+// function findCanvas(vm){
+// 	let t = vm.$parent;
+// 	while(t && t.$el.tagName !== "CANVAS"){
+// 		t = t.$parent;
+// 	}
+// 	return t;
+// }
 
-function findStack(vm){
-	let t = vm.$parent;
-	while(t && !t.stack){
-		t = t.$parent;
-	}
-	return t;
+// function findStack(vm){
+// 	let t = vm.$parent;
+// 	while(t && !t.stack){
+// 		t = t.$parent;
+// 	}
+// 	return t;
+// }
+
+function _testHit(ctx){
+	return ctx.getImageData(0, 0, 1, 1).data[3] > 1;
 }
 
 const plugin = {
@@ -32,11 +43,11 @@ const plugin = {
 				const vm = this;
 				if(isCanvasVnode(vm)){
 					this.$nextTick(() => {
-						console.log(this);
 						const parent = findCanvas(this); // TODO find parent util canvas
-						const container = findStack(this);
+						const container = findContainer(this);
 						this[VCTX] = parent.$el.getContext('2d')
 						this[VSTACK] = container.stack;
+
 						_paint.call(this, this.$options.draw, this[VSTACK]);				
 					})
 				}
@@ -53,6 +64,17 @@ const plugin = {
 					this[VCTX] = null;
 					this[VNODE] = null;
 					this[VSTACK].rm(this._uid);
+				}
+			},
+			methods: {
+				_hitTest(x, y){
+					if(!this.$options.draw.type){
+						_hitTestContext.setTransform(1, 0, 0, 1, -x, -y);
+						this.$options.draw(_hitTestContext);
+						const hit = _testHit(_hitTestContext);
+						_hitTestContext.setTransform();
+						_hitTestContext.clearRect(0, 0, 2, 2);						
+					}
 				}
 			}
 		});
