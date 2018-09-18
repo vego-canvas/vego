@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "vue": "^2.5.17"
+    "vue": "^2.5.17",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

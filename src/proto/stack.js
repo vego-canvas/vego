@@ -31,6 +31,7 @@ Stack.prototype.rmAfter = function(id){
 }
 
 Stack.prototype.iterator = function(it){
+
 	const _stack = this._stack;
 	const _pre = this._pre;
 	const _after = this._after;

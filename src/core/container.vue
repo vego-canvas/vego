@@ -20,33 +20,25 @@ export default {
 			default: 0,
 		},
 	},
-	// computed:{
-	// 	matrix(){
-
-	// 		return [1,0,0,1,]
-	// 	}
-	// },
 	draw(ctx){
 		const m = this.matrix;
+		const pm = this.parentMatrix;
 		this.stack.setPre(this._uid, () => {
-			ctx.setTransform(m.a,m.b,m.c,m.d,m.tx, m.ty);
+			ctx.setTransform(m.a,m.b,m.c,m.d,m.tx,m.ty);
 		});
 		this.stack.setAfter(this._uid, () => {
-			ctx.setTransform();
+			ctx.setTransform(pm.a,pm.b,pm.c,pm.d,pm.tx,pm.ty);
 		});
 		return this.stack;
 	},
 	updated(){
-		this.matrix = this.parentMatrix.clone().append(1,0,0,1,this.x,this.y);
+		this.matrix.copy(this.parentMatrix.clone().append(1,0,0,1,this.x,this.y));
 	},
 	created(){
 		this.stack = new Stack();
 		this.parentMatrix = findContainer(this).matrix;
 		this.matrix = this.parentMatrix.clone().append(1,0,0,1,this.x,this.y);
 		this.$options.draw.type = "container";
-	},
-	mounted(){
-		
 	},
 }
 </script>

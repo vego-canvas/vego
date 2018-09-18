@@ -1,14 +1,12 @@
 <template>
 	<circle :x="x" :y="y" :r="r" :color="color">
+
 	</circle>
 </template>
 <script>
-
-import watcherMixin from '../proto/watcherMixin'
 // import Vue from 'vue';
 export default {
-	name: 'my-circle',
-	mixins: [ watcherMixin ],
+	name: 'my-arc',
 	props: ['x', 'y', 'r', 'color'],
 	draw(ctx, p){
 		const {
@@ -17,9 +15,9 @@ export default {
 
 		ctx.beginPath();
 		ctx.save();
-		ctx.fillStyle = color;
+		ctx.strokeStyle = color;
 		ctx.arc(x, y, r, 0, 2 * Math.PI);
-		ctx.fill();
+		ctx.stroke();
 		ctx.restore();		
 	},
 };

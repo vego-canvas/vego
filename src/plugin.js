@@ -6,6 +6,8 @@ import {findCanvas, findContainer} from './util/common.js';
 const VNODE = Symbol('_vCanvasNode');
 const VCTX = Symbol('_vCanvasContext');
 const VSTACK = Symbol('_vStack');
+const VCACHE = Symbol('_vCache');
+const VCACHECTX = Symbol('_vCacheContext');
 const noop = () => {};
 
 
@@ -14,24 +16,7 @@ const _hitTestContext = _cvs.getContext('2d');
 _cvs.width = _cvs.height = 1;
 
 
-// const PaintStack = new Stack();
-
-// function findCanvas(vm){
-// 	let t = vm.$parent;
-// 	while(t && t.$el.tagName !== "CANVAS"){
-// 		t = t.$parent;
-// 	}
-// 	return t;
-// }
-
-// function findStack(vm){
-// 	let t = vm.$parent;
-// 	while(t && !t.stack){
-// 		t = t.$parent;
-// 	}
-// 	return t;
-// }
-
+// 非透明的元素
 function _testHit(ctx){
 	return ctx.getImageData(0, 0, 1, 1).data[3] > 1;
 }
@@ -39,6 +24,11 @@ function _testHit(ctx){
 const plugin = {
 	install(Vue, options){
 		Vue.mixin({
+			created(){
+				if(this.$options.draw){
+					this.parentMatrix = findContainer(this).matrix;
+				}
+			},
 			mounted(){
 				const vm = this;
 				if(isCanvasVnode(vm)){
@@ -49,16 +39,29 @@ const plugin = {
 						this[VSTACK] = container.stack;
 
 						_paint.call(this, this.$options.draw, this[VSTACK]);				
+						const canvas = this._hitTestCanvas = document.createElement("canvas"); 
+						this._hitTestContext = canvas.getContext("2d");
+						canvas.width = canvas.height = 1;
+						
+						// TODO cache stable drawing
+						// this[VCACHE] = document.createElement("canvas"); 
+						// this[VCACHECTX] = this[VCACHE].getContext('2d');
+						// this[VCACHE].width = parent.width;
+						// this[VCACHE].height = parent.height;
 					})
+				
 				}
 
 			},
-			updated(){
-				const vm = this;
-				if(isCanvasVnode(vm)){
-					_paint.call(vm, vm.$options.draw, this[VSTACK])
-				}				
-			},
+			// updated(){
+			// 	const vm = this;
+			// 	if(isCanvasVnode(vm)){
+			// 		_paint.call(vm, vm.$options.draw, this[VSTACK])
+			// 	}				
+			// },
+			// updated(){
+			// 	this[VCACHECTX]
+			// },
 			destroyed(){
 				if(isCanvasVnode(this)){
 					this[VCTX] = null;
@@ -68,13 +71,18 @@ const plugin = {
 			},
 			methods: {
 				_hitTest(x, y){
-					if(!this.$options.draw.type){
-						_hitTestContext.setTransform(1, 0, 0, 1, -x, -y);
-						this.$options.draw(_hitTestContext);
-						const hit = _testHit(_hitTestContext);
-						_hitTestContext.setTransform();
-						_hitTestContext.clearRect(0, 0, 2, 2);						
-					}
+					const ctx = this._hitTestContext;
+					const mtx = this.parentMatrix;// .clone().append(1,0,0,1,this.x,this.y);
+					ctx.setTransform(mtx.a, mtx.b, mtx.c, mtx.d, mtx.tx, mtx.ty);
+					ctx.translate(-x, -y);
+					this.$options.draw.call(this, ctx);
+					
+					const hit = _testHit(ctx);
+					ctx.setTransform();
+					ctx.clearRect(0, 0, 2, 2);
+
+
+					return hit;
 				}
 			}
 		});
@@ -97,6 +105,9 @@ const plugin = {
 	}
 }
 
+// function _render(render, ctx){
+// 	this.
+// }
 
 
 function _paint(render, stack){

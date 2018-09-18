@@ -1,5 +1,5 @@
 <template>
-	<canvas style="border:1px solid red;" :width="width | toPx" :height="height | toPx" @click="onclick" @mousemove="onMouseMove">
+	<canvas :width="width | toPx" :height="height | toPx" @click="onclick" @mousemove="onMouseMove">
 		<slot></slot>
 	</canvas>
 </template>
@@ -9,6 +9,7 @@
 	import Stack from './proto/stack';
 	import Ticker from './proto/ticker';
 	import Matrix2D from './util/Matrix2D';
+	// import EventStore from './proto/event.js';
 
 	export default Vue.component('my-canvas', {
 		name: 'my-canvas',
@@ -21,10 +22,19 @@
 				type: Number,
 	  			default: 400,
 			},
+			pause: {
+				type: Boolean,
+				default:false
+			}
 		},
 		filters: {
 			toPx(num){
 				return `${num}px`
+			}
+		},
+		watch: {
+			pause(val){
+				Ticker._pause = val;
 			}
 		},
 		// created(){
@@ -38,9 +48,27 @@
 		mounted(){
 			const {width, height} = this;
 			const ctx = this.$el.getContext('2d');
+			const ratio = this.scaleCanvas(this.$el, width, height);
+			const m = this.matrix.scale(ratio, ratio);
+			this.stack.setPre(this._uid, () => {
+				ctx.setTransform(m.a,m.b,m.c,m.d,m.tx, m.ty);
+			});
+			this.stack.setAfter(this._uid, () => {
+				ctx.setTransform();
+			});
+			//const ctx = this.scaleCanvas(this.$el, width, height);
 			const stack = this.stack;
+			// setTimeout(() => {
+			// 	ctx.clearRect(0, 0, width * ratio, height * ratio);
+			// 	stack.iterator((render) => {
+			// 		render();
+			// 	})
+			// }, 500)
+
 			Ticker((t) => {
-				ctx.clearRect(0, 0, width, height);
+				
+				ctx.clearRect(0, 0, width * ratio, height * ratio);
+
 				this.$emit('tick', t);
 				stack.iterator((render) => {
 					render();
@@ -59,14 +87,62 @@
 				const { clientX, clientY } = e;
 			},
 			onMouseMove(e){
-				const { clientX, clientY } = e;
-				console.log(clientX, clientY);
+				const { offsetX, offsetY } = e;
+				const pos = {
+					x: offsetX,
+					y: offsetY
+				}
+				//console.log(e);
+				this.$store.commit('mousemove', pos)
+				this.$emit('mousemove', pos)
+				// const { clientX, clientY } = e;
+				// console.log(clientX, clientY);
+				// this.$broadcast('canvasmousemove', e); 
+			},
+			scaleCanvas(canvas, width, height) {
+			  // assume the device pixel ratio is 1 if the browser doesn't specify it
+			  const devicePixelRatio = window.devicePixelRatio || 1;
+			  const context = canvas.getContext('2d');
+
+			  // determine the 'backing store ratio' of the canvas context
+			  const backingStoreRatio = (
+			    context.webkitBackingStorePixelRatio ||
+			    context.mozBackingStorePixelRatio ||
+			    context.msBackingStorePixelRatio ||
+			    context.oBackingStorePixelRatio ||
+			    context.backingStorePixelRatio || 1
+			  );
+
+			  // determine the actual ratio we want to draw at
+			  const ratio = devicePixelRatio / backingStoreRatio;
+
+			  if (devicePixelRatio !== backingStoreRatio) {
+			    // set the 'real' canvas size to the higher width/height
+			    canvas.width = width * ratio;
+			    canvas.height = height * ratio;
+
+			    // ...then scale it back down with CSS
+			    canvas.style.width = width + 'px';
+			    canvas.style.height = height + 'px';
+			  }
+			  else {
+			    // this is a normal 1:1 device; just scale it simply
+			    canvas.width = width;
+			    canvas.height = height;
+			    canvas.style.width = '';
+			    canvas.style.height = '';
+			  }
+
+			  // scale the drawing context so everything will work at the higher ratio
+
+			  // context.scale(ratio, ratio);
+			  return ratio;
 			}
 		}
 	});
 </script>
 <style type="text/css">
 	.canvas{
-		background:red;
+		
 	}
 </style>

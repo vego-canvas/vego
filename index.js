@@ -1,10 +1,18 @@
 import Vue from 'vue';
-import home from './index.vue';
+import Vuex from 'vuex';
+//import home from './tests/solar.vue';
+import home from './tests/chart.vue';
+//import home from './index.vue';
 import './src/canvas.vue';
 import './src/core/circle.vue';
 import canvasPlugin from './src/plugin';
+import eventStore from './src/proto/event';
 
-
+Vue.use(Vuex)
 Vue.use(canvasPlugin);
 
-new Vue(home).$mount("#app");
+const store = new Vuex.Store(eventStore);
+
+new Vue(Object.assign(home, {
+	store
+})).$mount("#app");
