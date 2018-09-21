@@ -42,14 +42,20 @@
 		// 	this.ticker = new Ticker();
 		// },
 		created(){
+			const {width, height} = this;
 			this.stack = new Stack();
+			this.ratio = window.devicePixelRatio 
 			this.matrix = new Matrix2D();
+			this.matrix.scale(this.ratio, this.ratio);
+
 		},
 		mounted(){
 			const {width, height} = this;
 			const ctx = this.$el.getContext('2d');
-			const ratio = this.scaleCanvas(this.$el, width, height);
-			const m = this.matrix.scale(ratio, ratio);
+			const ratio = this.ratio;
+			this.scaleCanvas(this.$el, width, height);
+
+			const m = this.matrix;//.scale(ratio, ratio);
 			this.stack.setPre(this._uid, () => {
 				ctx.setTransform(m.a,m.b,m.c,m.d,m.tx, m.ty);
 			});
@@ -105,18 +111,18 @@
 			  const context = canvas.getContext('2d');
 
 			  // determine the 'backing store ratio' of the canvas context
-			  const backingStoreRatio = (
-			    context.webkitBackingStorePixelRatio ||
-			    context.mozBackingStorePixelRatio ||
-			    context.msBackingStorePixelRatio ||
-			    context.oBackingStorePixelRatio ||
-			    context.backingStorePixelRatio || 1
-			  );
+			  // const backingStoreRatio = (
+			  //   context.webkitBackingStorePixelRatio ||
+			  //   context.mozBackingStorePixelRatio ||
+			  //   context.msBackingStorePixelRatio ||
+			  //   context.oBackingStorePixelRatio ||
+			  //   context.backingStorePixelRatio || 1
+			  // );
 
 			  // determine the actual ratio we want to draw at
-			  const ratio = devicePixelRatio / backingStoreRatio;
+			  const ratio = devicePixelRatio;
 
-			  if (devicePixelRatio !== backingStoreRatio) {
+			  if (devicePixelRatio !== 1) {
 			    // set the 'real' canvas size to the higher width/height
 			    canvas.width = width * ratio;
 			    canvas.height = height * ratio;

@@ -1,9 +1,9 @@
 <template>
-	<div class="root">
+	<div class="rootchart">
 		<div class="container">	
 			
 			<div class="canvas">
-				<my-canvas :width="canvasWidth" :height="canvasHeight" @mousemove="onmousemove">
+				<my-canvas :width="canvasWidth" :height="canvasHeight" @mousemove="onmousemove"  @tick="tick">
 					<container v-for="(ax, i) in yaxis" :key="ax" :x="xstart" :y="ystart + i*ystep">
 						<charttext :x="fontStartX" :y="5" :text="ax" fill="black" font="18px serif"/>
 						<chartline :x="lineStartX" :y="0" :tx="lineEndX" :ty="0" color="#eee"/>
@@ -13,9 +13,9 @@
 						:x="lineStartX + xstart + xstep*i - 20" 
 						:y="ystart + yaxis.length * ystep" 
 						:text="dt.week" fill="black" font="18px serif"/>
-					<chartData v-for="(bz, i) in beziers" :key="bz.key" :start="bz.st" :stops="bz.bz" :color="color[i]"/>
+					<chartData v-for="(bz, i) in beziers" :key="bz.key" :stops="bz.bz" :color="color[i]" :tween="tween"/>
 					
-					<chartline v-if="mouseX>0" :x="mouseX" :y="ystart" :tx="mouseX" :ty="yend" />
+					<chartlineindicate v-if="mouseX>0" :x="mouseX" :y="ystart" :tx="mouseX" :ty="yend" :tween="tweenline"/>
 					<container v-if="dataY" :x="mouseX" :y="yend - dataY.a * ydata2coord">
 						<chartPoint :x="0" :y="0" :r="5" color="orange"/>
 						<charttext :x="0" :y="-25" :text="`${dataY.week}  ${dataY.a}`" fill="black" font="18px serif"/>
@@ -38,6 +38,7 @@
 <script>
 	import container from '../src/core/container.vue';
 	import line from '../src/core/line.vue';
+	import tweenline from '../src/core/tweenline.vue';
 	import text from '../src/core/text.vue';
 	import bezier from '../src/core/bezier.vue';
 	import circle from '../src/core/circle.vue';
@@ -49,20 +50,29 @@
 			'charttext': text,
 			'chartData': bezier,
 			'chartPoint': circle,
-
+			'chartlineindicate': tweenline,
 		},
 		data() {
 			return {
 				title: '每星期访问量',
-				series: ['a','b'],
+				series: ['a', 'b'],
+				// data: [
+				// 	{ week: '星期一', a: 150, b: 1200 },
+				// 	{ week: '星期二', a: 300, b: 1200 },
+				// 	{ week: '星期三', a: 28,  b: 1000 },
+				// 	{ week: '星期四', a: 200, b: 2000 },
+				// 	{ week: '星期五', a: 74,  b: 740 },
+				// 	{ week: '星期六', a: 532, b:2000 },
+				// 	{ week: '星期日', a: 420 ,b: 5000},
+				// ],
 				data: [
-					{ week: '星期一', a: 150, b: 1200 },
-					{ week: '星期二', a: 300, b: 1200 },
-					{ week: '星期三', a: 28,  b: 1000 },
-					{ week: '星期四', a: 200, b: 2000 },
-					{ week: '星期五', a: 74,  b: 740 },
-					{ week: '星期六', a: 532, b:2000 },
-					{ week: '星期日', a: 420 ,b: 5000},
+					{ week: '星期一', a: 0, b: 0},
+					{ week: '星期二', a: 0, b: 0},
+					{ week: '星期三', a: 0, b: 0},
+					{ week: '星期四', a: 0, b: 0},
+					{ week: '星期五', a: 0, b: 0},
+					{ week: '星期六', a: 0, b: 0},
+					{ week: '星期日', a: 0, b: 0},
 				],
 				color: ['orange','blue'],
 				smooth: true,
@@ -81,31 +91,63 @@
 				fontStartX: 0,
 				lineStartX: 50,
 				lineEndX: 700,
-				xstep: 10,
 				mouseX: 0,
 				mouseY: 0,
 
 				dataY: undefined,
+				tween: {
+					duration: 1000,
+					easing: 'easeOutBounce',
+					observe: ['start','stops'],
+				},
+				tweenline: {
+					duration: 200,
+					easing: 'easeInQuart',
+					observe: ['x','tx'],
+				}
 			}
 		},
 		computed:{
+			xstep() {
+				return (this.lineEndX - this.lineStartX)/ (this.data.length-1);
+			},
 			yaxis(){
 				// console.log('yaxis');
 				return this.calcyaxis();
 			},
 			beziers(){
+				console.log('getbeziers')
 				return this.calcbeziers();
 			}
+		},
+		created(){
+			this.$watch('beziers.0', (val, oldv)=>{
+				console.log(val, oldv)
+			})
 		},
 		mounted(){
 			// this.yaxis = this.calcyaxis();
 			// console.log(this.yaxis)
-			this.xstep = (this.lineEndX - this.lineStartX)/ (this.data.length-1);
-			 
+
 			// this.beziers = this.calcbeziers();
+			this.$nextTick(() => {
+				this.data = [
+					{ week: '星期一', a: 150, b: 1200 },
+					{ week: '星期二', a: 300, b: 1200 },
+					{ week: '星期三', a: 28,  b: 1000 },
+					{ week: '星期四', a: 200, b: 2000 },
+					{ week: '星期五', a: 74,  b: 740 },
+					{ week: '星期六', a: 532, b:2000 },
+					{ week: '星期日', a: 420 ,b: 5000},
+				]			
+			})
+
 			
 		},	
 		methods:{
+			tick(){
+
+			},
 			calcyaxis(){
 				const d = this.data;
 				const s = this.series;
@@ -113,11 +155,9 @@
 				const all = d.map(dt => s.map(k => dt[k])).reduce((accu, n) => accu.concat(n), []);
 
 				all.sort((a,b)=> b - a);
-				const top = Math.ceil(all[0]/10)*10;
+				const top = Math.max(Math.ceil(all[0]/10)*10, 100);
 				const bottom = 0;
 				const step = Math.ceil((top - bottom) / this.ylevel);
-				console.log(top)
-				console.log(bottom, step)
 				let p = top;
 				this.ydata2coord = this.ystep / step; 
 				this.yend = this.ystart + this.ystep * this.ylevel;
@@ -151,6 +191,7 @@
 	            var preP = points[0];
 	            var dx2, dy2;
 	            var beziers = [];
+	            beziers.push(preP);
 	            for (var i = 1; i < points.length; i++) {
 	                var curP = points[i];
 	                var nexP = points[i + 1];
@@ -182,7 +223,6 @@
 	            }
 	            return {
 	            	key,
-	            	st: points[0],
 	            	bz: beziers,
 	            }
 			},
@@ -206,8 +246,9 @@
 	}
 </script>
 <style>
-	.root{
-		
+	.rootchart{
+		background-color: white;
+		color: black;
 	}
 	.container{
 		display: flex;

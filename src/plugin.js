@@ -38,11 +38,20 @@ const plugin = {
 						this[VCTX] = parent.$el.getContext('2d')
 						this[VSTACK] = container.stack;
 
-						_paint.call(this, this.$options.draw, this[VSTACK]);				
+						
+						if(this.tween){
+							console.log(this._renderCtx)
+							_paintInTween.call(this, this._renderCtx, this.$options.draw, this[VSTACK]);
+							//draw = this.$options.
+						}else{
+							_paint.call(this, this.$options.draw, this[VSTACK]);	
+						}
+						
+									
 						const canvas = this._hitTestCanvas = document.createElement("canvas"); 
 						this._hitTestContext = canvas.getContext("2d");
 						canvas.width = canvas.height = 1;
-						
+
 						// TODO cache stable drawing
 						// this[VCACHE] = document.createElement("canvas"); 
 						// this[VCACHECTX] = this[VCACHE].getContext('2d');
@@ -93,9 +102,10 @@ const plugin = {
 			if(isCanvasVnode(vm)){
 				const vnode = this.$options.render.call(this._renderProxy, this.$createElement)
 				vm[VNODE] = vnode;
-				// if(vm._e){
-				// 	return vm._e(); // createEmptyNode
-				// }
+				
+				if(vm._e && !vnode.data.attrs.hasOwnProperty('canvascontainer')){
+					return vm._e(); // createEmptyNode
+				}
 				return vnode;
 			}else{
 				return p.call(vm);
@@ -108,7 +118,13 @@ const plugin = {
 // function _render(render, ctx){
 // 	this.
 // }
-
+function _paintInTween(renderCtx, render, stack){
+	const vnode = this[VNODE];
+	const ctx = this[VCTX];
+	const bindedFUNC = render.bind(renderCtx, ctx);
+	bindedFUNC.type = render.type;
+	stack.set(this._uid, bindedFUNC)
+}
 
 function _paint(render, stack){
 
@@ -117,11 +133,11 @@ function _paint(render, stack){
 	//if(el.getContext){
 	const ctx = this[VCTX];
 	// console.log(vnode)
-	const props = vnode.data.attrs;
-	const {
-		width,
-		height
-	} = this.$props
+	// const props = vnode.data.attrs;
+	// const {
+	// 	width,
+	// 	height
+	// } = this.$props
 
 	const bindedFUNC = render.bind(this, ctx);
 	bindedFUNC.type = render.type;

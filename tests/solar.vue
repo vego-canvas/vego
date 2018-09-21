@@ -3,6 +3,7 @@
 		<div class="container">	
 			<div class="canvas">
 				<my-canvas :style="{backgroundColor: 'black'}" :pause="pause" @tick="tick" :width="canvasWidth" :height="canvasHeight">
+					<sun :x="400" :y="400" :r="sun.sunburn" color="red"  @mouseenter="onhit(sun)" @mouseleave="onhitlose(sun)"/>
 					<orbits v-for="item in orbits" :key="item.key" :x="item.x" :y="item.y" :r="item.r" :color="item.color"/>
 					<container v-for="item in planets" :key="item.key" :x="item.x" :y="item.y">
 						<planet @mouseenter="onhit(item)" @mouseleave="onhitlose(item)" :x="0" :y="0" :r="item.r" :color="item.color"/>
@@ -38,7 +39,8 @@
 			'container': container,
 			'orbits':arc,
 			'planet': circle,
-			'satellite': circle
+			'satellite': circle,
+			'sun': circle,
 		},
 		data(){
 			return {
@@ -48,11 +50,17 @@
 				breifImg: '',
 				pause: false,
 				pauseReason: undefined,
+				
 				orbits:[
 					{key:'p1ob',x:400, y:400, r:300, color:"white"},
 					{key:'p2ob',x:400, y:400, r:200, color:"#d2d2d2"},
 					{key:'p3ob',x:400, y:400, r:100, color:"#333"},
 				],
+				sun: {
+					sunburn: 60,
+					briefStory: "The Sun, at the heart of our solar system, is a yellow dwarf star, a hot ball of glowing gases. Its gravity holds the solar system together, keeping everything from the biggest planets to the smallest particles of debris in its orbit. Electric currents in the Sun generate a magnetic field that is carried out through the solar system by the solar wind—a stream of electrically charged gas blowing outward from the Sun in all directions.",
+						breifImg: "https://solarsystem.nasa.gov/system/stellar_items/image_files/1_sun.jpg"					
+				},
 				planets:[
 					{
 						key:'p1', x: 0, y: 0, r: 25, 
@@ -90,6 +98,8 @@
 				this.planets.forEach(p => {
 					this.calcPos(t, p);
 				});
+
+				this.sun.sunburn = 60 + 8 * Math.cos(t/500)
 			},
 
 			calcPos(t, planet){

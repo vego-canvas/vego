@@ -1,5 +1,5 @@
 <template>
-	<div :x="x" :y="y">
+	<div canvascontainer :x="x" :y="y">
 		<slot></slot>
 	</div>
 </template>
