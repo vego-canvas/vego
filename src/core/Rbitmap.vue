@@ -7,10 +7,12 @@
 <script>
 
 import watcherMixin from '../proto/mouseEvtWatcherMixin';
+import eventMixin from '../proto/eventMixin'
 // import Vue from 'vue';
 export default {
 	name: 'bitmap',
-	mixins: [ watcherMixin ],
+	mixins: [eventMixin],
+	// mixins: [ watcherMixin ],
 	props: ['dx', 'dy', 'dwidth', 'dheight','src'],
 	data(){
 		return {
@@ -48,13 +50,13 @@ export default {
 			}
 			this.source.src = val;
 		},
-		'mouseEvt.hit':function(val) {
- 			if(val){
- 				this.scale = 1.5;
- 			}else{
- 				this.scale = 1;
- 			}
- 		}
+		// 'mouseEvt.hit':function(val) {
+ 	// 		if(val){
+ 	// 			this.scale = 1.5;
+ 	// 		}else{
+ 	// 			this.scale = 1;
+ 	// 		}
+ 	// 	}
 	},
 	mounted(){
 		this.source = new Image();
@@ -62,7 +64,21 @@ export default {
 			this.imageReady = true;
 		}
 		this.source.src = this.src;
+		this.regist('mouseenter');
+		this.regist('mouseleave');
+		this.$on('mouseenter', (e) => {
+			this.scale = 1.5;
+		});
+		this.$on('mouseleave', (e) =>{
+			this.scale = 1
+		
+		})
 
+	},
+	methods:{
+		onmousemove(){
+
+		}
 	}
 };
 </script>

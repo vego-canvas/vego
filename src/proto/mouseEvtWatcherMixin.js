@@ -17,6 +17,9 @@ export default {
 			this.mouseEvt.hit = this._hitTest(x, y);
 		});
 	},
+	updated(){
+		console.log(this.uuid)
+	},
 	watch:{
  		'mouseEvt.hit':function(val) {
  			if(val){

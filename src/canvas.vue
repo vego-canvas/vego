@@ -9,7 +9,9 @@
 	import Stack from './proto/stack';
 	import Ticker from './proto/ticker';
 	import Matrix2D from './util/Matrix2D';
-	import mouseEventVM from './proto/mouseEvent';
+	// import mouseEventVM from './proto/mouseEvent';
+
+	import EventDispatcher from './proto/event.js'; 
 	// import EventStore from './proto/event.js';
 
 	export default Vue.component('my-canvas', {
@@ -48,7 +50,7 @@
 			this.ratio = window.devicePixelRatio || 1;
 			this.matrix = new Matrix2D();
 			this.matrix.scale(this.ratio, this.ratio);
-
+			this.eventDispacher = new EventDispatcher();
 		},
 		mounted(){
 			const {width, height} = this;
@@ -102,9 +104,15 @@
 					x: offsetX,
 					y: offsetY
 				}
+
 				//console.log(e);
 				// this.$store.commit('mousemove', pos)
-				mouseEventVM.mouse = pos;
+				// mouseEventVM.mouse = pos;
+
+				this.eventDispacher.dispatch('mousemove', e);
+				this.eventDispacher.dispatch('mouseenter', e);
+				this.eventDispacher.dispatch('mouseleave', e);
+				
 				this.$emit('mousemove', pos)
 				// const { clientX, clientY } = e;
 				// console.log(clientX, clientY);

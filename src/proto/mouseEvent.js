@@ -25,6 +25,4 @@ const mouseEventVM = new Vue({
 	}
 });
 
-
-
 export default mouseEventVM;

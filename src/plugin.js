@@ -1,6 +1,6 @@
 import Vue from 'vue';
 // import Vuex from 'vuex';
-import {findCanvas, findContainer} from './util/common.js';
+import {findCanvas, findContainer, isCanvasVnode} from './util/common.js';
 import './canvas.vue';
 
 
@@ -148,12 +148,7 @@ function _paint(render, stack){
 	//}
 }
 
-function isFunction(t){
-	return t && Object.prototype.toString.call(t) === '[object Function]';
-}
 
-function isCanvasVnode(vm){
-	return vm.$options.draw && isFunction(vm.$options.draw)
-}
+
 
 export default plugin;
