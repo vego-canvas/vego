@@ -10,6 +10,11 @@ module.exports = {
         filename: '[name].js',
         publicPath: '/',
     },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'src/'),
+        }
+      },
     mode: 'development',
     module: {
         rules:[
@@ -26,6 +31,15 @@ module.exports = {
                 use: [
                   'vue-style-loader',
                   'css-loader'
+                ]
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                  {
+                    loader: 'file-loader',
+                    options: {}
+                  }
                 ]
             }
         ]

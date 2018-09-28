@@ -1,5 +1,5 @@
 <template>
-	<div canvascontainer :x="x" :y="y">
+	<div canvascontainer :x="x" :y="y" :regX="regX" :regY="regY">
 		<slot></slot>
 	</div>
 </template>
@@ -19,6 +19,14 @@ export default {
 			type: Number,
 			default: 0,
 		},
+		regX: {
+			type: Number,
+			default: 0,
+		},
+		regY: {
+			type: Number,
+			default: 0,
+		}
 	},
 	draw(ctx){
 		const m = this.matrix;
@@ -32,12 +40,16 @@ export default {
 		return this.stack;
 	},
 	updated(){
-		this.matrix.copy(this.parentMatrix.clone().append(1,0,0,1,this.x,this.y));
+		const x = this.x - this.regX;
+		const y = this.y - this.regY;
+		this.matrix.copy(this.parentMatrix.clone().append(1,0,0,1,x,y));
 	},
 	created(){
 		this.stack = new Stack();
 		this.parentMatrix = findContainer(this).matrix;
-		this.matrix = this.parentMatrix.clone().append(1,0,0,1,this.x,this.y);
+		const x = this.x - this.regX;
+		const y = this.y - this.regY;
+		this.matrix = this.parentMatrix.clone().append(1,0,0,1,x,y);
 		this.$options.draw.type = "container";
 	},
 }

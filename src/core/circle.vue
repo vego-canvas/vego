@@ -4,7 +4,7 @@
 </template>
 <script>
 
-import watcherMixin from '../proto/watcherMixin'
+import watcherMixin from '../proto/mouseEvtWatcherMixin';
 // import Vue from 'vue';
 export default {
 	name: 'my-circle',

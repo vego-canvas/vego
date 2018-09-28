@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import Render from './core/render.js';
+// import Vuex from 'vuex';
 import {findCanvas, findContainer} from './util/common.js';
+import './canvas.vue';
 
 
 const VNODE = Symbol('_vCanvasNode');
@@ -11,9 +12,9 @@ const VCACHECTX = Symbol('_vCacheContext');
 const noop = () => {};
 
 
-const _cvs = document.createElement("canvas"); 
-const _hitTestContext = _cvs.getContext('2d');
-_cvs.width = _cvs.height = 1;
+// const _cvs = document.createElement("canvas"); 
+// const _hitTestContext = _cvs.getContext('2d');
+// _cvs.width = _cvs.height = 1;
 
 
 // 非透明的元素
@@ -23,6 +24,7 @@ function _testHit(ctx){
 
 const plugin = {
 	install(Vue, options){
+
 		Vue.mixin({
 			created(){
 				if(this.$options.draw){

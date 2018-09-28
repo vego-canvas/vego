@@ -1,5 +1,5 @@
 <template>
-	<canvas :width="width | toPx" :height="height | toPx" @click="onclick" @mousemove="onMouseMove">
+	<canvas :width="width | toPx" :height="height | toPx" @click="onclick" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp">
 		<slot></slot>
 	</canvas>
 </template>
@@ -9,6 +9,7 @@
 	import Stack from './proto/stack';
 	import Ticker from './proto/ticker';
 	import Matrix2D from './util/Matrix2D';
+	import mouseEventVM from './proto/mouseEvent';
 	// import EventStore from './proto/event.js';
 
 	export default Vue.component('my-canvas', {
@@ -44,7 +45,7 @@
 		created(){
 			const {width, height} = this;
 			this.stack = new Stack();
-			this.ratio = window.devicePixelRatio 
+			this.ratio = window.devicePixelRatio || 1;
 			this.matrix = new Matrix2D();
 			this.matrix.scale(this.ratio, this.ratio);
 
@@ -92,6 +93,9 @@
 			onclick(e){
 				const { clientX, clientY } = e;
 			},
+			onMouseDown(e){
+				
+			},
 			onMouseMove(e){
 				const { offsetX, offsetY } = e;
 				const pos = {
@@ -99,15 +103,19 @@
 					y: offsetY
 				}
 				//console.log(e);
-				this.$store.commit('mousemove', pos)
+				// this.$store.commit('mousemove', pos)
+				mouseEventVM.mouse = pos;
 				this.$emit('mousemove', pos)
 				// const { clientX, clientY } = e;
 				// console.log(clientX, clientY);
 				// this.$broadcast('canvasmousemove', e); 
 			},
+			onMouseUp(e){
+
+			},
 			scaleCanvas(canvas, width, height) {
 			  // assume the device pixel ratio is 1 if the browser doesn't specify it
-			  const devicePixelRatio = window.devicePixelRatio || 1;
+			  // const devicePixelRatio = window.devicePixelRatio || 1;
 			  const context = canvas.getContext('2d');
 
 			  // determine the 'backing store ratio' of the canvas context
@@ -120,7 +128,7 @@
 			  // );
 
 			  // determine the actual ratio we want to draw at
-			  const ratio = devicePixelRatio;
+			  const ratio = this.ratio;
 
 			  if (devicePixelRatio !== 1) {
 			    // set the 'real' canvas size to the higher width/height
