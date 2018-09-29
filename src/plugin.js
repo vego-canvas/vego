@@ -14,8 +14,11 @@ const noop = () => {};
 
 const _cvs = document.createElement("canvas"); 
 const _hitTestContext = _cvs.getContext('2d');
-_cvs.width = _cvs.height = 400;
-document.body.appendChild(_cvs)
+const _scale = window.devicePixelRatio
+_cvs.width = _cvs.height = 400 * _scale;
+_cvs.style.width = 400 + 'px';
+_cvs.style.height = 400 + 'px';
+//document.body.appendChild(_cvs)
 _cvs.style.position = "absolute";
 _cvs.style.right = "0";
 _cvs.style.top = "0";
@@ -33,6 +36,7 @@ const plugin = {
 			created(){
 				if(this.$options.draw){
 					this.parentMatrix = findContainer(this).matrix;
+					this.pixel2axis = window.devicePixelRatio || 1;
 				}
 			},
 			mounted(){
@@ -88,21 +92,19 @@ const plugin = {
 				_hitTest(x, y){ 
 					// can i just save some results until properties change ??? 
 					const ctx = this._hitTestContext;
-					const m = this.parentMatrix.clone().prependTransform(-x,-y,1,1);
+					let m = this.parentMatrix.clone().prepend(1,0,0,1,-x * this.pixel2axis,-y * this.pixel2axis);
 					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-					//ctx.translate(-x, -y);
 					this.$options.draw.call(this, ctx);
 					
 					const hit = _testHit(ctx);
 					ctx.setTransform();
 					ctx.clearRect(0, 0, 2, 2);
 
-					_hitTestContext.clearRect(0, 0, 400, 400);
-					//const m = mtx.clone().prepend(1,0,0,1,-x,-y);
-					_hitTestContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-					//_hitTestContext.translate(-x, -y);
-					this.$options.draw.call(this, _hitTestContext);
-					_hitTestContext.setTransform();
+					// _hitTestContext.clearRect(0, 0, 800, 800);
+					// m = m.prepend(1,0,0,1,-x * this.pixel2axis,-y * this.pixel2axis)
+					// _hitTestContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+					// this.$options.draw.call(this, _hitTestContext);
+					// _hitTestContext.setTransform();
 
 					return hit;
 				}

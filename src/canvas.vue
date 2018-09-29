@@ -47,7 +47,7 @@
 		created(){
 			const {width, height} = this;
 			this.stack = new Stack();
-			this.ratio = 1;//window.devicePixelRatio || 1;
+			this.ratio = window.devicePixelRatio || 1;
 			this.matrix = new Matrix2D();
 			this.matrix.scale(this.ratio, this.ratio);
 			this.eventDispacher = new EventDispatcher();
@@ -60,10 +60,12 @@
 
 			const m = this.matrix;//.scale(ratio, ratio);
 			this.stack.setPre(this._uid, () => {
-				ctx.setTransform(m.a,m.b,m.c,m.d,m.tx, m.ty);
+				//ctx.scale(ratio, ratio);
+				 ctx.setTransform(m.a,m.b,m.c,m.d,m.tx, m.ty);
 			});
 			this.stack.setAfter(this._uid, () => {
-				ctx.setTransform();
+				 ctx.setTransform();
+				//ctx.scale()
 			});
 			//const ctx = this.scaleCanvas(this.$el, width, height);
 			const stack = this.stack;
@@ -73,10 +75,12 @@
 			// 		render();
 			// 	})
 			// }, 500)
+			const width_actual = width * ratio;
+			const height_actual = height * ratio;
 
 			Ticker((t) => {
 				
-				ctx.clearRect(0, 0, width * ratio, height * ratio);
+				ctx.clearRect(0, 0, width_actual, height_actual);
 
 				this.$emit('tick', t);
 				stack.iterator((render) => {

@@ -5,7 +5,7 @@
 				<controlRect :x="0" :y="0" :width="panel.width" :height="panel.height"/>
 				<controlPoint :dx="panel.width - 25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="resizeIcon" @pressmove="resize" @mousedown="prepare"/>
 <!-- 				<controlPoint :dx="panel.width - 25" :dy="-25" :dwidth="50" :dheight="50" :src="panel.closeIcon"/> -->
-				<controlPoint :dx="-25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="rotateIcon" @pressmove="rotate" @mousedown="prepare"/>
+<!-- 				<controlPoint :dx="-25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="rotateIcon" @pressmove="rotate" @mousedown="prepare"/> -->
 			</container>
 		</my-canvas>
 	</div>
