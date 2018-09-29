@@ -6,7 +6,7 @@
 </template>
 <script>
 
-import watcherMixin from '../proto/mouseEvtWatcherMixin';
+// import watcherMixin from '../proto/mouseEvtWatcherMixin';
 import eventMixin from '../proto/eventMixin'
 // import Vue from 'vue';
 export default {
