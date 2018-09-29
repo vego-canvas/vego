@@ -26,6 +26,10 @@ export default {
 		regY: {
 			type: Number,
 			default: 0,
+		},
+		rotation: {
+			type: Number,
+			default: 0
 		}
 	},
 	draw(ctx){
@@ -40,16 +44,16 @@ export default {
 		return this.stack;
 	},
 	updated(){
-		const x = this.x - this.regX;
-		const y = this.y - this.regY;
-		this.matrix.copy(this.parentMatrix.clone().append(1,0,0,1,x,y));
+
+		this.matrix.copy(this.parentMatrix.clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY) );
 	},
 	created(){
 		this.stack = new Stack();
 		this.parentMatrix = findContainer(this).matrix;
-		const x = this.x - this.regX;
-		const y = this.y - this.regY;
-		this.matrix = this.parentMatrix.clone().append(1,0,0,1,x,y);
+
+		console.log(this.x, this.y, this.rotation)
+		this.matrix = this.parentMatrix.clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY) 
+
 		this.$options.draw.type = "container";
 	},
 }

@@ -47,7 +47,7 @@
 		created(){
 			const {width, height} = this;
 			this.stack = new Stack();
-			this.ratio = window.devicePixelRatio || 1;
+			this.ratio = 1;//window.devicePixelRatio || 1;
 			this.matrix = new Matrix2D();
 			this.matrix.scale(this.ratio, this.ratio);
 			this.eventDispacher = new EventDispatcher();
@@ -96,7 +96,7 @@
 				const { clientX, clientY } = e;
 			},
 			onMouseDown(e){
-				
+				this.eventDispacher.dispatch('mousedown', e);				
 			},
 			onMouseMove(e){
 				const { offsetX, offsetY } = e;
@@ -109,7 +109,7 @@
 				// this.$store.commit('mousemove', pos)
 				// mouseEventVM.mouse = pos;
 
-				this.eventDispacher.dispatch('mousemove', e);
+				this.eventDispacher.dispatch('pressmove', e);
 				this.eventDispacher.dispatch('mouseenter', e);
 				this.eventDispacher.dispatch('mouseleave', e);
 				
@@ -119,7 +119,7 @@
 				// this.$broadcast('canvasmousemove', e); 
 			},
 			onMouseUp(e){
-
+				this.eventDispacher.dispatch('mouseup', e);	
 			},
 			scaleCanvas(canvas, width, height) {
 			  // assume the device pixel ratio is 1 if the browser doesn't specify it

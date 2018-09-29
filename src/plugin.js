@@ -12,10 +12,14 @@ const VCACHECTX = Symbol('_vCacheContext');
 const noop = () => {};
 
 
-// const _cvs = document.createElement("canvas"); 
-// const _hitTestContext = _cvs.getContext('2d');
-// _cvs.width = _cvs.height = 1;
-
+const _cvs = document.createElement("canvas"); 
+const _hitTestContext = _cvs.getContext('2d');
+_cvs.width = _cvs.height = 400;
+document.body.appendChild(_cvs)
+_cvs.style.position = "absolute";
+_cvs.style.right = "0";
+_cvs.style.top = "0";
+_cvs.style.border = "1px solid red";
 
 // 非透明的元素
 function _testHit(ctx){
@@ -81,17 +85,24 @@ const plugin = {
 				}
 			},
 			methods: {
-				_hitTest(x, y){
+				_hitTest(x, y){ 
+					// can i just save some results until properties change ??? 
 					const ctx = this._hitTestContext;
-					const mtx = this.parentMatrix;// .clone().append(1,0,0,1,this.x,this.y);
-					ctx.setTransform(mtx.a, mtx.b, mtx.c, mtx.d, mtx.tx, mtx.ty);
-					ctx.translate(-x, -y);
+					const m = this.parentMatrix.clone().prependTransform(-x,-y,1,1);
+					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+					//ctx.translate(-x, -y);
 					this.$options.draw.call(this, ctx);
 					
 					const hit = _testHit(ctx);
 					ctx.setTransform();
 					ctx.clearRect(0, 0, 2, 2);
 
+					_hitTestContext.clearRect(0, 0, 400, 400);
+					//const m = mtx.clone().prepend(1,0,0,1,-x,-y);
+					_hitTestContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+					//_hitTestContext.translate(-x, -y);
+					this.$options.draw.call(this, _hitTestContext);
+					_hitTestContext.setTransform();
 
 					return hit;
 				}

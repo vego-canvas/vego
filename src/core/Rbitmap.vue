@@ -66,14 +66,16 @@ export default {
 		this.source.src = this.src;
 		this.regist('mouseenter');
 		this.regist('mouseleave');
+		this.regist('pressmove');
 		this.$on('mouseenter', (e) => {
 			this.scale = 1.5;
 		});
 		this.$on('mouseleave', (e) =>{
 			this.scale = 1
-		
 		})
-
+		this.$on('mousedown', (e) => {
+			console.log('mousedown', e)
+		});
 	},
 	methods:{
 		onmousemove(){

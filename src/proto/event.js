@@ -35,6 +35,28 @@ const EventTypes = {
     })
   },
   mousemove: noop,
+  mousedown: noop,
+  mouseup: noop,
+  pressmove: function(target){
+    return new Vue({
+       data(){
+          return {
+            anchor: null,
+            pos: null,
+          }
+        },
+        watch:{
+          pos(val){
+            if(this.anchor){
+              target.$emit('pressmove', {
+                ...this.anchor,
+                ...val
+              })
+            }
+          }
+        }
+    })
+  },
 }
 
 class Event {
@@ -70,6 +92,10 @@ function isStateChangeEvent(type){
   return type === "mouseenter" || type === "mouseleave";
 }
 
+function isStateSharedEvent(type){
+  return type === "mousedown" || type === "mouseup";
+}
+
 class EventDispatcher {
   constructor(){
     this._listeners = null
@@ -77,7 +103,6 @@ class EventDispatcher {
 
   dispatch(type, winevent){
     const { offsetX, offsetY } = winevent;
-
     if(this._listeners && this._listeners[type]){
       const event = new Event({
         type, offsetX, offsetY
@@ -99,21 +124,50 @@ class EventDispatcher {
           for (var i = watchers.length - 1; i > 0; i--) {
             watchers[i].state.hit = false;
           }
-        }else{
+        }
+        if(type === 'mousedown'){
+          watcher.state.anchor = { anchorX: offsetX, anchorY: offsetY };
+          watcher.target.$emit(type, event);
+        }
+        if(type === 'pressmove'){
+          watcher.state.pos = { x: offsetX, y: offsetY };
+        } 
+
+        if(type === 'mouseup'){
+          watcher.state.anchor = null;
+          watcher.target.$emit(type, event);
+        }
+
+        if(type === 'mousemove'){
           watcher.target.$emit(type, event);
         }
       }
     }
   }
 
+  contains(type, uid){
+    return !!this._listeners[type].find(t => t.uid === uid);
+  }
+
   push(eventType, target){
     console.log(eventType, target._uid)
+    if(!EventTypes[eventType]) throw `no such eventType: ${eventType}`
     if(!this._listeners) this._listeners = {};
     if(!this._listeners[eventType]) this._listeners[eventType] = [];
-    this._listeners[eventType].push({
+    
+    const am = EventTypes[eventType](target);
+    const handler = {
+      uid: target._uid,
       target,
-      state: EventTypes[eventType](target),
-    });
+      state: am,
+    };
+    this._listeners[eventType].push(handler);
+    if(eventType === "pressmove"){
+      if(!this._listeners['mousedown']) this._listeners['mousedown'] = [];
+      this._listeners['mousedown'].push(handler);
+      if(!this._listeners['mouseup']) this._listeners['mouseup'] = [];
+      this._listeners['mouseup'].push(handler);
+    }
   }
 }
 
