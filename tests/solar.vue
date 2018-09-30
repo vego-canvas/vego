@@ -1,7 +1,7 @@
 <template>
 	<div class="root">
-		<div class="container">	
-			<div class="canvas">
+		<div class="row">	
+			<div class="col-7 col">
 				<my-canvas :style="{backgroundColor: 'black'}" :pause="pause" @tick="tick" :width="canvasWidth" :height="canvasHeight">
 					<sun :x="400" :y="400" :r="sun.sunburn" color="red"  @mouseenter="onhit(sun)" @mouseleave="onhitlose(sun)"/>
 					<orbits v-for="item in orbits" :key="item.key" :x="item.x" :y="item.y" :r="item.r" :color="item.color"/>
@@ -15,7 +15,7 @@
 					
 				</my-canvas>
 			</div>
-			<div class="flex">
+			<div class="col-5 col">
 				<h1>Solar System!</h1>
 				<p class="brief">
 					{{briefStory}}

@@ -73,9 +73,6 @@ export default {
 		this.$on('mouseleave', (e) =>{
 			this.scale = 1
 		})
-		this.$on('mousedown', (e) => {
-			console.log('mousedown', e)
-		});
 	},
 	methods:{
 		onmousemove(){

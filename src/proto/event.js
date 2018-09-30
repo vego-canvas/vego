@@ -1,6 +1,14 @@
 import Vue from 'vue';
 
-const noop = () => null;
+const noop = function(target){
+  return new Vue({
+    data(){
+      return {
+        hit: false,
+      }
+    },
+  })
+}
 const EventTypes = {
   mouseenter: function(target){
     return new Vue({
@@ -57,6 +65,7 @@ const EventTypes = {
         }
     })
   },
+  click: noop,
 }
 
 class Event {
@@ -95,18 +104,38 @@ function isStateChangeEvent(type){
 function isStateSharedEvent(type){
   return type === "mousedown" || type === "mouseup";
 }
+function isStableEvent(type) {
+   return type === "mousemove" || type === "pressmove";
+}
 
 class EventDispatcher {
   constructor(){
     this._listeners = null
   }
 
-  dispatch(type, winevent){
-    const { offsetX, offsetY } = winevent;
+  dispatch(type, sourceevent){
+    const {_sourceevt , _source } = sourceevent;
+    const {offsetX, offsetY} = _sourceevt;
     if(this._listeners && this._listeners[type]){
       const event = new Event({
         type, offsetX, offsetY
       });
+
+
+      if(isStableEvent(type)){
+        this._listeners[type].forEach(watcher => {
+          watcher.state.pos = { x: offsetX, y: offsetY };
+        })
+        return;
+      }
+
+      if(type === 'mouseup'){
+        this._listeners[type].forEach(watcher => {
+          watcher.state.anchor = null;
+          watcher.target.$emit(type, event);
+        })
+      }
+
       const watchers = this._listeners[type].filter(watcher => {
         const { target, state } = watcher;
         const hit = target._hitTest(offsetX, offsetY);
@@ -126,21 +155,28 @@ class EventDispatcher {
           }
         }
         if(type === 'mousedown'){
+           console.log(event)
           watcher.state.anchor = { anchorX: offsetX, anchorY: offsetY };
           watcher.target.$emit(type, event);
         }
-        if(type === 'pressmove'){
-          watcher.state.pos = { x: offsetX, y: offsetY };
-        } 
 
-        if(type === 'mouseup'){
-          watcher.state.anchor = null;
-          watcher.target.$emit(type, event);
-        }
+        // if(type === 'pressmove'){
+        //   watcher.state.pos = { x: offsetX, y: offsetY };
+        // } 
 
-        if(type === 'mousemove'){
-          watcher.target.$emit(type, event);
-        }
+        // if(type === 'mouseup'){
+        //   watcher.state.anchor = null;
+        //   watcher.target.$emit(type, event);
+        // }
+
+        // if(type === 'mousemove'){
+        //   watcher.target.$emit(type, event);
+        // }
+      }else{
+        if(type === "mousedown"){
+          console.log('no watcher');
+          _source.$emit(type, event)
+        }       
       }
     }
   }

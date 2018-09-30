@@ -1,17 +1,26 @@
 <template>
 	<div>
-		<my-canvas :width="canvasWidth" :height="canvasHeight">
-			<container :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
+		<div>
+			<button class="btn" @click="openfile">file</button>
+		</div>
+		<my-canvas :width="canvasWidth" :height="canvasHeight" @mousedown="noEdit">
+			<container v-if="bgImage" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
+				<targetImage :dx="0" :dy="0" :dwidth="panel.width" :dheight="panel.height" :src="bgImage" @pressmove="move" @mousedown="prepare"/>
+			</container>
+			<container v-if="editing" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
 				<controlRect :x="0" :y="0" :width="panel.width" :height="panel.height"/>
 				<controlPoint :dx="panel.width - 25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="resizeIcon" @pressmove="resize" @mousedown="prepare"/>
-<!-- 				<controlPoint :dx="panel.width - 25" :dy="-25" :dwidth="50" :dheight="50" :src="panel.closeIcon"/> -->
-<!-- 				<controlPoint :dx="-25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="rotateIcon" @pressmove="rotate" @mousedown="prepare"/> -->
+				<controlPoint :dx="panel.width - 25" :dy="-25" :dwidth="50" :dheight="50" :src="closeIcon" @click="deleteimg"/>
+				<controlPoint :dx="-25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="rotateIcon" @pressmove="rotate" @mousedown="prepare"/>
 			</container>
+
 		</my-canvas>
+		<input ref="picfilereader" type="file" name="pic" accept="image/*, image/png, image/jpeg, image/gif, image/jpg, .png, .jpg, .jpeg" class="diyfile" @change="fileChanged" />
 	</div>
 </template>
 <script>
-	import bitmap from '@/core/Rbitmap.vue';
+	import Rbitmap from '@/core/Rbitmap.vue';
+	import bitmap from '@/core/bitmap.vue';
 	import rect from '@/core/Rectangle.vue';
 	import container from '@/core/container.vue';
 	const resizeIcon = require('./assets/resize.png');
@@ -20,8 +29,9 @@
 	export default {
 		name: 'drift',
 		components: {
-			"controlPoint": bitmap,
+			"controlPoint": Rbitmap,
 			"controlRect": rect,
+			"targetImage": bitmap,
 			container
 		},
 		data(){
@@ -36,18 +46,34 @@
 					height: 200,
 					regX: 100,
 					regY: 100,
-					rotation: 30,
+					rotation: 0,
 				},
 				resizeIcon,
 				closeIcon,
-				rotateIcon
+				rotateIcon,
+
+				editing: false,
+
+				bgImage: undefined,
+			}
+		},
+		watch:{
+			bgImage(val){
+				if(val){
+					console.log(val)
+					this.editing = true;
+				}
 			}
 		},
 		methods: {
 			prepare(e){
+				this.editing = true;
 				this.preparePanle = {
 					...this.panel
 				}
+
+				this.rotateOffset = 180* (Math.atan2(this.preparePanle.height/2,this.preparePanle.width/2) - Math.PI/2) / Math.PI
+				console.log(this.rotateOffset);
 			},
 			resize(e){
 				const {
@@ -71,14 +97,52 @@
 				const dx = x - this.preparePanle.x;
 				const dy = y - this.preparePanle.y;
 
-				const theta = -180*Math.atan2(dy, dx)/Math.PI;
+				const theta = 180*(Math.atan2(dy, dx) - Math.PI /2)/Math.PI + this.rotateOffset
 
 				this.panel.rotation = theta;
 
+			},
+			move(e){
+				const {
+					anchorX, anchorY,
+					x, y
+				} = e;
+				const vecx = x - anchorX;
+				const vecy = y - anchorY;
+				this.panel.x = this.preparePanle.x + vecx;
+				this.panel.y = this.preparePanle.y + vecy;
+			},
+			openfile(){
+				this.$refs.picfilereader.click();
+			},
+			fileChanged(e){
+				let file = this.$refs.picfilereader.files[0];
+				if(file){
+					const fileReader = new FileReader();
+	      			fileReader.onload = (evt) => {
+				        this.bgImage = evt.target.result;
+	      			}
+					fileReader.readAsDataURL(file);					
+				}
+			},
+			deleteimg(){
+				this.editing = false;
+				this.bgImage = null;
+			},
+			toEdit(){
+				this.editing = true;
+			},
+			noEdit(){
+				this.editing = false;
 			}
 		}
 	}
 </script>
-<style type="text/css">
-	
+<style module>
+	.diyfile{
+		display: none;
+	}
+	.btn{
+
+	}
 </style>

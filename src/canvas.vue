@@ -96,11 +96,18 @@
 			// }
 		},
 		methods:{
+			wrapEvt(e){
+				return {
+					_sourceevt: e,
+					_source: this,				
+				} 
+			},
 			onclick(e){
-				const { clientX, clientY } = e;
+				this.eventDispacher.dispatch('click', this.wrapEvt(e));
+				// this.$emit('click', e);
 			},
 			onMouseDown(e){
-				this.eventDispacher.dispatch('mousedown', e);				
+				this.eventDispacher.dispatch('mousedown', this.wrapEvt(e));				
 			},
 			onMouseMove(e){
 				const { offsetX, offsetY } = e;
@@ -113,9 +120,9 @@
 				// this.$store.commit('mousemove', pos)
 				// mouseEventVM.mouse = pos;
 
-				this.eventDispacher.dispatch('pressmove', e);
-				this.eventDispacher.dispatch('mouseenter', e);
-				this.eventDispacher.dispatch('mouseleave', e);
+				this.eventDispacher.dispatch('pressmove', this.wrapEvt(e));
+				this.eventDispacher.dispatch('mouseenter', this.wrapEvt(e));
+				this.eventDispacher.dispatch('mouseleave', this.wrapEvt(e));
 				
 				this.$emit('mousemove', pos)
 				// const { clientX, clientY } = e;
@@ -123,7 +130,7 @@
 				// this.$broadcast('canvasmousemove', e); 
 			},
 			onMouseUp(e){
-				this.eventDispacher.dispatch('mouseup', e);	
+				this.eventDispacher.dispatch('mouseup', this.wrapEvt(e));	
 			},
 			scaleCanvas(canvas, width, height) {
 			  // assume the device pixel ratio is 1 if the browser doesn't specify it

@@ -6,7 +6,7 @@ export default {
 	},
 	methods:{
 		regist(type){
-			this.evt.push(type, this)
+			this.evt.push(type, this);
 		}
 	}
 }
