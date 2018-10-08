@@ -27,7 +27,12 @@ class Tween extends Map{
 		super()
 
 		this.callback = callback;
-		this.easing = Easing[easing];
+		if(typeof easing === "string"){
+			this.easing = Easing[easing];
+		}else{
+			this.easing = easing;
+		}
+		
 		this.duration = duration;
 
 		this.begin = undefined;
@@ -183,6 +188,7 @@ export default {
 			duration,
 			easing,
 			observe,
+
 		} = this.tween;
 		this[TWEEN] = new Tween(TickInTweens.bind(this), duration, easing);
 		

@@ -2,10 +2,19 @@
 	<div>
 		<div>
 			<button class="btn" @click="openfile">file</button>
+			<button class="btn" @click="chooseBtn">bubble</button>
+		</div>
+		<div class="scroll-row">
+			<div v-for="icon in bubblesIcon">
+				<img class="bubble" :src="icon" @click="addBubble(icon)">
+			</div>
 		</div>
 		<my-canvas :width="canvasWidth" :height="canvasHeight" @mousedown="noEdit">
 			<container v-if="bgImage" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
 				<targetImage :dx="0" :dy="0" :dwidth="panel.width" :dheight="panel.height" :src="bgImage" @pressmove="move" @mousedown="prepare"/>
+			</container>
+			<container v-for="bb in bubbles"  :x="bb.x" :y="bb.y" :regX="bb.regX" :regY="bb.regY" :rotation="bb.rotation">
+				<targetImage :dx="0" :dy="0" :dwidth="bb.width" :dheight="bb.height" :src="bb.img" @pressmove="move" @mousedown="prepare($event, bb)"/>
 			</container>
 			<container v-if="editing" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
 				<controlRect :x="0" :y="0" :width="panel.width" :height="panel.height"/>
@@ -13,7 +22,6 @@
 				<controlPoint :dx="panel.width - 25" :dy="-25" :dwidth="50" :dheight="50" :src="closeIcon" @click="deleteimg"/>
 				<controlPoint :dx="-25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="rotateIcon" @pressmove="rotate" @mousedown="prepare"/>
 			</container>
-
 		</my-canvas>
 		<input ref="picfilereader" type="file" name="pic" accept="image/*, image/png, image/jpeg, image/gif, image/jpg, .png, .jpg, .jpeg" class="diyfile" @change="fileChanged" />
 	</div>
@@ -26,6 +34,9 @@
 	const resizeIcon = require('./assets/resize.png');
 	const closeIcon = require('./assets/close.png');
 	const rotateIcon = require('./assets/rotate.png');
+
+	const bubbles = Array(10).fill(1).map((i, idx) => require(`./assets/bubble/${idx+1}.png`))
+	
 	export default {
 		name: 'drift',
 		components: {
@@ -36,8 +47,21 @@
 		},
 		data(){
 			return {
-				canvasWidth: 400,
-				canvasHeight: 400,
+				canvasWidth: 800,
+				canvasHeight: 800,
+				bubblesIcon: bubbles,
+
+				bubblePanel: {
+					x: 400/2,
+					y: 400/2,
+					width: 200,
+					height: 200,
+					regX: 100,
+					regY: 100,
+					rotation: 0,					
+				},
+
+				bubbles: [],
 
 				panel: {
 					x: 400/2,
@@ -66,10 +90,35 @@
 			}
 		},
 		methods: {
-			prepare(e){
+			addBubble(icon){
+				const panel = {
+					x: 400/2,
+					y: 400/2,
+					width: 200,
+					height: 200,
+					regX: 100,
+					regY: 100,
+					rotation: 0,
+					img: icon					
+				}
+				this.bubbles.push(panel);
+				this.panel = panel
+
+			},
+			chooseBtn(){
+
+			},
+			prepare(e, bubble){
 				this.editing = true;
-				this.preparePanle = {
-					...this.panel
+				if(bubble){
+					this.preparePanle = {
+						...bubble
+					};
+					this.panel = bubble;
+				}else{
+					this.preparePanle = {
+						...this.panel
+					}
 				}
 
 				this.rotateOffset = 180* (Math.atan2(this.preparePanle.height/2,this.preparePanle.width/2) - Math.PI/2) / Math.PI
@@ -144,5 +193,14 @@
 	}
 	.btn{
 
+	}
+	.bubble{
+		height: 100px;
+		width: auto;
+	}
+	.scroll-row{
+		display: flex;
+		flex-direction: row;
+		overflow: scroll;
 	}
 </style>

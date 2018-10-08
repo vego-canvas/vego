@@ -114,8 +114,16 @@ class EventDispatcher {
   }
 
   dispatch(type, sourceevent){
-    const {_sourceevt , _source } = sourceevent;
-    const {offsetX, offsetY} = _sourceevt;
+    const {
+      _sourceevt,
+      _source
+    } = sourceevent;
+    
+    const {
+      offsetX,
+      offsetY
+    } = _sourceevt;
+
     if(this._listeners && this._listeners[type]){
       const event = new Event({
         type, offsetX, offsetY
