@@ -13,7 +13,7 @@
 			<container v-if="bgImage" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
 				<targetImage :dx="0" :dy="0" :dwidth="panel.width" :dheight="panel.height" :src="bgImage" @pressmove="move" @mousedown="prepare"/>
 			</container>
-			<container v-for="bb in bubbles"  :x="bb.x" :y="bb.y" :regX="bb.regX" :regY="bb.regY" :rotation="bb.rotation">
+			<container v-for="bb in bubbles" :key="bb.key" :x="bb.x" :y="bb.y" :regX="bb.regX" :regY="bb.regY" :rotation="bb.rotation" @mouseenter="bubbleMouseOver(true, $event)" @mouseleave="bubbleMouseOver(false, $event)">
 				<targetImage :dx="0" :dy="0" :dwidth="bb.width" :dheight="bb.height" :src="bb.img" @pressmove="move" @mousedown="prepare($event, bb)"/>
 			</container>
 			<container v-if="editing" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
@@ -36,7 +36,7 @@
 	const rotateIcon = require('./assets/rotate.png');
 
 	const bubbles = Array(10).fill(1).map((i, idx) => require(`./assets/bubble/${idx+1}.png`))
-	
+	let k = 0;
 	export default {
 		name: 'drift',
 		components: {
@@ -99,7 +99,8 @@
 					regX: 100,
 					regY: 100,
 					rotation: 0,
-					img: icon					
+					img: icon,
+					key: k++,					
 				}
 				this.bubbles.push(panel);
 				this.panel = panel
@@ -183,6 +184,14 @@
 			},
 			noEdit(){
 				this.editing = false;
+			},
+			bubbleMouseOver(mousein, evt){
+				if(mousein){
+					console.log('in');
+				}else{
+					console.log('out')
+				}
+				
 			}
 		}
 	}

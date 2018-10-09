@@ -123,6 +123,7 @@
 				this.eventDispacher.dispatch('pressmove', this.wrapEvt(e));
 				this.eventDispacher.dispatch('mouseenter', this.wrapEvt(e));
 				this.eventDispacher.dispatch('mouseleave', this.wrapEvt(e));
+				this.eventDispacher.dispatch('mousemove', this.wrapEvt(e));
 				
 				this.$emit('mousemove', pos)
 				// const { clientX, clientY } = e;

@@ -9,6 +9,7 @@ const VCTX = Symbol('_vCanvasContext');
 const VSTACK = Symbol('_vStack');
 const VCACHE = Symbol('_vCache');
 const VCACHECTX = Symbol('_vCacheContext');
+const VCRASH = Symbol('_vcrash')
 const noop = () => {};
 
 
@@ -91,6 +92,8 @@ const plugin = {
 			methods: {
 				_hitTest(x, y){ 
 					// can i just save some results until properties change ??? 
+					
+					// hit test begin 
 					const ctx = this._hitTestContext;
 					let m = this.parentMatrix.clone().prepend(1,0,0,1,-x * this.pixel2axis,-y * this.pixel2axis);
 					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
@@ -99,7 +102,6 @@ const plugin = {
 					const hit = _testHit(ctx);
 					ctx.setTransform();
 					ctx.clearRect(0, 0, 2, 2);
-
 					// _hitTestContext.clearRect(0, 0, 800, 800);
 					// m = m.prepend(1,0,0,1,-x * this.pixel2axis,-y * this.pixel2axis)
 					// _hitTestContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);

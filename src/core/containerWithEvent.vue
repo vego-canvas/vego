@@ -6,17 +6,10 @@
 
 <script>
 import Stack from '../proto/stack';
-import eventMixin from '../proto/eventMixin'
 import { findContainer } from '../util/common.js';
 import Matrix2D from '../util/Matrix2D';
 export default {
 	name: 'my-container',
-	mixins: [eventMixin],
-	data(){
-		return {
-			hit: false,
-		}
-	},
 	props:{
 		x: {
 			type: Number,
@@ -63,23 +56,5 @@ export default {
 
 		this.$options.draw.type = "container";
 	},
-	// watch:{
-	// 	hit(val, oldVal){
-	// 		if(val){
-	// 			this.$emit('mouseenter', val);
-	// 		}else{	
-	// 			this.$emit('mouseleave', oldVal);
-	// 		}
-	// 	}
-	// },
-	mounted(){
-		// console.log(this._events);
-		// this.regist('mouseenter');
-		// this.regist('mouseleave');
-
-		// this.$on('mouseinboundcheck', e => {
-			
-		// })
-	}
 }
 </script>

@@ -10,33 +10,47 @@ const noop = function(target){
   })
 }
 const EventTypes = {
-  mouseenter: function(target){
+  mouseenter: function(target, bubble){
     return new Vue({
        data(){
           return {
             hit: false,
+            bubble,
           }
         },
         watch:{
           hit(val, oldVal){
-            if(val){
+            if(val && !this.bubble){
               target.$emit('mouseenter');
+            }
+            if(this.bubble){
+              target._hit = val;
+              this.bubble.$emit('mouseinboundcheck', {
+                target
+              });
             }
           }
         }
     })
   },
-  mouseleave: function(target){
+  mouseleave: function(target, bubble){
     return new Vue({
        data(){
           return {
             hit: false,
+            bubble
           }
         },
         watch:{
           hit(val, oldVal){
-            if(!val){
+            if(!val && !this.bubble){
               target.$emit('mouseleave');
+            }
+            if(this.bubble){
+              target._hit = val;
+              this.bubble.$emit('mouseinboundcheck', {
+                target
+              });
             }
           }
         }
@@ -45,17 +59,18 @@ const EventTypes = {
   mousemove: noop,
   mousedown: noop,
   mouseup: noop,
-  pressmove: function(target){
+  pressmove: function(target, bubble){
     return new Vue({
        data(){
           return {
             anchor: null,
             pos: null,
+            bubble
           }
         },
         watch:{
           pos(val){
-            if(this.anchor){
+            if(this.anchor && !this.bubble){
               target.$emit('pressmove', {
                 ...this.anchor,
                 ...val
@@ -163,7 +178,7 @@ class EventDispatcher {
           }
         }
         if(type === 'mousedown'){
-           console.log(event)
+          // console.log(event)
           watcher.state.anchor = { anchorX: offsetX, anchorY: offsetY };
           watcher.target.$emit(type, event);
         }
@@ -192,25 +207,39 @@ class EventDispatcher {
   contains(type, uid){
     return !!this._listeners[type].find(t => t.uid === uid);
   }
+  
+  push(eventType, target, bubble){
+    if(target.$children.length > 0){
+      target.$children.forEach(child => {
+        this.push(eventType, child, target);
+      });
+    }else{
+      this._push(eventType, target, bubble);
+    }
+  }
 
-  push(eventType, target){
-    console.log(eventType, target._uid)
+  _push(eventType, target, bubbleTarget){
+    // console.log(eventType, target._uid)
     if(!EventTypes[eventType]) throw `no such eventType: ${eventType}`
     if(!this._listeners) this._listeners = {};
     if(!this._listeners[eventType]) this._listeners[eventType] = [];
-    
-    const am = EventTypes[eventType](target);
-    const handler = {
+
+    // if(target.$children.length > 0){
+    //   ret
+    // }
+
+    const am = EventTypes[eventType](target, bubbleTarget);
+    const watcher = {
       uid: target._uid,
       target,
       state: am,
     };
-    this._listeners[eventType].push(handler);
+    this._listeners[eventType].push(watcher);
     if(eventType === "pressmove"){
       if(!this._listeners['mousedown']) this._listeners['mousedown'] = [];
-      this._listeners['mousedown'].push(handler);
+      this._listeners['mousedown'].push(watcher);
       if(!this._listeners['mouseup']) this._listeners['mouseup'] = [];
-      this._listeners['mouseup'].push(handler);
+      this._listeners['mouseup'].push(watcher);
     }
   }
 }
