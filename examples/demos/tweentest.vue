@@ -60,7 +60,7 @@
 	</div>	
 </template>
 <script>
-	import circle from '../src/core/tweenCircle.vue'; 
+	import circle from '@/core/tweenCircle.vue'; 
 	export default {
 		components: { "my-circle": circle },
 		data(){

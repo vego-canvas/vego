@@ -18,8 +18,8 @@
 </template>
 
 <script type="text/javascript">
-	import circle from './src/core/circle.vue';
-	import container from './src/core/container.vue';
+	import circle from '@/core/circle.vue';
+	import container from '@/core/container.vue';
 	export default {
 		components:{
 			"my-circle": circle, 

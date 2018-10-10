@@ -36,12 +36,12 @@
 	</div>
 </template>
 <script>
-	import container from '../src/core/container.vue';
-	import line from '../src/core/line.vue';
-	import tweenline from '../src/core/tweenline.vue';
-	import text from '../src/core/text.vue';
-	import bezier from '../src/core/bezier.vue';
-	import circle from '../src/core/circle.vue';
+	import container from '@/core/container.vue';
+	import line from '@/core/line.vue';
+	import tweenline from '@/core/tweenline.vue';
+	import text from '@/core/text.vue';
+	import bezier from '@/core/bezier.vue';
+	import circle from '@/core/circle.vue';
 
 	export default {
 		components:{ 
