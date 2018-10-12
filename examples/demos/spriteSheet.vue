@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<my-canvas @click="jump" :width="canvasWidth" :height="canvasHeight">
-			<container :x="100" :y="100">
+		<my-canvas @click="jump" @tick="tick" :width="canvasWidth" :height="canvasHeight">
+			<container :x="x" :y="y">
 				<spriteSheet :configs="conf" :pattern.sync="pattern" />
 			</container>
 			
@@ -48,13 +48,19 @@
 				},
 				pattern:'run',
 
+				velocity: 150,
+				x: 0,
+				y: 100,
 			}
 		},
 		methods:{
 			jump(){
 				console.log('jump')
 				this.pattern = 'jump'
-			}			
+			},
+			tick(due){
+				this.x = (this.velocity/1000 * due) % (this.canvasWidth + 165) - 165;
+			}		
 		}
 
 	}
