@@ -2,7 +2,7 @@
 	<div>
 		<my-canvas @tick="tick" :width="canvasWidth" :height="canvasHeight">
 			<container :key="ball.key" v-for="ball in balls" :x="ball.x" :y="ball.y" >
-				<ball :x="0" :y="0" :r="ball.radius" :color="ball.color"/>
+				<ball :x="0" :y="0" :r="ball.radius" :color="ball.color" :scaleY="ball.scaleY" :tween="tweenBall" @tweenend="recover(ball)"/>
 			</container>
 		</my-canvas>
 	</div>
@@ -34,6 +34,12 @@
 				balls: [],
 
 				lastT: 0,
+
+				tweenBall: {
+					duration: 50,
+					easing: 'linear',
+					observe: ['scaleY'],
+				}
 			}
 		},
 		mounted(){
@@ -55,9 +61,12 @@
 				this.balls.forEach(ball => {
 					ball.vx = ball.vx - ( ball.vx*friction);
 					ball.vy += gravity;
+
 					if ((ball.y + ball.radius) > bottom) {
+						// about to bounce
 					   ball.vy = -(ball.vy)*elasticity;
 					   ball.y = bottom - ball.radius;
+					   ball.scaleY = 0.8; // maybe scaleY is in proportion to the velocity of the ball.
 					}
 					if((ball.x - ball.radius) < 0){
 						ball.vx = -(ball.vx) * elasticitx;
@@ -135,8 +144,12 @@
 					color: randomColor(),
 					vx,
 					vy,
+					scaleY: 1
 				})
 			},
+			recover(ball){
+				ball.scaleY = 1;
+			}
 		}
 	}
 </script>

@@ -1,13 +1,24 @@
 <template>
 	<div>
-		<my-canvas :width="canvasWidth" :height="canvasHeight">
-			<spiriteSheet :configs="conf" />
+		<my-canvas @click="jump" :width="canvasWidth" :height="canvasHeight">
+			<container :x="100" :y="100">
+				<spriteSheet :configs="conf" :pattern.sync="pattern" />
+			</container>
+			
 		</my-canvas>
 	</div>
 </template>
 <script>
+	import container from '@/core/container.vue';
+	import spriteSheet from '@/core/spriteSheet.vue';
+	const sheet = require('./assets/spritesheet_grant.png');
+
 	export default{
-		name: 'tweenlite',
+		components: {
+			spriteSheet,
+			container,
+			
+		},
 		data(){
 			return {
 				canvasWidth: 800,
@@ -15,18 +26,37 @@
 
 				conf: {
 					framerate: 30,
-					"images": [loader.getResult("grant")],
-					"frames": {
-						"regX": 82, "height": 292, "count": 64, "regY": 0, "width": 165},
+					image: sheet,
+					frames: {
+						width: 165,
+						height: 292,
+						count: 64,
+
+					},
+						// "regX": 82, "height": 292, "count": 64, "regY": 0, "width": 165},
 					// define two animations, run (loops, 1.5x speed) and jump (returns to run):
-					"animations": {
-						"run": [0, 25, "run", 1.5],
-						"jump": [26, 63, "run"]
+					patterns: {
+						run: {
+							frame: [0, 25],
+							next: 'run'
+						},
+						jump: {
+							frame: [26, 63],
+							next: 'run'
+						}
 					}
-				}
+				},
+				pattern:'run',
 
 			}
+		},
+		methods:{
+			jump(){
+				console.log('jump')
+				this.pattern = 'jump'
+			}			
 		}
+
 	}
 </script>
 <style>

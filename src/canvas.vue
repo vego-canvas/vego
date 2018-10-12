@@ -104,7 +104,7 @@
 			},
 			onclick(e){
 				this.eventDispacher.dispatch('click', this.wrapEvt(e));
-				// this.$emit('click', e);
+				this.$emit('click', e);
 			},
 			onMouseDown(e){
 				this.eventDispacher.dispatch('mousedown', this.wrapEvt(e));				

@@ -10,6 +10,10 @@
 // https://raw.github.com/danro/easing-js/master/LICENSE
 // --------------------------------------------------
 export default {
+  linear: function (pos) {
+    return pos;
+  },
+  
   easeInQuad: function(pos) {
     return Math.pow(pos, 2);
   },

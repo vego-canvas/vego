@@ -3,6 +3,7 @@
 		<div class="container">	
 			
 			<div class="canvas">
+				<h1 style="font-size: 18px">{{title}}</h1>
 				<my-canvas :width="canvasWidth" :height="canvasHeight" @mousemove="onmousemove"  @tick="tick">
 					<container v-for="(ax, i) in yaxis" :key="ax" :x="xstart" :y="ystart + i*ystep">
 						<charttext :x="fontStartX" :y="5" :text="ax" fill="black" font="18px serif"/>
@@ -26,10 +27,6 @@
 						<charttext :x="0" :y="-25" :text="`${dataY.week}  ${dataY.b}`" fill="black" font="18px serif"/>
 					</container>
 				</my-canvas>
-			</div>
-			<div class="flex">
-				<h1>{{title}}</h1>
-				
 			</div>
 
 		</div>
@@ -102,9 +99,22 @@
 				},
 				tweenline: {
 					duration: 200,
-					easing: 'easeInQuart',
+					easing: 'linear',
 					observe: ['x','tx'],
-				}
+				},
+				// tweenindicator: {
+				// 	duration: 200,
+				// 	observe: [
+				// 		{
+				// 			key: 'x',
+				// 			easing: 'linear'
+				// 		},
+				// 		{
+				// 			key: 'y',
+				// 			easing: 
+				// 		}
+				// 	]
+				// }
 			}
 		},
 		computed:{

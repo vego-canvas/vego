@@ -57,7 +57,7 @@ class Tween extends Map{
 				walkInTween(tw, newCtx, newV);
 				//return Object.assign(newO, tw.end());
 			});
-			this.callback(newCtx);
+			this.callback(newCtx, true);
 			return 
 		}
 		const newCtx = this.origin;
@@ -113,9 +113,12 @@ const _tweenPrefix = '_tweenProps_'
 const genTweenProp = function(key){
 	return `${_tweenPrefix}${key}`;
 }
-const TickInTweens = function(newCtx){
+const TickInTweens = function(newCtx, flag){
 	// console.log('tick')
 	Object.keys(newCtx).forEach(k => this._renderCtx[k] = newCtx[k]);
+	if(flag){
+		this.$emit('tweenend')
+	}
 }
 
 const TWEENID = Symbol('_tweenId');
