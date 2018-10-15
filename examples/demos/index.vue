@@ -7,6 +7,7 @@
 			<a href="#" @click.prevent="setComp('drift')">drift</a>
 			<a href="#" @click.prevent="setComp('bouncing')">bouncing</a>
 			<a href="#" @click.prevent="setComp('spritesheet')">spritesheet</a>
+			<a href="#" @click.prevent="setComp('simple')">simple</a>
 		</div>
 		<components :is="comp">
 		</components>
@@ -19,14 +20,15 @@ import chart from './chart.vue';
 import drift from './drift.vue';
 import bouncing from './bouncing.vue';
 import spritesheet from './spriteSheet.vue';
+import simple from './simple.vue';
 
-const comps = {tweentest, solar, chart, drift, bouncing, spritesheet}
+const comps = {tweentest, solar, chart, drift, bouncing, spritesheet, simple}
 // import Vue from 'vue';
 export default {
 	name: 'my-index',
 	data(){
 		return {
-			comp: spritesheet
+			comp: simple
 		}
 	},
 	methods:{

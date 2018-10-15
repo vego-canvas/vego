@@ -9,12 +9,16 @@ import Stack from '../proto/stack';
 import eventMixin from '../proto/eventMixin'
 import { findContainer } from '../util/common.js';
 import Matrix2D from '../util/Matrix2D';
+
+const VCACHE = Symbol('_vCache');
+const VCACHECTX = Symbol('_vCacheContext');
+
 export default {
-	name: 'my-container',
 	mixins: [eventMixin],
 	data(){
 		return {
 			hit: false,
+			hasUpdated: false,
 		}
 	},
 	props:{
@@ -73,6 +77,12 @@ export default {
 	// 	}
 	// },
 	mounted(){
+		// cache components
+		// const canvas = this[VCACHE] = document.createElement("canvas"); 
+		// this[VCACHECTX] = canvas.getContext("2d");
+		// canvas.width = 
+
+
 		// console.log(this._events);
 		// this.regist('mouseenter');
 		// this.regist('mouseleave');
