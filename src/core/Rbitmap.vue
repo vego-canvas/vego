@@ -67,12 +67,13 @@ export default {
 		this.regist('mouseenter');
 		this.regist('mouseleave');
 		this.regist('pressmove');
+		this.regist('click');
 		this.$on('mouseenter', (e) => {
 			this.scale = 1.5;
 		});
 		this.$on('mouseleave', (e) =>{
 			this.scale = 1
-		})
+		});
 	},
 	methods:{
 		onmousemove(){

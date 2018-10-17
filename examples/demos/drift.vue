@@ -79,6 +79,7 @@
 				editing: false,
 
 				bgImage: undefined,
+				bubbleInEditing: undefined,
 			}
 		},
 		watch:{
@@ -116,6 +117,7 @@
 						...bubble
 					};
 					this.panel = bubble;
+					this.bubbleInEditing = bubble;
 				}else{
 					this.preparePanle = {
 						...this.panel
@@ -177,7 +179,10 @@
 			},
 			deleteimg(){
 				this.editing = false;
-				this.bgImage = null;
+				if(this.bubbleInEditing){
+					const idx = this.bubbles.findIndex((el) => el === this.bubbleInEditing);
+					this.bubbles.splice(idx, 1);
+				}
 			},
 			toEdit(){
 				this.editing = true;

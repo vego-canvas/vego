@@ -182,6 +182,9 @@ class EventDispatcher {
           watcher.state.anchor = { anchorX: offsetX, anchorY: offsetY };
           watcher.target.$emit(type, event);
         }
+        if(type === 'click'){
+          watcher.target.$emit(type, event);
+        }
 
         // if(type === 'pressmove'){
         //   watcher.state.pos = { x: offsetX, y: offsetY };

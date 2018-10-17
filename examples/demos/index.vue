@@ -28,7 +28,7 @@ export default {
 	name: 'my-index',
 	data(){
 		return {
-			comp: simple
+			comp: drift
 		}
 	},
 	methods:{
