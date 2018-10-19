@@ -4,11 +4,8 @@
 </template>
 <script>
 
-import eventMixin from '../proto/eventMixin'
-// import Vue from 'vue';
 export default {
 	name: 'my-circle',
-	mixins: [ eventMixin ],
 	props: ['x', 'y', 'r', 'color'],
 	draw(ctx, p){
 		const {
@@ -22,9 +19,5 @@ export default {
 		ctx.fill();
 		ctx.restore();		
 	},
-	mounted(){
-		this.regist('mouseenter');
-		this.regist('mouseleave');
-	}
 };
 </script>

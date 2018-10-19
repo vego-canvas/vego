@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<my-canvas @tick="tick" :width="canvasWidth" :height="canvasHeight">
+		<vego-canvas @tick="tick" :width="canvasWidth" :height="canvasHeight">
 			<container :key="ball.key" v-for="ball in balls" :x="ball.x" :y="ball.y" >
 				<ball :x="0" :y="0" :r="ball.radius" :color="ball.color" :scaleY="ball.scaleY" :tween="tweenBall" @tweenend="recover(ball)"/>
 			</container>
-		</my-canvas>
+		</vego-canvas>
 	</div>
 </template>
 <script>

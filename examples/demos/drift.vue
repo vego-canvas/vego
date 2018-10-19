@@ -9,20 +9,20 @@
 				<img class="bubble" :src="icon" @click="addBubble(icon)">
 			</div>
 		</div>
-		<my-canvas :width="canvasWidth" :height="canvasHeight" @mousedown="noEdit">
+		<vego-canvas :width="canvasWidth" :height="canvasHeight" @mousedown="noEdit">
 			<container v-if="bgImage" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
 				<targetImage :dx="0" :dy="0" :dwidth="panel.width" :dheight="panel.height" :src="bgImage" @pressmove="move" @mousedown="prepare"/>
 			</container>
 			<container v-for="bb in bubbles" :key="bb.key" :x="bb.x" :y="bb.y" :regX="bb.regX" :regY="bb.regY" :rotation="bb.rotation" @mouseenter="bubbleMouseOver(true, $event)" @mouseleave="bubbleMouseOver(false, $event)">
 				<targetImage :dx="0" :dy="0" :dwidth="bb.width" :dheight="bb.height" :src="bb.img" @pressmove="move" @mousedown="prepare($event, bb)"/>
 			</container>
-			<container v-if="editing" :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
+			<container :x="panel.x" :y="panel.y" :regX="panel.regX" :regY="panel.regY" :rotation="panel.rotation">
 				<controlRect :x="0" :y="0" :width="panel.width" :height="panel.height"/>
 				<controlPoint :dx="panel.width - 25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="resizeIcon" @pressmove="resize" @mousedown="prepare"/>
 				<controlPoint :dx="panel.width - 25" :dy="-25" :dwidth="50" :dheight="50" :src="closeIcon" @click="deleteimg"/>
 				<controlPoint :dx="-25" :dy="panel.height - 25" :dwidth="50" :dheight="50" :src="rotateIcon" @pressmove="rotate" @mousedown="prepare"/>
 			</container>
-		</my-canvas>
+		</vego-canvas>
 		<input ref="picfilereader" type="file" name="pic" accept="image/*, image/png, image/jpeg, image/gif, image/jpg, .png, .jpg, .jpeg" class="diyfile" @change="fileChanged" />
 	</div>
 </template>
@@ -111,8 +111,10 @@
 
 			},
 			prepare(e, bubble){
+				
 				this.editing = true;
 				if(bubble){
+					console.log(bubble)
 					this.preparePanle = {
 						...bubble
 					};
@@ -125,7 +127,7 @@
 				}
 
 				this.rotateOffset = 180* (Math.atan2(this.preparePanle.height/2,this.preparePanle.width/2) - Math.PI/2) / Math.PI
-				console.log(this.rotateOffset);
+				
 			},
 			resize(e){
 				const {

@@ -6,12 +6,8 @@
 </template>
 <script>
 
-// import watcherMixin from '../proto/mouseEvtWatcherMixin';
-import eventMixin from '../proto/eventMixin'
-// import Vue from 'vue';
 export default {
 	name: 'bitmap',
-	mixins: [eventMixin],
 	// mixins: [ watcherMixin ],
 	props: ['dx', 'dy', 'dwidth', 'dheight','src'],
 	data(){
@@ -64,8 +60,6 @@ export default {
 			this.imageReady = true;
 		}
 		this.source.src = this.src;
-
-		this.regist('pressmove');
 	},
 };
 </script>

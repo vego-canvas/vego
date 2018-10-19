@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<my-canvas @click="jump" @tick="tick" :width="canvasWidth" :height="canvasHeight">
+		<vego-canvas @click="jump" @tick="tick" :width="canvasWidth" :height="canvasHeight">
 			<container :x="x" :y="y">
 				<spriteSheet :configs="conf" :pattern.sync="pattern" />
 			</container>
 			
-		</my-canvas>
+		</vego-canvas>
 	</div>
 </template>
 <script>

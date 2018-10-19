@@ -1,8 +1,8 @@
 <template>
 	<div class="root">
-		<my-canvas :width="canvasWidth" :height="canvasHeight">
+		<vego-canvas :width="canvasWidth" :height="canvasHeight">
 			<my-circle :x="x" :y="y" :r="r" :color="color" :tween="tween"/>
-		</my-canvas>
+		</vego-canvas>
 		<div class="grid">
 			<pre>
 				// index.vue

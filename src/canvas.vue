@@ -14,8 +14,8 @@
 	import EventDispatcher from './proto/event.js'; 
 	// import EventStore from './proto/event.js';
 
-	export default Vue.component('my-canvas', {
-		name: 'my-canvas',
+	export default Vue.component('vego-canvas', {
+		name: 'vego-canvas',
 		props: {
 			width: {
 				type: Number,

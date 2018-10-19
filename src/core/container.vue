@@ -6,7 +6,6 @@
 
 <script>
 import Stack from '../proto/stack';
-import eventMixin from '../proto/eventMixin'
 import { findContainer } from '../util/common.js';
 import Matrix2D from '../util/Matrix2D';
 
@@ -14,7 +13,6 @@ const VCACHE = Symbol('_vCache');
 const VCACHECTX = Symbol('_vCacheContext');
 
 export default {
-	mixins: [eventMixin],
 	data(){
 		return {
 			hit: false,

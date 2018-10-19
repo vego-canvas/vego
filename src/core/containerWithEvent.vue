@@ -8,8 +8,17 @@
 import Stack from '../proto/stack';
 import { findContainer } from '../util/common.js';
 import Matrix2D from '../util/Matrix2D';
+import EventDispatcher from '../proto/eventDispatcher.js'; 
+const VCACHE = Symbol('_vCache');
+const VCACHECTX = Symbol('_vCacheContext');
+
 export default {
-	name: 'my-container',
+	data(){
+		return {
+			hit: false,
+			hasUpdated: false,
+		}
+	},
 	props:{
 		x: {
 			type: Number,
@@ -56,5 +65,6 @@ export default {
 
 		this.$options.draw.type = "container";
 	},
+
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<my-canvas :width="canvasWidth" :height="canvasHeight">
+		<vego-canvas :width="canvasWidth" :height="canvasHeight">
 			<my-arc :x="x" :y="y" :r="r" :color="color"/>
-		</my-canvas>
+		</vego-canvas>
     </div>
 </template>
 

@@ -2,7 +2,7 @@
 	<div class="root">
 		<div class="row">	
 			<div class="col-7 col">
-				<my-canvas :style="{backgroundColor: 'black'}" :pause="pause" @tick="tick" :width="canvasWidth" :height="canvasHeight">
+				<vego-canvas :style="{backgroundColor: 'black'}" :pause="pause" @tick="tick" :width="canvasWidth" :height="canvasHeight">
 					<sun :x="400" :y="400" :r="sun.sunburn" color="red"  @mouseenter="onhit(sun)" @mouseleave="onhitlose(sun)"/>
 					<orbits v-for="item in orbits" :key="item.key" :x="item.x" :y="item.y" :r="item.r" :color="item.color"/>
 					<container v-for="item in planets" :key="item.key" :x="item.x" :y="item.y">
@@ -13,7 +13,7 @@
 						</container>
 					</container>
 					
-				</my-canvas>
+				</vego-canvas>
 			</div>
 			<div class="col-5 col">
 				<h1>Solar System!</h1>

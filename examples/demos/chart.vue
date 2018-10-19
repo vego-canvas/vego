@@ -4,7 +4,7 @@
 			
 			<div class="canvas">
 				<h1 style="font-size: 18px">{{title}}</h1>
-				<my-canvas :width="canvasWidth" :height="canvasHeight" @mousemove="onmousemove"  @tick="tick">
+				<vego-canvas :width="canvasWidth" :height="canvasHeight" @dommousemove="onmousemove"  @tick="tick">
 					<container v-for="(ax, i) in yaxis" :key="ax" :x="xstart" :y="ystart + i*ystep">
 						<charttext :x="fontStartX" :y="5" :text="ax" fill="black" font="18px serif"/>
 						<chartline :x="lineStartX" :y="0" :tx="lineEndX" :ty="0" color="#eee"/>
@@ -26,7 +26,7 @@
 						<chartPoint :x="0" :y="0" :r="5" color="blue"/>
 						<charttext :x="0" :y="-25" :text="`${dataY.week}  ${dataY.b}`" fill="black" font="18px serif"/>
 					</container>
-				</my-canvas>
+				</vego-canvas>
 			</div>
 
 		</div>

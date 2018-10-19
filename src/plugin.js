@@ -1,8 +1,8 @@
 import Vue from 'vue';
 // import Vuex from 'vuex';
 import {findCanvas, findContainer, isCanvasVnode} from './util/common.js';
-import './canvas.vue';
-
+import './canvas2.vue';
+import EventDispatcher from './proto/eventDispatcher.js'; 
 
 const VNODE = Symbol('_vCanvasNode');
 const VCTX = Symbol('_vCanvasContext');
@@ -34,6 +34,7 @@ const plugin = {
 	install(Vue, options){
 
 		Vue.mixin({
+			mixins: [EventDispatcher],
 			created(){
 				if(this.$options.draw){
 					this.parentMatrix = findContainer(this).matrix;
