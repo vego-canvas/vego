@@ -5,14 +5,9 @@
 </template>
 
 <script>
-import Stack from '../proto/stack';
-import { findContainer } from '../util/common.js';
-import Matrix2D from '../util/Matrix2D';
+import Vue from 'vue';
 
-const VCACHE = Symbol('_vCache');
-const VCACHECTX = Symbol('_vCacheContext');
-
-export default {
+export default  Vue.component('vego-container', {
 	data(){
 		return {
 			hit: false,
@@ -41,53 +36,25 @@ export default {
 			default: 0
 		}
 	},
-	draw(ctx){
-		const m = this.matrix;
-		const pm = this.parentMatrix;
-		this.stack.setPre(this._uid, () => {
-			ctx.setTransform(m.a,m.b,m.c,m.d,m.tx,m.ty);
-		});
-		this.stack.setAfter(this._uid, () => {
-			ctx.setTransform(pm.a,pm.b,pm.c,pm.d,pm.tx,pm.ty);
-		});
-		return this.stack;
-	},
-	updated(){
 
-		this.matrix.copy(this.parentMatrix.clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY) );
+	updated(){
+		this.matrix.copy(this.$parent.matrix.clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY) );
 	},
 	created(){
-		this.stack = new Stack();
-		this.parentMatrix = findContainer(this).matrix;
-
-		console.log(this.x, this.y, this.rotation)
-		this.matrix = this.parentMatrix.clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY) 
-
-		this.$options.draw.type = "container";
+		this.matrix = this.$parent.matrix
+			.clone()
+			.appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY) 
 	},
-	// watch:{
-	// 	hit(val, oldVal){
-	// 		if(val){
-	// 			this.$emit('mouseenter', val);
-	// 		}else{	
-	// 			this.$emit('mouseleave', oldVal);
-	// 		}
-	// 	}
-	// },
-	mounted(){
-		// cache components
-		// const canvas = this[VCACHE] = document.createElement("canvas"); 
-		// this[VCACHECTX] = canvas.getContext("2d");
-		// canvas.width = 
+	methods: {			
+		_preUpdate(ctx){
+			const m = this.matrix;
+			ctx.setTransform(m.a,m.b,m.c,m.d,m.tx,m.ty);
+		},
 
-
-		// console.log(this._events);
-		// this.regist('mouseenter');
-		// this.regist('mouseleave');
-
-		// this.$on('mouseinboundcheck', e => {
-			
-		// })
+		_afterUpdate(ctx){
+			const pm = this.$parent.matrix;
+			ctx.setTransform(pm.a,pm.b,pm.c,pm.d,pm.tx,pm.ty);
+		}
 	}
-}
+});
 </script>

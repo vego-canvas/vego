@@ -19,8 +19,8 @@ npm install vego
 #### Step 1. Use plugin
 
 ```javascript
-import canvasPlugin from 'vego/plugin';
-Vue.use(canvasPlugin);
+import plugin from 'vego/plugin';
+Vue.use(plugin);
 
 // other initialize
 ```
@@ -29,8 +29,8 @@ Vue.use(canvasPlugin);
 
 ```vue
 <template>
-	<circle :x="x" :y="y" :r="r" :color="color">
-	</circle>
+	<div :x="x" :y="y" :r="r" :color="color">
+	</div>
 </template>
 <script>
 // arc.vue
@@ -103,15 +103,15 @@ building...
 
 **vego-canvas**: canvas wrapper. It has width, height properties and basic events emiters. And it can fit different devicePixelRatio. All components within this tag must implement draw function which named as  *canvas components*. 
 
-**eventMixin**: a mixin mimic mouse event, like mouseenter ,mouseleave, mousedown or mouseup, when mixin into *canvas components*. 
+**eventDispatcher**: a mixin mimic mouse event, iucludes click, mousedown, mouseup and ect. It will mixin into *canvas component* when created.
 
-**tweenMixin**: a mixin used to calculate tweening when declared data changed.
+**drawStack**:  a mixin into *canvas component* when created. It injects function `_updateContext` for every *canvas components*. 
+
+**tweenMixin**: a mixin used to calculate tweening when declared data changed. 
 
 **spriteSheet**: a *canvas component* to display a sprite sheet.
 
-**container**:  a *canvas component* to contain other *canvas components* and it has own coordiantes start from left top.
-
-**stack**: drawing commands stack composed by hierachy of  *canvas components*.
+**vego-container**:  a *canvas component* to contain other *canvas components* and it has own coordiantes-origin from left top.
 
 **ticker**: a internal ticker drive stack to draw graphics.
 

@@ -30,7 +30,7 @@
 	</div>
 </template>
 <script>
-	import circle from '@/core/circle.vue';
+	import circle from '@/components/circle.vue';
 	import container from '@/core/container.vue';
 	import arc from './arc.vue';
 

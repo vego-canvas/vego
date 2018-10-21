@@ -8,7 +8,7 @@
 			const {
 				x, y, r, color
 			} = this.config;
-
+			
 			ctx.beginPath();
 			ctx.save();
 			ctx.fillStyle = color;

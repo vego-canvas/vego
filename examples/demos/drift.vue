@@ -27,9 +27,9 @@
 	</div>
 </template>
 <script>
-	import Rbitmap from '@/core/Rbitmap.vue';
-	import bitmap from '@/core/bitmap.vue';
-	import rect from '@/core/Rectangle.vue';
+	import Rbitmap from '@/components/Rbitmap.vue';
+	import bitmap from '@/components/bitmap.vue';
+	import rect from '@/components/Rectangle.vue';
 	import container from '@/core/container.vue';
 	const resizeIcon = require('./assets/resize.png');
 	const closeIcon = require('./assets/close.png');

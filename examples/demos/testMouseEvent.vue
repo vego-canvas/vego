@@ -17,7 +17,7 @@
 	</div>
 </template>
 <script>
-	import container from '@/core/containerWithEvent.vue'
+	import container from '@/core/container.vue'
 	import circle from './components/circleWithDispatcherMixin.vue';
 	export default {
 		components: { 

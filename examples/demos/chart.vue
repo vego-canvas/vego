@@ -34,11 +34,11 @@
 </template>
 <script>
 	import container from '@/core/container.vue';
-	import line from '@/core/line.vue';
-	import tweenline from '@/core/tweenline.vue';
-	import text from '@/core/text.vue';
-	import bezier from '@/core/bezier.vue';
-	import circle from '@/core/circle.vue';
+	import line from '@/components/line.vue';
+	import tweenline from '@/components/tweenline.vue';
+	import text from '@/components/text.vue';
+	import bezier from '@/components/bezier.vue';
+	import circle from '@/components/circle.vue';
 
 	export default {
 		components:{ 

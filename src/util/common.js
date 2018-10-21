@@ -27,3 +27,25 @@ export function findCanvas(vm){
 export function isCanvasVnode(vm){
 	return vm.$options.draw && isFunction(vm.$options.draw)
 }
+
+
+export function isCanvasComponentGen(){
+	let result = undefined;
+	return function(vm){
+		if(result !== undefined) return result;
+
+		let t = vm.$parent;
+
+		while(t && t.tagName !== "CANVAS"){
+			t = t.$parent;
+		}
+
+		if(!!t && t.tagName === "CANVAS"){
+			result = true;
+		}else{
+			result = false
+		}
+		
+		return result;
+	}
+} 

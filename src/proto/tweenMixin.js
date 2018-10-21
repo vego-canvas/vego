@@ -209,36 +209,8 @@ export default {
 				});
 				
 			}
-
-
-
-			// this.$watch(k, (val, oldval) => {
-			// 	console.log('compare ' + k, JSON.stringify(val), JSON.stringify(oldval))
-			// 	if(compare(val, oldval)) {
-			// 		console.log('same')
-			// 		this[TWEEN].pause = true;
-			// 		return 
-			// 	};
-			// 	if(observe.indexOf(k) !== -1){
-			// 		console.log('Tweenlet')
-			// 		const t = new Tweenlet(k, drawCtx[k], val);
-			// 		this[TWEEN].set(k, t);
-			// 		this[TWEEN].pause = false;
-			// 	}else{
-			// 		console.log('reset')
-			// 		drawCtx[k] = val;
-			// 	}
-			// });
 		});
 		this[TWEEN].origin = drawCtx;
-		// observe.forEach(ob => {
-		// 	console.log(ob);
-		// 	this.$watch(ob, (val, oldval) => {
-		// 		const t = new Tweenlet(ob, oldval, val);
-		// 		this[TWEEN].set(ob, t);
-		// 		this[TWEEN].pause = false;
-		// 	});
-		// });
 		Ticker.regist(this[TWEEN]);
 		this._renderCtx = drawCtx;
 	}
