@@ -5,6 +5,7 @@
   "main": "src/plugin.js",
   "scripts": {
     "lint": "eslint ./src --fix",
+    "precommit": "node node_modules/vusion-hooks/precommit",
     "dev": "node_modules/.bin/webpack-dev-server --config examples/webpack.config.js",
     "test": "mocha --timeout 5000 ./test/integration.test.js"
   },

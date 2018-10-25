@@ -1,7 +1,3 @@
-/*
- * Copied from createjs Matrix2D
- */
-
 class Matrix2D {
     constructor(a, b, c, d, tx, ty) {
         this.setValues(a, b, c, d, tx, ty);

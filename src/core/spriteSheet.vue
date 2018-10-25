@@ -89,8 +89,6 @@ export default {
             }
 
             const timespan = 1000 / framerate;
-            const allframe = this.frames.length;
-            console.log(allframe, w, h, height, width);
             Ticker.regist({
                 tick: (due) => {
                     this.due = due;

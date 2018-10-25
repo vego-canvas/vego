@@ -32,7 +32,6 @@ const plugin = {
                 }
             },
             methods: {
-
                 _hitTest(x, y) {
                     const ratio = window.devicePixelRatio || 1;
 

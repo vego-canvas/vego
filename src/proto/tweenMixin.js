@@ -11,13 +11,9 @@ class Tweenlet {
 
     tick(t, easing, begin, duration) {
         const expo = easing((t - begin) / duration);
-        // const p = {};
-        // p[this.ob] = this.span * expo + this.from;
         return this.span * expo + this.from;
     }
     end() {
-        // const p = {};
-        // p[this.ob] = this.to;
         return this.to;
     }
 }
@@ -56,7 +52,6 @@ class Tween extends Map {
                 // same
                 const newV = tw.end();
                 walkInTween(tw, newCtx, newV);
-                // return Object.assign(newO, tw.end());
             });
             this.callback(newCtx, true);
             return;
@@ -101,28 +96,15 @@ function walkInTween(tweenlet, ctx, newV) {
     accu[keychain[i]] = newV;
 }
 
-const _tweenPrefix = '_tweenProps_';
-const genTweenProp = function (key) {
-    return `${_tweenPrefix}${key}`;
-};
 const TickInTweens = function (newCtx, flag) {
-    // console.log('tick')
     Object.keys(newCtx).forEach((k) => this._renderCtx[k] = newCtx[k]);
     if (flag) {
         this.$emit('tweenend');
     }
 };
 
-const TWEENID = Symbol('_tweenId');
 const TWEEN = Symbol('_tween');
 
-const compare = function (a, b) {
-    if (typeof a === 'object' && typeof b === 'object') {
-        return JSON.stringify(a) === JSON.stringify(b);
-    } else {
-        return a === b;
-    }
-};
 const clone = function (a) {
     if (typeof a === 'object') {
         return JSON.parse(JSON.stringify(a));
@@ -144,7 +126,6 @@ function watch(vm, target, lastKey) {
         }
     } else {
         vm.$watch(lastKey, (val, oldval) => {
-            // console.log(lastKey, val)
             const t = new Tweenlet(lastKey, oldval, val);
             vm[TWEEN].set(lastKey, t);
             vm[TWEEN].pause = false;
@@ -167,8 +148,6 @@ export default {
 
         this.$options.dataKeysInDraw.forEach((k) => {
             drawCtx[k] = clone(this[k]);
-
-            // console.log(drawCtx, k);
             if (observe.indexOf(k) !== -1) {
                 watch(this, drawCtx[k], k);
             } else {
