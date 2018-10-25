@@ -1,18 +1,18 @@
 <template>
-	<div>
-		<div>
-			<a href="#" @click.prevent="setComp('solar')">solar</a>
-			<a href="#" @click.prevent="setComp('tweentest')">tweentest</a>
-			<a href="#" @click.prevent="setComp('chart')">chart</a>
-			<a href="#" @click.prevent="setComp('drift')">drift</a>
-			<a href="#" @click.prevent="setComp('bouncing')">bouncing</a>
-			<a href="#" @click.prevent="setComp('spritesheet')">spritesheet</a>
-			<a href="#" @click.prevent="setComp('simple')">simple</a>
-			<a href="#" @click.prevent="setComp('testMouseEvent')">testMouseEvent</a>
-		</div>
-		<components :is="comp">
-		</components>
-	</div>
+<div>
+    <div>
+        <a href="#" @click.prevent="setComp('solar')">solar</a>
+        <a href="#" @click.prevent="setComp('tweentest')">tweentest</a>
+        <a href="#" @click.prevent="setComp('chart')">chart</a>
+        <a href="#" @click.prevent="setComp('drift')">drift</a>
+        <a href="#" @click.prevent="setComp('bouncing')">bouncing</a>
+        <a href="#" @click.prevent="setComp('spritesheet')">spritesheet</a>
+        <a href="#" @click.prevent="setComp('simple')">simple</a>
+        <a href="#" @click.prevent="setComp('testMouseEvent')">testMouseEvent</a>
+    </div>
+    <components :is="comp">
+    </components>
+</div>
 </template>
 <script>
 import tweentest from './tweentest.vue';
@@ -24,19 +24,19 @@ import spritesheet from './spriteSheet.vue';
 import simple from './simple.vue';
 import testMouseEvent from './testMouseEvent.vue';
 
-const comps = {tweentest, solar, chart, drift, bouncing, spritesheet, simple, testMouseEvent}
+const comps = { tweentest, solar, chart, drift, bouncing, spritesheet, simple, testMouseEvent };
 // import Vue from 'vue';
 export default {
-	name: 'my-index',
-	data(){
-		return {
-			comp: testMouseEvent
-		}
-	},
-	methods:{
-		setComp(comp){
-			this.comp = comps[comp]
-		}
-	}
+    name: 'my-index',
+    data() {
+        return {
+            comp: testMouseEvent,
+        };
+    },
+    methods: {
+        setComp(comp) {
+            this.comp = comps[comp];
+        },
+    },
 };
 </script>

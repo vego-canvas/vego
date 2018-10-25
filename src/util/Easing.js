@@ -10,184 +10,193 @@
 // https://raw.github.com/danro/easing-js/master/LICENSE
 // --------------------------------------------------
 export default {
-  linear: function (pos) {
-    return pos;
-  },
-  
-  easeInQuad: function(pos) {
-    return Math.pow(pos, 2);
-  },
+    linear(pos) {
+        return pos;
+    },
 
-  easeOutQuad: function(pos) {
-    return -(Math.pow((pos-1), 2) -1);
-  },
+    easeInQuad(pos) {
+        return Math.pow(pos, 2);
+    },
 
-  easeInOutQuad: function(pos) {
-    if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,2);
-    return -0.5 * ((pos-=2)*pos - 2);
-  },
+    easeOutQuad(pos) {
+        return -(Math.pow((pos - 1), 2) - 1);
+    },
 
-  easeInCubic: function(pos) {
-    return Math.pow(pos, 3);
-  },
+    easeInOutQuad(pos) {
+        if ((pos /= 0.5) < 1)
+            return 0.5 * Math.pow(pos, 2);
+        return -0.5 * ((pos -= 2) * pos - 2);
+    },
 
-  easeOutCubic: function(pos) {
-    return (Math.pow((pos-1), 3) +1);
-  },
+    easeInCubic(pos) {
+        return Math.pow(pos, 3);
+    },
 
-  easeInOutCubic: function(pos) {
-    if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,3);
-    return 0.5 * (Math.pow((pos-2),3) + 2);
-  },
+    easeOutCubic(pos) {
+        return (Math.pow((pos - 1), 3) + 1);
+    },
 
-  easeInQuart: function(pos) {
-    return Math.pow(pos, 4);
-  },
+    easeInOutCubic(pos) {
+        if ((pos /= 0.5) < 1)
+            return 0.5 * Math.pow(pos, 3);
+        return 0.5 * (Math.pow((pos - 2), 3) + 2);
+    },
 
-  easeOutQuart: function(pos) {
-    return -(Math.pow((pos-1), 4) -1);
-  },
+    easeInQuart(pos) {
+        return Math.pow(pos, 4);
+    },
 
-  easeInOutQuart: function(pos) {
-    if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
-    return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
-  },
+    easeOutQuart(pos) {
+        return -(Math.pow((pos - 1), 4) - 1);
+    },
 
-  easeInQuint: function(pos) {
-    return Math.pow(pos, 5);
-  },
+    easeInOutQuart(pos) {
+        if ((pos /= 0.5) < 1)
+            return 0.5 * Math.pow(pos, 4);
+        return -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2);
+    },
 
-  easeOutQuint: function(pos) {
-    return (Math.pow((pos-1), 5) +1);
-  },
+    easeInQuint(pos) {
+        return Math.pow(pos, 5);
+    },
 
-  easeInOutQuint: function(pos) {
-    if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5);
-    return 0.5 * (Math.pow((pos-2),5) + 2);
-  },
+    easeOutQuint(pos) {
+        return (Math.pow((pos - 1), 5) + 1);
+    },
 
-  easeInSine: function(pos) {
-    return -Math.cos(pos * (Math.PI/2)) + 1;
-  },
+    easeInOutQuint(pos) {
+        if ((pos /= 0.5) < 1)
+            return 0.5 * Math.pow(pos, 5);
+        return 0.5 * (Math.pow((pos - 2), 5) + 2);
+    },
 
-  easeOutSine: function(pos) {
-    return Math.sin(pos * (Math.PI/2));
-  },
+    easeInSine(pos) {
+        return -Math.cos(pos * (Math.PI / 2)) + 1;
+    },
 
-  easeInOutSine: function(pos) {
-    return (-0.5 * (Math.cos(Math.PI*pos) -1));
-  },
+    easeOutSine(pos) {
+        return Math.sin(pos * (Math.PI / 2));
+    },
 
-  easeInExpo: function(pos) {
-    return (pos===0) ? 0 : Math.pow(2, 10 * (pos - 1));
-  },
+    easeInOutSine(pos) {
+        return (-0.5 * (Math.cos(Math.PI * pos) - 1));
+    },
 
-  easeOutExpo: function(pos) {
-    return (pos===1) ? 1 : -Math.pow(2, -10 * pos) + 1;
-  },
+    easeInExpo(pos) {
+        return (pos === 0) ? 0 : Math.pow(2, 10 * (pos - 1));
+    },
 
-  easeInOutExpo: function(pos) {
-    if(pos===0) return 0;
-    if(pos===1) return 1;
-    if((pos/=0.5) < 1) return 0.5 * Math.pow(2,10 * (pos-1));
-    return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
-  },
+    easeOutExpo(pos) {
+        return (pos === 1) ? 1 : -Math.pow(2, -10 * pos) + 1;
+    },
 
-  easeInCirc: function(pos) {
-    return -(Math.sqrt(1 - (pos*pos)) - 1);
-  },
+    easeInOutExpo(pos) {
+        if (pos === 0)
+            return 0;
+        if (pos === 1)
+            return 1;
+        if ((pos /= 0.5) < 1)
+            return 0.5 * Math.pow(2, 10 * (pos - 1));
+        return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
+    },
 
-  easeOutCirc: function(pos) {
-    return Math.sqrt(1 - Math.pow((pos-1), 2));
-  },
+    easeInCirc(pos) {
+        return -(Math.sqrt(1 - (pos * pos)) - 1);
+    },
 
-  easeInOutCirc: function(pos) {
-    if((pos/=0.5) < 1) return -0.5 * (Math.sqrt(1 - pos*pos) - 1);
-    return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
-  },
+    easeOutCirc(pos) {
+        return Math.sqrt(1 - Math.pow((pos - 1), 2));
+    },
 
-  easeOutBounce: function(pos) {
-    if ((pos) < (1/2.75)) {
-      return (7.5625*pos*pos);
-    } else if (pos < (2/2.75)) {
-      return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
-    } else if (pos < (2.5/2.75)) {
-      return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
-    } else {
-      return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
-    }
-  },
+    easeInOutCirc(pos) {
+        if ((pos /= 0.5) < 1)
+            return -0.5 * (Math.sqrt(1 - pos * pos) - 1);
+        return 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1);
+    },
 
-  easeInBack: function(pos) {
-    var s = 1.70158;
-    return (pos)*pos*((s+1)*pos - s);
-  },
+    easeOutBounce(pos) {
+        if ((pos) < (1 / 2.75)) {
+            return (7.5625 * pos * pos);
+        } else if (pos < (2 / 2.75)) {
+            return (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
+        } else if (pos < (2.5 / 2.75)) {
+            return (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
+        } else {
+            return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
+        }
+    },
 
-  easeOutBack: function(pos) {
-    var s = 1.70158;
-    return (pos=pos-1)*pos*((s+1)*pos + s) + 1;
-  },
+    easeInBack(pos) {
+        const s = 1.70158;
+        return (pos) * pos * ((s + 1) * pos - s);
+    },
 
-  easeInOutBack: function(pos) {
-    var s = 1.70158;
-    if((pos/=0.5) < 1) return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));
-    return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
-  },
+    easeOutBack(pos) {
+        const s = 1.70158;
+        return (pos = pos - 1) * pos * ((s + 1) * pos + s) + 1;
+    },
 
-  elastic: function(pos) {
-    return -1 * Math.pow(4,-8*pos) * Math.sin((pos*6-1)*(2*Math.PI)/2) + 1;
-  },
+    easeInOutBack(pos) {
+        let s = 1.70158;
+        if ((pos /= 0.5) < 1)
+            return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));
+        return 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
+    },
 
-  swingFromTo: function(pos) {
-    var s = 1.70158;
-    return ((pos/=0.5) < 1) ? 0.5*(pos*pos*(((s*=(1.525))+1)*pos - s)) :
-    0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos + s) + 2);
-  },
+    elastic(pos) {
+        return -1 * Math.pow(4, -8 * pos) * Math.sin((pos * 6 - 1) * (2 * Math.PI) / 2) + 1;
+    },
 
-  swingFrom: function(pos) {
-    var s = 1.70158;
-    return pos*pos*((s+1)*pos - s);
-  },
+    swingFromTo(pos) {
+        let s = 1.70158;
+        return ((pos /= 0.5) < 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) : 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
+    },
 
-  swingTo: function(pos) {
-    var s = 1.70158;
-    return (pos-=1)*pos*((s+1)*pos + s) + 1;
-  },
+    swingFrom(pos) {
+        const s = 1.70158;
+        return pos * pos * ((s + 1) * pos - s);
+    },
 
-  bounce: function(pos) {
-    if (pos < (1/2.75)) {
-      return (7.5625*pos*pos);
-    } else if (pos < (2/2.75)) {
-      return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
-    } else if (pos < (2.5/2.75)) {
-      return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
-    } else {
-      return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
-    }
-  },
+    swingTo(pos) {
+        const s = 1.70158;
+        return (pos -= 1) * pos * ((s + 1) * pos + s) + 1;
+    },
 
-  bouncePast: function(pos) {
-    if (pos < (1/2.75)) {
-      return (7.5625*pos*pos);
-    } else if (pos < (2/2.75)) {
-      return 2 - (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
-    } else if (pos < (2.5/2.75)) {
-      return 2 - (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
-    } else {
-      return 2 - (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
-    }
-  },
+    bounce(pos) {
+        if (pos < (1 / 2.75)) {
+            return (7.5625 * pos * pos);
+        } else if (pos < (2 / 2.75)) {
+            return (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
+        } else if (pos < (2.5 / 2.75)) {
+            return (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
+        } else {
+            return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
+        }
+    },
 
-  easeFromTo: function(pos) {
-    if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
-    return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
-  },
+    bouncePast(pos) {
+        if (pos < (1 / 2.75)) {
+            return (7.5625 * pos * pos);
+        } else if (pos < (2 / 2.75)) {
+            return 2 - (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
+        } else if (pos < (2.5 / 2.75)) {
+            return 2 - (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
+        } else {
+            return 2 - (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
+        }
+    },
 
-  easeFrom: function(pos) {
-    return Math.pow(pos,4);
-  },
+    easeFromTo(pos) {
+        if ((pos /= 0.5) < 1)
+            return 0.5 * Math.pow(pos, 4);
+        return -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2);
+    },
 
-  easeTo: function(pos) {
-    return Math.pow(pos,0.25);
-  }
+    easeFrom(pos) {
+        return Math.pow(pos, 4);
+    },
+
+    easeTo(pos) {
+        return Math.pow(pos, 0.25);
+    },
 };

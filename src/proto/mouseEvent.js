@@ -1,30 +1,30 @@
 class MouseEvent {
-	constructor(options){
-		Object.assign(this, {
-			bubble: true,
-			capture: false, 
-			propagationStopped: false,
-			defaultPrevented: false,
-		}, options)
-		this.type = options.type;
+    constructor(options) {
+        Object.assign(this, {
+            bubble: true,
+            capture: false,
+            propagationStopped: false,
+            defaultPrevented: false,
+        }, options);
+        this.type = options.type;
 
-		this.eventPhase = 0;
-		this.originEvent = options.evt;
-		this.x = options.x;
-    	this.y = options.y; 
-	}
+        this.eventPhase = 0;
+        this.originEvent = options.evt;
+        this.x = options.x;
+        this.y = options.y;
+    }
 
-	preventDefault(){
-		this.defaultPrevented = true;
-	}
+    preventDefault() {
+        this.defaultPrevented = true;
+    }
 
-	stopPropagation(){
-		this.propagationStopped = true;
-	}
+    stopPropagation() {
+        this.propagationStopped = true;
+    }
 
-	toString() {
-		return "[MouseEvent (type="+this.type+" x="+this.x+" y="+this.y+")]";
-	}
+    toString() {
+        return '[MouseEvent (type=' + this.type + ' x=' + this.x + ' y=' + this.y + ')]';
+    }
 }
 
 export default MouseEvent;
