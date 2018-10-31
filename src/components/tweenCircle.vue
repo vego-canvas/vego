@@ -9,7 +9,6 @@ export default {
     name: 'my-circle',
     mixins: [tweenMixin],
     props: { x: Number, y: Number, r: Number, color: String },
-    dataKeysInDraw: ['x', 'y', 'r', 'color'],
     draw(ctx) {
         const {
             x, y, r, color,

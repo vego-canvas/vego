@@ -1,5 +1,6 @@
 import Easing from '../util/Easing.js';
 import Ticker from '../proto/ticker.js';
+import { hexToRGB } from '../util/common';
 
 class Tweenlet {
     constructor(ob, from, to) {
@@ -18,12 +19,57 @@ class Tweenlet {
     }
 }
 
+class TweenletColor {
+    constructor(ob, from, to) {
+        this.from = this.translateColor(from);
+        this.to = this.translateColor(to);
+        this.ob = ob;
+        this.span = this.calculateDistance(this.to, this.from);
+    }
+    calculateDistance(colorArray1, colorArray2) {
+        return colorArray1.map((c, i) => c - colorArray2[i]);
+    }
+    translateColor(color) {
+        if (/rgb/.test(color)) {
+            const result = /rgb\(([\d,\s]+)\)/.exec(color);
+            if (result) {
+                return result[1].split(',').map((p) => +p);
+            }
+        }
+        if (/#[0-9a-fA-F]{3,6}/.test(color)) {
+            let hex = /#([0-9a-fA-F]{3,6})/.exec(color)[1];
+            if (hex.length === 3) {
+                hex = hex.split('').map((c) => `${c}${c}`).join('');
+            }
+            if (hex.length !== 6) {
+                throw new Error('Wrong color format!');
+            }
+            return hexToRGB(`0x${hex}`);
+        }
+    }
+
+    formatRGB([r, g, b]) {
+        return `rgb(${r},${g},${b})`;
+    }
+
+    tick(t, easing, begin, duration) {
+        const expo = easing((t - begin) / duration);
+
+        return this.formatRGB(this.span.map((c, i) => c * expo + this.from[i]));
+    }
+    end() {
+        return this.formatRGB(this.to);
+    }
+}
+
 class Tween extends Map {
     constructor(callback, duration, easing) {
         super();
 
         this.callback = callback;
         if (typeof easing === 'string') {
+            if (!Easing[easing])
+                throw new Error(`${easing} function not founded!`);
             this.easing = Easing[easing];
         } else {
             this.easing = easing;
@@ -78,6 +124,7 @@ function walkInTween(tweenlet, ctx, newV) {
     let k;
     let accu = ctx;
     let knext;
+    // go down to the property
     for (;i < l; i++) {
         k = keychain[i];
         knext = keychain[i + 1];
@@ -92,7 +139,7 @@ function walkInTween(tweenlet, ctx, newV) {
             accu[k] = {};
         accu = accu[k];
     }
-
+    // set new value to property
     accu[keychain[i]] = newV;
 }
 
@@ -126,7 +173,12 @@ function watch(vm, target, lastKey) {
         }
     } else {
         vm.$watch(lastKey, (val, oldval) => {
-            const t = new Tweenlet(lastKey, oldval, val);
+            let t = null;
+            if (/rgb/.test(val) || /#[0-9a-fA-F]{3,6}/.test(val)) {
+                t = new TweenletColor(lastKey, oldval, val);
+            } else {
+                t = new Tweenlet(lastKey, oldval, val);
+            }
             vm[TWEEN].set(lastKey, t);
             vm[TWEEN].pause = false;
         });
@@ -134,24 +186,30 @@ function watch(vm, target, lastKey) {
 }
 
 export default {
-    props: ['tween'],
+    props: {
+        tween: Object,
+    },
     mounted() {
+        if (!this.tween)
+            return;
         const {
             duration,
             easing,
             observe,
-
         } = this.tween;
+
         this[TWEEN] = new Tween(TickInTweens.bind(this), duration, easing);
 
         const drawCtx = {};
-
-        this.$options.dataKeysInDraw.forEach((k) => {
-            drawCtx[k] = clone(this[k]);
+        console.log(this.$options.propsData);
+        const keys = Object.keys(this.$options.propsData);
+        const propsData = this.$options.propsData;
+        keys.filter((k) => k !== 'tween').forEach((k) => {
+            drawCtx[k] = clone(propsData[k]);
             if (observe.indexOf(k) !== -1) {
                 watch(this, drawCtx[k], k);
             } else {
-                this.$watch(k, (val, oldval) => {
+                this.$watch(k, (val) => {
                     drawCtx[k] = val;
                 });
             }

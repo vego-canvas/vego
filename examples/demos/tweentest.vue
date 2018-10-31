@@ -1,51 +1,51 @@
 <template>
 <div class="root">
     <vego-canvas :width="canvasWidth" :height="canvasHeight">
-        <my-circle :x="x" :y="y" :r="r" :color="color" :tween="tween"></my-circle>
+        <my-circle :config="config" :tween="tween" @tweenend="end"></my-circle>
     </vego-canvas>
     <div class="grid">
         <pre>
             // index.vue
-            import circle from '../src/core/tweenCircle.vue';
+            import circle from './components/circleWithDispatcherMixin.vue';
             export default {
-                components: { "my-circle": circle },
-                data(){
+                components: { 'my-circle': circle },
+                data() {
                     return {
                         canvasWidth: 600,
-                        canvasHeight: 400,
-                        x: 50,
-                        y: 50,
-                        r: 40,
-                        color: 'red',
+                        canvasHeight: 250,
+                        config: {
+                            x: 50,
+                            y: 50,
+                            r: 40,
+                            color: 'red',
+                        },
+
                         tween: {
                             duration: 2000,
                             easing: 'easeOutBounce',
-                            observe: ['x','y'],
-                        }
-                    }
+                            observe: ['config'],
+                        },
+                    };
                 },
 
-                mounted(){
+                mounted() {
                     setTimeout(() => {
-                        this.x = 100;
-                        this.y = 150;
-                        this.color = 'yellow'
+                        this.config.x = 100;
+                        this.config.y = 150;
+                        this.color = 'yellow';
                     }, 1000);
-                }
-            }
+                },
+            };
         </pre>
         <pre>
-            // tweenCircle.vue
-            import tweenMixin from '../proto/tweenMixin.js';
+            import tweenMixin from '@/proto/tweenMixin.js';
             export default {
-                name: 'my-circle',
-                mixins: [ tweenMixin ],
-                props: ['x', 'y', 'r', 'color'],
-                dataKeysInDraw: ['x', 'y', 'r', 'color'],
-                draw(ctx){
+                mixins: [tweenMixin],
+                props: { config: Object },
+                draw(ctx, p) {
                     const {
-                        x, y, r, color
-                    } = this;
+                        x, y, r, color,
+                    } = this.config;
 
                     ctx.beginPath();
                     ctx.save();
@@ -60,31 +60,42 @@
 </div>
 </template>
 <script>
-import circle from '@/components/tweenCircle.vue';
+
+import circle from './components/circleWithDispatcherMixin.vue';
 export default {
     components: { 'my-circle': circle },
     data() {
         return {
             canvasWidth: 600,
             canvasHeight: 250,
-            x: 50,
-            y: 50,
-            r: 40,
-            color: 'red',
+            config: {
+                x: 50,
+                y: 50,
+                r: 40,
+                color: '#ffff00',
+            },
+
             tween: {
                 duration: 2000,
                 easing: 'easeOutBounce',
-                observe: ['x', 'y'],
+                observe: ['config'],
             },
+            direction: -1,
         };
     },
 
     mounted() {
-        setTimeout(() => {
-            this.x = 100;
-            this.y = 150;
-            this.color = 'yellow';
-        }, 1000);
+        this.config.x = 100;
+        this.config.y = 150;
+        this.config.color = '#ff00ff';
+    },
+    methods: {
+        end() {
+            this.config.x += this.direction * 100;
+            this.config.y += this.direction * 100;
+            this.config.color = this.direction > 0 ? '#ff00ff' : '#ffff00';
+            this.direction = -this.direction;
+        },
     },
 };
 </script>
