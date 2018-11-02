@@ -1,6 +1,7 @@
 import { isCanvasComponentGen } from './util/common.js';
-import './canvas.vue';
-import './core/container.vue';
+import canvas from './canvas.vue';
+import container from './core/container.vue';
+import spritesheet from './core/spriteSheet.vue';
 import EventDispatcher from './proto/eventDispatcher.js';
 import DrawStack from './proto/drawStack.js';
 
@@ -63,6 +64,9 @@ const plugin = {
                 return p.call(this);
             }
         };
+        Vue.component('vego-canvas', canvas);
+        Vue.component('vego-container', container);
+        Vue.component('vego-sprite-sheet', spritesheet);
     },
 };
 

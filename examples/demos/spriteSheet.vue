@@ -1,24 +1,17 @@
 <template>
 <div>
     <vego-canvas @domclick="jump" @tick="tick" :width="canvasWidth" :height="canvasHeight">
-        <container :x="x" :y="y">
-            <spriteSheet :configs="conf" :pattern.sync="pattern"></spriteSheet>
-        </container>
+        <vego-container :x="x" :y="y">
+            <vego-sprite-sheet :configs="conf" :pattern.sync="pattern"></vego-sprite-sheet>
+        </vego-container>
 
     </vego-canvas>
 </div>
 </template>
 <script>
-import container from '@/core/container.vue';
-import spriteSheet from '@/core/spriteSheet.vue';
 const sheet = require('./assets/spritesheet_grant.png');
 
 export default{
-    components: {
-        spriteSheet,
-        container,
-
-    },
     data() {
         return {
             canvasWidth: 800,

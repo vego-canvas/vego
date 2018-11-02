@@ -9,14 +9,12 @@
 </template>
 
 <script type="text/javascript">
-import Vue from 'vue';
 import ticker from './proto/ticker';
 import Matrix2D from './util/Matrix2D';
 // import mouseEventVM from './proto/mouseEvent';
 import MouseEvent from './proto/mouseEvent.js';
 
-export default Vue.component('vego-canvas', {
-    name: 'vego-canvas',
+export default {
     filters: {
         toPx(num) {
             return `${num}px`;
@@ -187,7 +185,7 @@ export default Vue.component('vego-canvas', {
             ctx.setTransform();
         },
     },
-});
+};
 </script>
 <style type="text/css">
 </style>

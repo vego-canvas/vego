@@ -5,9 +5,8 @@
 </template>
 
 <script>
-import Vue from 'vue';
 
-export default Vue.component('vego-container', {
+export default {
     props: {
         x: {
             type: Number,
@@ -56,5 +55,5 @@ export default Vue.component('vego-container', {
             ctx.setTransform(pm.a, pm.b, pm.c, pm.d, pm.tx, pm.ty);
         },
     },
-});
+};
 </script>

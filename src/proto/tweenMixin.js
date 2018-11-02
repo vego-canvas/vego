@@ -201,7 +201,6 @@ export default {
         this[TWEEN] = new Tween(TickInTweens.bind(this), duration, easing);
 
         const drawCtx = {};
-        console.log(this.$options.propsData);
         const keys = Object.keys(this.$options.propsData);
         const propsData = this.$options.propsData;
         keys.filter((k) => k !== 'tween').forEach((k) => {
