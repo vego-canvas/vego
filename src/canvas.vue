@@ -41,7 +41,6 @@ export default {
     },
 
     created() {
-        const { width, height } = this;
         this.tagName = 'CANVAS';
         this.ratio = window.devicePixelRatio || 1;
         this.matrix = new Matrix2D();
@@ -65,7 +64,6 @@ export default {
     },
     methods: {
         scaleCanvas(canvas, width, height) {
-            const context = canvas.getContext('2d');
             const ratio = this.ratio;
 
             if (devicePixelRatio !== 1) {
@@ -99,6 +97,7 @@ export default {
                     x: offsetX,
                     y: offsetY,
                     type,
+                    target,
                 });
             }
             this.$emit(`dom${type}`, event);
@@ -120,12 +119,7 @@ export default {
         },
 
         onmouseup(event) {
-            const {
-                offsetX,
-                offsetY,
-            } = event;
-
-            const target = this.commonHandler('mouseup', event);
+            // const target = this.commonHandler('mouseup', event);
             this.pinedTarget = null;
         },
 
@@ -141,11 +135,13 @@ export default {
                     x: offsetX,
                     y: offsetY,
                     type: 'mouseleave',
+                    target: this.oldTarget,
                 });
                 this.dispatchMouseEvent(target, {
                     x: offsetX,
                     y: offsetY,
                     type: 'mouseenter',
+                    target,
                 });
             }
 
@@ -160,6 +156,7 @@ export default {
                     y: offsetY,
                     anchorX, anchorY,
                     type: 'pressmove',
+                    target,
                 });
             }
             this.oldTarget = target;
