@@ -40,7 +40,6 @@ export default {
         this[symb].copy(this.$parent[symb].clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY));
     },
     created() {
-        console.log(this.$parent[symb]);
         this[symb] = this.$parent[symb]
             .clone()
             .appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY);

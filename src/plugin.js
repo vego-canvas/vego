@@ -4,6 +4,7 @@ import container from './core/container.vue';
 import spritesheet from './core/spriteSheet.vue';
 import EventDispatcher from './proto/eventDispatcher.js';
 import DrawStack from './proto/drawStack.js';
+import tweenMixin from './proto/tweenMixin.js';
 import { symb } from './util/Matrix2D';
 const VNODE = Symbol('_vCanvasNode');
 
@@ -73,3 +74,6 @@ const plugin = {
 };
 
 export default plugin;
+export {
+    tweenMixin,
+};
