@@ -5,7 +5,7 @@
 </template>
 
 <script>
-
+import { symb } from '../util/Matrix2D';
 export default {
     props: {
         x: {
@@ -37,21 +37,22 @@ export default {
     },
 
     updated() {
-        this.matrix.copy(this.$parent.matrix.clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY));
+        this[symb].copy(this.$parent[symb].clone().appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY));
     },
     created() {
-        this.matrix = this.$parent.matrix
+        console.log(this.$parent[symb]);
+        this[symb] = this.$parent[symb]
             .clone()
             .appendTransform(this.x, this.y, 1, 1, this.rotation, 0, 0, this.regX, this.regY);
     },
     methods: {
         _preUpdate(ctx) {
-            const m = this.matrix;
+            const m = this[symb];
             ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         },
 
         _afterUpdate(ctx) {
-            const pm = this.$parent.matrix;
+            const pm = this.$parent[symb];
             ctx.setTransform(pm.a, pm.b, pm.c, pm.d, pm.tx, pm.ty);
         },
     },

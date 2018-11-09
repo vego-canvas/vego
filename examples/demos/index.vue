@@ -9,6 +9,7 @@
         <a href="#" @click.prevent="setComp('spritesheet')">spritesheet</a>
         <a href="#" @click.prevent="setComp('simple')">simple</a>
         <a href="#" @click.prevent="setComp('testMouseEvent')">testMouseEvent</a>
+        <a href="#" @click.prevent="setComp('gamecenter')">tetris</a>
     </div>
     <components :is="comp">
     </components>
@@ -23,14 +24,15 @@ import bouncing from './bouncing.vue';
 import spritesheet from './spriteSheet.vue';
 import simple from './simple.vue';
 import testMouseEvent from './testMouseEvent.vue';
+import gamecenter from './GameCenter.vue';
 
-const comps = { tweentest, solar, chart, drift, bouncing, spritesheet, simple, testMouseEvent };
+const comps = { tweentest, solar, chart, drift, bouncing, spritesheet, simple, testMouseEvent, gamecenter };
 // import Vue from 'vue';
 export default {
     name: 'my-index',
     data() {
         return {
-            comp: testMouseEvent,
+            comp: gamecenter,
         };
     },
     methods: {

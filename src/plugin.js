@@ -4,7 +4,7 @@ import container from './core/container.vue';
 import spritesheet from './core/spriteSheet.vue';
 import EventDispatcher from './proto/eventDispatcher.js';
 import DrawStack from './proto/drawStack.js';
-
+import { symb } from './util/Matrix2D';
 const VNODE = Symbol('_vCanvasNode');
 
 // 非透明的元素
@@ -18,6 +18,9 @@ const plugin = {
             mixins: [EventDispatcher, DrawStack],
             created() {
                 this.isCanvasComponent = isCanvasComponentGen();
+                if (this.isCanvasComponent(this)) {
+                    this[symb] = this.$parent[symb];
+                }
             },
             mounted() {
                 if (this.isCanvasComponent(this)) {
@@ -37,7 +40,7 @@ const plugin = {
                     const ratio = window.devicePixelRatio || 1;
 
                     const ctx = this._hitTestContext;
-                    const m = this.$parent.matrix.clone().prepend(1, 0, 0, 1, -x * ratio, -y * ratio);
+                    const m = this.$parent[symb].clone().prepend(1, 0, 0, 1, -x * ratio, -y * ratio);
                     ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     this.$options.draw.call(this, ctx);
 
@@ -55,8 +58,7 @@ const plugin = {
             if (this.isCanvasComponent(this)) {
                 const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
                 this[VNODE] = vnode;
-
-                if (this._e && !vnode.data.attrs.hasOwnProperty('canvascontainer')) {
+                if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
                     return this._e(); // createEmptyNode
                 }
                 return vnode;

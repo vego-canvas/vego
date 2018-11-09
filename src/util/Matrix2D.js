@@ -228,5 +228,9 @@ class Matrix2D {
 }
 Matrix2D.DEG_TO_RAD = Math.PI / 180;
 Matrix2D.identity = new Matrix2D();
+const symb = Symbol('matrix2d');
+export {
+    symb,
+};
 
 export default Matrix2D;

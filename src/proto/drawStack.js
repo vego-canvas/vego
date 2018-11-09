@@ -12,7 +12,7 @@ export default {
                     this.$options.draw.call(this._renderCtx, ctx);
                     return;
                 }
-                this.$options.draw.call(this, ctx);
+                this.$options.draw && this.$options.draw.call(this, ctx);
             } else {
                 this._preUpdate(ctx);
                 for (let i = 0; i < l; i++) {

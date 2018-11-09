@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
 import ticker from './proto/ticker';
-import Matrix2D from './util/Matrix2D';
+import Matrix2D, { symb } from './util/Matrix2D';
 // import mouseEventVM from './proto/mouseEvent';
 import MouseEvent from './proto/mouseEvent.js';
 
@@ -38,13 +38,19 @@ export default {
         pause(val) {
             ticker._pause = val;
         },
+        width() {
+            this.scaleCanvas(this.$el, this.width, this.height);
+        },
+        height() {
+            this.scaleCanvas(this.$el, this.width, this.height);
+        },
     },
 
     created() {
         this.tagName = 'CANVAS';
         this.ratio = window.devicePixelRatio || 1;
-        this.matrix = new Matrix2D();
-        this.matrix.scale(this.ratio, this.ratio);
+        this[symb] = new Matrix2D();
+        this[symb].scale(this.ratio, this.ratio);
     },
     mounted() {
         const { width, height } = this;
@@ -174,7 +180,7 @@ export default {
         },
 
         _preUpdate(ctx) {
-            const m = this.matrix;
+            const m = this[symb];
             ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         },
 

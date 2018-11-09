@@ -1,0 +1,5 @@
+{
+  "hooks": {
+    "commit-msg": "git-commit-translate --project-id=translatemycommi-1541318377656  --eng-first=true"
+  }
+}

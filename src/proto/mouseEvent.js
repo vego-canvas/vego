@@ -8,7 +8,6 @@ class MouseEvent {
         }, options);
         this.type = options.type;
         this.target = options.target;
-        this.eventPhase = 0;
         this.originEvent = options.evt;
         this.x = options.x;
         this.y = options.y;
