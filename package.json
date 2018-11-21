@@ -1,0 +1,36 @@
+{
+  "name": "vego",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node_modules/.bin/webpack-dev-server --config test/webpack.config.js",
+    "test": "cross-env NODE_ENV=test mocha \"./src/**/*.test.js\" --require babel-polyfill --require babel-register"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/preset-env": "^7.1.5",
+    "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.9.0",
+    "mocha": "^5.2.0",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "gl-matrix": "^2.8.1",
+    "lodash.clonedeep": "^4.5.0"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  }
+}
