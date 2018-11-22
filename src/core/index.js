@@ -15,13 +15,14 @@ function _init(config){
     const Engine = this.constructor.Engine;
     this._watchers = [];
     normalize(this, config);
+
     initEvent(this);
     initRender(this);
     initData(this);
     initChildren(this);
     initGeometry(this);
     lifecycle(this);
-
+    callhook('created', this);
     this._mainWatcher = new Watcher({
         vm: this,
         cb: function() {

@@ -50,7 +50,7 @@ const app = new Vego({
         // } = this;
         g.clear()//.setStrokeStyle(1).beginStroke(stroke).beginFill(fill).drawRect(rect.x, rect.y, rect.w, rect.h);
     },
-    mounted(){
+    created(){
         console.log(this);
 
         getData().then(this.handleData);

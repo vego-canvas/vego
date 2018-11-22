@@ -2,6 +2,7 @@ import  { injectEvent } from '../event'
 function lifecycle(vm){
     const Vego = vm.constructor;
     vm.mounted = vm.$options.mountedhook;
+    vm.created = vm.$options.createdhook;
     vm.$options.mountedhook = null;
     vm.$mount = (function(el){
         const ratio = window.devicePixelRatio || 1;
