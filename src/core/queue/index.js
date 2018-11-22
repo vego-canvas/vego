@@ -11,7 +11,6 @@ let index = 0
 function flushSchedulerQueue () {
     flushing = true
     let watcher, id
-
     // Sort queue before flush.
     // This ensures that:
     // 1. Components are updated from parent to child. (because parent is always
@@ -29,6 +28,7 @@ function flushSchedulerQueue () {
       id = watcher.uid
       has[id] = null
       watcher.update()
+
     }
 
     resetSchedulerState()
@@ -40,6 +40,7 @@ function resetSchedulerState () {
 }
 export function queueWatcher (watcher) {
     const id = watcher.uid
+
     if (has[id] == null) {
       has[id] = true
       if (!flushing) {
@@ -56,6 +57,7 @@ export function queueWatcher (watcher) {
       // queue the flush
       if (!waiting) {
         waiting = true
+
         nextTick(flushSchedulerQueue)
       }
     }

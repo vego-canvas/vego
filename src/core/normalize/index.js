@@ -7,7 +7,7 @@ function normalize(vm, config){
     const methods = config.methods || {};
     const options = {};
     Object.keys(methods).forEach(f => {
-        options[f] = methods[f];
+        vm[f] = methods[f].bind(vm);
     });
 
     // prop 校验

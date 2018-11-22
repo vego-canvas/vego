@@ -13,6 +13,7 @@ function initialize(Vego){
 function _init(config){
     this._uid = uid++;
     const Engine = this.constructor.Engine;
+    this._watchers = [];
     normalize(this, config);
     initEvent(this);
     initRender(this);
@@ -21,7 +22,7 @@ function _init(config){
     initGeometry(this);
     lifecycle(this);
 
-    new Watcher({
+    this._mainWatcher = new Watcher({
         vm: this,
         cb: function() {
             this._update();
@@ -30,7 +31,7 @@ function _init(config){
         getter: function() {
             return this.$data;
         }
-    });
+    }, true);
     // new Watcher({
     //     vm: this,
     //     cb: function() {
@@ -40,7 +41,7 @@ function _init(config){
     //         return this.$children;
     //     }
     // });
-    new Watcher({
+    this._mainGeomWatcher = new Watcher({
         vm: this,
         cb: function () {
             this._appendTransform();

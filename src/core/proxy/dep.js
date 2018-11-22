@@ -8,6 +8,7 @@ class Dep{
     }
     depend(){
         if(Dep.currWatcher){
+            Dep.currWatcher._deps.push(this);
             this.targets.set(Dep.currWatcher.uid, Dep.currWatcher);
         }
     }
@@ -16,6 +17,13 @@ class Dep{
             // watcher.update();
             queueWatcher(watcher);
         })
+    }
+    undepend(){
+        if(Dep.currWatcher){
+            if(this.targets.has(Dep.currWatcher.uid)){
+                this.targets.delete(Dep.currWatcher.uid);
+            }
+        }
     }
 }
 Dep.currWatcher = null;

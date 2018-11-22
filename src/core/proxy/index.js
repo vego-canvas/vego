@@ -1,10 +1,9 @@
 import Dep from './dep';
 import Watcher from './watcher';
-import { assert } from '../../utils/logger';
 import { isFunction } from '../../utils/index';
-import { Engine } from '../render'
 import Vego from '../../../index'
 
+let bind = true
 function addOBProxy(obj, shallow){
     const isA = Array.isArray(obj);
     const isObj = (obj.constructor && obj.constructor === Object);
@@ -27,7 +26,7 @@ function addOBProxy(obj, shallow){
     }
     const observeHandlers = {
         get: function(obj, prop, value){
-            dp.depend();
+            bind ? dp.depend(): dp.undepend();
             return obj[prop]
         },
         set: function(obj, prop, value){
@@ -42,11 +41,20 @@ function addOBProxy(obj, shallow){
     return new Proxy(obj, observeHandlers);
 }
 export default addOBProxy;
-
+export function initWatcher(Vego){
+    Vego.prototype.unbindAllWatcher = function () {
+        let watcher = null;
+        while (watcher = this._watchers.pop()) {
+            watcher.del();
+        }
+        this._mainWatcher.del();
+        this._mainGeomWatcher.del();
+    }
+}
 export function initData(vm){
     const proxy = addOBProxy(vm.$options.data);
     vm.$data = proxy;
-     Object.assign(vm, proxy);
+     // Object.assign(vm, proxy);
 }
 export function initGeometry(vm){
     const proxy = addOBProxy(vm._geometry);
@@ -64,8 +72,9 @@ function observeChildren(children, vm) {
         const props = Object.keys(comp.$options.props);
         if(props.length){
             // let defaultVal;
+            // const getters = {};
             props.forEach((prop) => {
-                const getter = attrs[prop];
+                // const getter = attrs[prop];
                 // if(!vm.hasOwnProperty(key)){
                 //     defaultVal = props[prop].default;
                 //     if(defaultVal){
@@ -76,21 +85,33 @@ function observeChildren(children, vm) {
                 //     return;
                 // }
                 // 一些校验逻辑
-                new Watcher({
-                    vm: comp,
-                    cb: function() {
-                        this._update();
-                    },
-                    getter: function() {
-                        return getter.call(vm)
-                    }
-                });
                 Object.defineProperty(comp, prop, {
                     get(){
-                        return getter.call(vm);
+                        return attrs[prop];
                     }
-                })
+                });
+                // getters[prop] = getter.bind(vm);
             });
+            const watcher = new Watcher({
+                vm: comp,
+                cb: function() {
+                    this._update();
+                    comp._mainWatcher.get();
+                    // Vego.Engine.run();
+                },
+                getter: function() {
+                    return attrs
+                    // const obj = {};
+                    // for (const key in getters) {
+                    //     if (getters.hasOwnProperty(key)) {
+                    //         const getter = getters[key];
+                    //         obj[key] = getter();
+                    //     }
+                    // }
+                    // return obj;
+                }
+            });
+            comp._watchers.push(watcher)
         }
         return {
             key: key || comp._uid,
@@ -99,6 +120,7 @@ function observeChildren(children, vm) {
     })
 }
 
+
 export function initChildren(vm) {
     const children = vm.$options.children;
     if(Array.isArray(children)){
@@ -106,35 +128,56 @@ export function initChildren(vm) {
     }
     if(isFunction(children)){
         let queue = null;
-        new Watcher({
+        const pp = new Watcher({
             vm,
             cb: function(){
+                // 当children改变时，比较新旧children
                 const oldChildren = vm.$children.slice();
                 const oldKeys = oldChildren.map(({key}) => key);
-                let newArr = children();
-                let needChange = [];
+                // 删除之前的依赖
+                pp.del();
+                // 更新当前新的依赖
+                let newArr = pp.get();
+
+                // 比较新旧的区别
+                const needChange = [];
+                const needChangeKey = [];
                 newArr = newArr.map(({key}, idx) => {
                     const changed = oldKeys.indexOf(key) === -1;
                     if(changed){
                         needChange.push(idx)
+                        needChangeKey.push(key);
                     }
                     return changed ? newArr[idx] : oldChildren[idx]
                 });
+                // 销毁不需要的节点的watcher
+                oldChildren.forEach(({key, comp}) => {
+                    if (needChangeKey.indexOf(key) === -1){
+                        comp.unbindAllWatcher()
+                    }
+                });
+
+                // 对新的子节点重新绑定watcher
                 vm.$children = observeChildren(newArr, vm);
                 vm.$children.forEach((child, idx) => {
                     if(needChange.indexOf(idx) !== -1){
                         child.comp._update();
                     }
                 })
+
+                // 更新视图
+                vm._mainWatcher.get();
                 // 删除或添加的 vm.$children
                 // Engine.run();
             },
             getter: function(){
-                children();
+                queue = children();
+                return queue;
             },
             shallow: true
         });
-        vm.$children = observeChildren(children(), vm);
+        // vm._childrenWatcher = childrenWatcher;
+        vm.$children = observeChildren(queue, vm);
         // childrenComp = observeChildren(queue, vm);
     }
 
