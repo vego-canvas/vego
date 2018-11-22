@@ -85,6 +85,7 @@ function observeChildren(children, vm) {
                 //     return;
                 // }
                 // 一些校验逻辑
+
                 Object.defineProperty(comp, prop, {
                     get(){
                         return attrs[prop];

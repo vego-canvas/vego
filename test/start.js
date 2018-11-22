@@ -17,7 +17,7 @@ class Tweenlet {
     }
 }
 
-const heart = new Vego({
+const heart = {
     name: 'heart',
     props: {
         config: Object,
@@ -93,7 +93,7 @@ const heart = new Vego({
         //     p = !p;
         // }, 400);
     }
-})
+}
 const app = new Vego({
     name: 'background',
     data: {
@@ -108,21 +108,32 @@ const app = new Vego({
         heart: {
             k: 25,
             d: 150,
+        },
+        heartsmall: {
+            k: 5,
+            d: 50,
         }
     },
-    children: [
-        {
-            comp: heart,
-            attrs: {
-                config: function(){ return this.heart ;} ,
-                fill: function(){ return this.$data.stroke ;},
+    children(){
+        return [
+            {
+                comp: heart,
+                attrs: {
+                    config: this.$data.heart,
+                }
+            },
+            {
+                comp: heart,
+                attrs: {
+                    config: this.$data.heartsmall,
+                }
             }
-        }
-    ],
+        ]
+    },
     render(g){
         const {
             stroke, fill, rect
-        } = this;
+        } = this.$data;
         g.clear().setStrokeStyle(1).beginStroke(stroke).beginFill(fill).drawRect(rect.x, rect.y, rect.w, rect.h);
     },
     mounted(){
