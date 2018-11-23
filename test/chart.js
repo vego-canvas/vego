@@ -1,5 +1,6 @@
 import Vego from '../index';
-import Chart from './comps/pie';
+import Pie from './comps/pie';
+import Rect from './comps/rectangle';
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -27,28 +28,24 @@ const app = new Vego({
     name: 'background',
     data: {
         origin: [],
+        rect: [],
     },
     children(){
-        return this.$data.origin.map((dt, idx) => ({
-            key: dt.name,
-            comp: Chart,
-            attrs: dt
-            // (){
-            //     return {
-
-            //     }
-            //     start: function(){ console.log(idx); return this.$data.origin[idx].start; },
-            //     end: function(){ return this.$data.origin[idx].end; },
-            //     color: function(){ return this.$data.origin[idx].color; },
-            //     data: function(){ return this.$data.origin[idx].data; },
-            // }
-        }));
+        return [
+            ...this.$data.origin.map((dt, idx) => ({
+                key: dt.name,
+                comp: Pie,
+                attrs: dt
+            })),
+            ...this.$data.rect.map((dt, idx) => ({
+                key: `rect-${dt.name}`,
+                comp: Rect,
+                attrs: dt
+            })),
+        ]
     },
     render(g){
-        // const {
-        //     stroke, fill, rect
-        // } = this;
-        g.clear()//.setStrokeStyle(1).beginStroke(stroke).beginFill(fill).drawRect(rect.x, rect.y, rect.w, rect.h);
+        g.clear()
     },
     created(){
         console.log(this);
@@ -94,6 +91,19 @@ const app = new Vego({
                     name: portion.name
                 };
             });
+
+            const biggest = dt.reduce((accu, curr) => curr.data > accu ? curr.data: accu, 0);
+            const height = 200;
+            const ratio = height/biggest;
+            this.$data.rect = dt.map((portion, idx) => {
+                return {
+                    height: portion.data * ratio,
+                    idx,
+                    color: portion.color,
+                    data: portion.data,
+                    name: portion.name
+                };
+            })
             this.$geometry.x = this.$geometry.y = 150;
         },
         changePortion(){
@@ -109,19 +119,33 @@ const app = new Vego({
                     p = s / sum * Math.PI * 2;
                     start = end;
                     end = p > Math.PI * 2 ? Math.PI * 2 : p;
-                    this.$data.origin[idx].start = start;
-                    this.$data.origin[idx].end = end;
-                    this.$data.origin[idx].color = portion.color;
-                    this.$data.origin[idx].data = portion.data;
-                    this.$data.origin[idx].name = portion.name;
-                    // this.$data.origin[idx] = {
-                    //     start,
-                    //     end,
-                    //     color: portion.color,
-                    //     data: portion.data,
-                    //     name: portion.name
-                    // };
+                    // this.$data.origin[idx].start = start;
+                    // this.$data.origin[idx].end = end;
+                    // this.$data.origin[idx].color = portion.color;
+                    // this.$data.origin[idx].data = portion.data;
+                    // this.$data.origin[idx].name = portion.name;
+                    this.$data.origin[idx] = {
+                        start,
+                        end,
+                        color: portion.color,
+                        data: portion.data,
+                        name: portion.name
+                    };
                 });
+
+                const biggest = dt.reduce((accu, curr) => curr.data > accu ? curr.data: accu, 0);
+                const height = 200;
+                const ratio = height/biggest;
+                dt.forEach((portion, idx) => {
+                    this.$data.rect[idx] = {
+                        height: portion.data * ratio,
+                        idx,
+                        color: portion.color,
+                        data: portion.data,
+                        name: portion.name
+                    };
+                })
+                this.$geometry.x = this.$geometry.y = 150;
                 console.log(this.$data.origin);
             });
         }

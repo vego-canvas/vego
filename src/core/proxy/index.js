@@ -3,7 +3,6 @@ import Watcher from './watcher';
 import { isFunction } from '../../utils/index';
 import Vego from '../../../index'
 
-let bind = true
 function addOBProxy(obj, shallow){
     const isA = Array.isArray(obj);
     const isObj = (obj.constructor && obj.constructor === Object);
@@ -25,8 +24,8 @@ function addOBProxy(obj, shallow){
         }
     }
     const observeHandlers = {
-        get: function(obj, prop, value){
-            bind ? dp.depend(): dp.undepend();
+        get: function(obj, prop){
+            dp.depend();
             return obj[prop]
         },
         set: function(obj, prop, value){
@@ -61,7 +60,40 @@ export function initGeometry(vm){
     vm.$geometry = proxy;
 }
 
-function observeChildren(children, vm) {
+function observeChild (child){
+    const comp = child.comp instanceof Vego ? child.comp: new Vego(child.comp)
+    const attrs = child.attrs;
+    const key = child.key;
+    comp.$parent = this;
+    // comp.$parentMatrix = this.$matrix;
+    // TODO 嵌套的Props解析
+    const props = Object.keys(comp.$options.props);
+    if(props.length){
+        props.forEach((prop) => {
+            Object.defineProperty(comp, prop, {
+                get(){
+                    return attrs[prop];
+                }
+            });
+        });
+        const watcher = new Watcher({
+            vm: comp,
+            cb: function() {
+                this._update();
+                comp._mainWatcher.get();
+            },
+            getter: function() {
+                return attrs
+            }
+        });
+        comp._watchers.push(watcher)
+    }
+    return {
+        key: key || comp._uid,
+        comp
+    }
+}
+function observeChildren(children, needChange, vm) {
     return children.map(child => {
         const comp = child.comp instanceof Vego ? child.comp: new Vego(child.comp)
         const attrs = child.attrs;
@@ -74,6 +106,7 @@ function observeChildren(children, vm) {
             // let defaultVal;
             // const getters = {};
             props.forEach((prop) => {
+                console.log(prop);
                 // const getter = attrs[prop];
                 // if(!vm.hasOwnProperty(key)){
                 //     defaultVal = props[prop].default;
@@ -125,7 +158,7 @@ function observeChildren(children, vm) {
 export function initChildren(vm) {
     const children = vm.$options.children;
     if(Array.isArray(children)){
-        vm.$children = observeChildren(children, vm);
+        vm.$children = children.map(observeChild)// observeChildren(children, vm);
     }
     if(isFunction(children)){
         let queue = null;
@@ -143,13 +176,15 @@ export function initChildren(vm) {
                 // 比较新旧的区别
                 const needChange = [];
                 const needChangeKey = [];
-                newArr = newArr.map(({key}, idx) => {
+                const newChildren = newArr.map(({key}, idx) => {
                     const changed = oldKeys.indexOf(key) === -1;
                     if(changed){
                         needChange.push(idx)
                         needChangeKey.push(key);
                     }
-                    return changed ? newArr[idx] : oldChildren[idx]
+
+                    return changed ? observeChild(newArr[idx]) : oldChildren[idx]
+                    //return changed ? newArr[idx] : oldChildren[idx]
                 });
                 // 销毁不需要的节点的watcher
                 oldChildren.forEach(({key, comp}) => {
@@ -159,7 +194,7 @@ export function initChildren(vm) {
                 });
 
                 // 对新的子节点重新绑定watcher
-                vm.$children = observeChildren(newArr, vm);
+                vm.$children = newChildren; //observeChildren(newArr, needChange, vm);
                 vm.$children.forEach((child, idx) => {
                     if(needChange.indexOf(idx) !== -1){
                         child.comp._update();
@@ -178,7 +213,7 @@ export function initChildren(vm) {
             shallow: true
         });
         // vm._childrenWatcher = childrenWatcher;
-        vm.$children = observeChildren(queue, vm);
+        vm.$children = queue.map(observeChild)// observeChildren(queue, vm);
         // childrenComp = observeChildren(queue, vm);
     }
 
