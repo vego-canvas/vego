@@ -158,7 +158,9 @@ function observeChildren(children, needChange, vm) {
 export function initChildren(vm) {
     const children = vm.$options.children;
     if(Array.isArray(children)){
-        vm.$children = children.map(observeChild)// observeChildren(children, vm);
+        vm.$children = children.map((child) => {
+            observeChild.call(vm,child);
+        })// observeChildren(children, vm);
     }
     if(isFunction(children)){
         let queue = null;
@@ -183,7 +185,7 @@ export function initChildren(vm) {
                         needChangeKey.push(key);
                     }
 
-                    return changed ? observeChild(newArr[idx]) : oldChildren[idx]
+                    return changed ? observeChild.call(vm, newArr[idx]) : oldChildren[idx]
                     //return changed ? newArr[idx] : oldChildren[idx]
                 });
                 // 销毁不需要的节点的watcher
@@ -213,7 +215,9 @@ export function initChildren(vm) {
             shallow: true
         });
         // vm._childrenWatcher = childrenWatcher;
-        vm.$children = queue.map(observeChild)// observeChildren(queue, vm);
+        vm.$children = queue.map((child) => {
+            observeChild.call(vm,child);
+        });// observeChildren(queue, vm);
         // childrenComp = observeChildren(queue, vm);
     }
 

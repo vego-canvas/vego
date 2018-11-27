@@ -1,24 +1,10 @@
-class MouseEvent {
+import Event from './event';
+class MouseEvent extends Event{
     constructor(options) {
-        Object.assign(this, {
-            bubble: true,
-            capture: false,
-            propagationStopped: false,
-            defaultPrevented: false,
-        }, options);
-        this.type = options.type;
-        this.target = options.target;
+        super(options);
         this.originEvent = options.evt;
         this.x = options.x;
         this.y = options.y;
-    }
-
-    preventDefault() {
-        this.defaultPrevented = true;
-    }
-
-    stopPropagation() {
-        this.propagationStopped = true;
     }
 
     toString() {

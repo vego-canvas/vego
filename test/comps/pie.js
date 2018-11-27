@@ -15,9 +15,15 @@ export default {
     handlers: {
         mouseenter(){
             this.$data.margin = 40;
+            this.$dispatch('pieenter', {
+                idx: this.idx,
+            });
         },
         mouseleave(){
             this.$data.margin = 30;
+            this.$dispatch('pieleave', {
+                idx: this.idx,
+            });
         }
     },
     render(g){
@@ -43,4 +49,17 @@ export default {
             .lineTo(radius2*cos2,radius2*sin2)
             .arc(0,0,radius2,endAngle,startAngle,1)
     },
+    methods: {
+        getCenter(){
+            const startAngle = this.start;
+            const endAngle = this.end;
+            const r = this.radius;
+            var angle = (endAngle-startAngle)/2 + startAngle;
+            return {
+                x: Math.cos(angle) * (r + 10),
+                y: Math.sin(angle) * (r + 10),
+                angle,
+            }
+        }
+    }
 };

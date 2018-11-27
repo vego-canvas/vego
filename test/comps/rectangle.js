@@ -12,14 +12,19 @@ export default {
     //     margin: 30,
     //     uuid: ~~(Math.random()*10),
     // },
-    // handlers: {
-    //     mouseenter(){
-    //         this.$data.margin = 40;
-    //     },
-    //     mouseleave(){
-    //         this.$data.margin = 30;
-    //     }
-    // },
+    handlers: {
+        mouseenter(){
+            console.log('enter')
+            this.$dispatch('rectenter', {
+                idx: this.idx,
+            });
+        },
+        mouseleave(){
+            this.$dispatch('rectleave', {
+                idx: this.idx,
+            });
+        }
+    },
     render(g){
         if(this.height === 0 ) {
             g.clear();
@@ -38,7 +43,7 @@ export default {
     mounted(){
         this.$geometry.x = 200;
         this.$geometry.rotation = 180;
-        this.$geometry.regX = 200;
+        this.$geometry.regX = 150;
         this.$geometry.regY = 150;
     }
 };

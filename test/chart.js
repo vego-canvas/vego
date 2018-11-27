@@ -68,6 +68,24 @@ const app = new Vego({
             this.changePortion();
         })
     },
+    handlers: {
+        rectenter(event){
+            event.stopPropagation();
+            console.log(event.payload);
+        },
+        rectleave(event){
+            event.stopPropagation();
+            console.log(event.payload);
+        },
+        pieenter(event){
+            event.stopPropagation();
+            console.log(event.payload);
+        },
+        pieleave(event){
+            event.stopPropagation();
+            console.log(event.payload);
+        }
+    },
     methods: {
         handleData(dt, flag) {
             console.log(this);

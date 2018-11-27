@@ -1,6 +1,7 @@
 import { mat2d } from 'gl-matrix';
 import hitTest from '../render/hitTest'
 import MouseEvent from './mouseEvent'
+import Event from './event';
 const eventTypes = [
     'click',
     'mousemove',
@@ -10,17 +11,25 @@ const eventTypes = [
     'pressmove',
     'mouseup'
 ]
+class DefaultEvent extends Event{
+    constructor(options){
+        super(options);
+        this.payload = options.payload
+    }
+}
 let ratio = 1;
 export default function(Vego){
     Vego.prototype._getTargets = function(x, y, targets, currentLayer, mtx){
         currentLayer = currentLayer || 0;
-        mtx = mtx ? mat2d.multiply(mtx, mtx, this.$matrix): mat2d.clone(this.$matrix);
+        const mtx_present = mat2d.create();
+        if(!mtx) mat2d.copy(mtx_present, this.$matrix)
+        else mat2d.multiply(mtx_present, mtx, this.$matrix)
         const children = this.$children;
-        if(hitTest(x, y, mtx, this.$graphic, ratio)){
+        if(hitTest(x, y, mtx_present, this.$graphic, ratio)){
             targets.push(this);
         }
-        children.forEach(({comp, key}) => {
-            comp._getTargets(x, y, targets, currentLayer + 1, mtx);
+        children.forEach(({comp}) => {
+            comp._getTargets(x, y, targets, currentLayer + 1, mtx_present);
         })
     //     for (let i = l - 1; i >= 0; i--) {
     //         console.log(this);
@@ -38,17 +47,28 @@ export default function(Vego){
     Vego.prototype._dispatch = function(event) {
         this.$emit(event.type, event);
         if (event.bubble && !event.propagationStopped && this.$parent) {
+
             this.$parent._dispatch(event);
         }
     }
+    Vego.prototype.$dispatch = function(type, payload){
+        const event = new DefaultEvent({
+            type,
+            payload,
+            target: this,
+        })
+        this._dispatch(event);
+    }
     Vego.prototype.$emit = function(type, event){
-        if(this._listeners[type].length)
+        if(type in this._listeners && this._listeners[type].length)
             this._listeners[type].forEach(f => f(event));
     }
     Vego.prototype.$regist = function(type, cb){
-        if(eventTypes.indexOf(type)){
-            this._listeners[type].push(cb);
-        }
+        // if(eventTypes.indexOf(type)!==-1){
+        if(!(type in this._listeners))
+            this._listeners[type] = [];
+        this._listeners[type].push(cb);
+        // }
     }
 }
 
