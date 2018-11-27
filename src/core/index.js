@@ -4,6 +4,7 @@ import initRender, {Engine} from './render';
 import lifecycle, { callhook } from './lifecycle';
 import { initEvent } from './event'
 import Watcher from './proxy/watcher';
+import {nextTick} from './queue/nextTick';
 let uid = 0;
 function initialize(Vego){
     const p = Vego.prototype;
@@ -53,6 +54,9 @@ function _init(config){
             return this.$geometry;
         }
     })
-    callhook('mounted', this);
+    nextTick(() => {
+        callhook('mounted', this);
+    }, this);
+
 }
 export default initialize;

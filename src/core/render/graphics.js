@@ -1,3 +1,4 @@
+import Text from './textRender';
 class Graphics {
     static getRGB(r, g, b, alpha) {
 		if (r != null && b == null) {
@@ -77,7 +78,6 @@ class Graphics {
 			if ((instr = instrs[i]).path !== false) { instr.exec(ctx); }
 		}
     }
-
     moveTo(x, y) {
 		return this.append(new G.MoveTo(x,y), true);
 	}
@@ -136,7 +136,15 @@ class Graphics {
 		this._updateInstructions(true);
 		this._strokeDash = this.command = new G.StrokeDash(segments, offset);
 		return this;
-    }
+	}
+	setFont (font, textAlign, textBaseline, lineJoin, miterLimit) {
+		this.font = font||"10px sans-serif";
+		this.textAlign = textAlign||"left";
+		this.textBaseline = textBaseline||"top";
+		this.lineJoin = lineJoin || "miter";
+		this.miterLimit = miterLimit || 2.5;
+		return this;
+	};
     beginStroke (color) {
 		return this._setStroke(color ? new G.Stroke(color) : null);
     }
@@ -168,7 +176,10 @@ class Graphics {
     }
     drawPolyStar (x, y, radius, sides, pointSize, angle) {
 		return this.append(new G.PolyStar(x, y, radius, sides, pointSize, angle));
-    }
+	}
+	drawText(text, config){
+		return this.append(new G.Text(text, config));
+	}
     append (command, clean) {
 		this._activeInstructions.push(command);
 		this.command = command;
@@ -253,6 +264,9 @@ class Graphics {
 const G = Graphics;
 let p;
 // Command Objects:
+	(G.Text = function(text, config){
+		this.text = new Text(text, config)
+	}).prototype.exec = function(ctx) { this.text.exec(ctx); };
 	/**
 	 * @namespace Graphics
 	 */

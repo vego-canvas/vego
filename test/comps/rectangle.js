@@ -1,3 +1,4 @@
+import textTag from './textTag'
 const step = 30;
 export default {
     name: 'rectangle',
@@ -12,17 +13,42 @@ export default {
     //     margin: 30,
     //     uuid: ~~(Math.random()*10),
     // },
+    data: {
+        focus: false,
+        text: {
+            x: 0, y: 0
+        }
+    },
+    children(){
+        if(this.$data.focus){
+            console.log('focused')
+            return [
+                {
+                    key: this.data,
+                    comp: textTag,
+                    attrs: Object.assign(this.$data.text, {
+                        color: this.color,
+                        text: this.data,
+                    })
+                }
+            ]
+        }else{
+            return [];
+        }
+    },
     handlers: {
         mouseenter(){
-            console.log('enter')
-            this.$dispatch('rectenter', {
-                idx: this.idx,
-            });
+            this.$data.focus = true;
+            console.log(this.idx)
+            // this.$dispatch('rectenter', {
+            //     idx: this.idx,
+            // });
         },
         mouseleave(){
-            this.$dispatch('rectleave', {
-                idx: this.idx,
-            });
+            this.$data.focus = false;
+            // this.$dispatch('rectleave', {
+            //     idx: this.idx,
+            // });
         }
     },
     render(g){
@@ -31,9 +57,8 @@ export default {
             return;
         }
         // const padding = Math.PI/180;
-        const x = this.idx * step;
         g.clear().beginFill(this.color)
-            .drawRoundRectComplex(x, 20, 20, this.height, 0, 0, 5, 5)
+            .drawRoundRectComplex(0, 20, 20, this.height, 0, 0, 5, 5)
         // .moveTo(radius2*cos,radius2*sin)
         //     .lineTo(radius*cos,radius*sin)
         //     .arc(0,0,radius,startAngle,endAngle,0)
@@ -41,9 +66,10 @@ export default {
         //     .arc(0,0,radius2,endAngle,startAngle,1)
     },
     mounted(){
-        this.$geometry.x = 200;
+        this.$geometry.x =  this.idx * step;
         this.$geometry.rotation = 180;
         this.$geometry.regX = 150;
         this.$geometry.regY = 150;
+        this.$data.text.y = this.height + 50;
     }
 };
