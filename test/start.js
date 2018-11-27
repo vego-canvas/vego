@@ -30,9 +30,11 @@ const heart = {
     },
     handlers: {
         mouseenter(){
+            console.log('enter')
             this.$data.fill = 'red';
         },
         mouseleave(){
+            console.log('leave')
             this.$data.fill = 'green';
         }
     },
@@ -81,12 +83,12 @@ const heart = {
             window.requestAnimationFrame(animate);
         }
 
-        setInterval(() => {
+        // setInterval(() => {
 
-            tween = p ? new Tweenlet(1.5, 1): new Tweenlet(1, 1.5);
-            p = !p;
-            window.requestAnimationFrame(animate);
-        }, 1000);
+        //     tween = p ? new Tweenlet(1.5, 1): new Tweenlet(1, 1.5);
+        //     p = !p;
+        //     window.requestAnimationFrame(animate);
+        // }, 1000);
         // setInterval(() => {
         //     this.stroke = p?'white':'black';
         //     this.fill = p? 'red':'green';

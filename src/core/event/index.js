@@ -82,7 +82,7 @@ function commonHandler(vm, type, offsetX, offsetY, event) {
     vm._getTargets(offsetX, offsetY, targets);
     const target = targets.sort((a, b) =>
     // last draw, high layer, bigger uid
-        a._uid - b._uid
+        b._uid - a._uid
     )[0];
     if (target) {
         dispatchMouseEvent(target, {
@@ -119,7 +119,6 @@ export function injectEvent(canvas, vm, ratio){
             offsetY,
         } = event;
         const target = commonHandler(vm, 'mousemove', offsetX, offsetY, event);
-
         if (_oldTarget !== target) {
             dispatchMouseEvent(_oldTarget, {
                 x: offsetX,

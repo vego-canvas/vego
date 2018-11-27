@@ -11,6 +11,7 @@ function initialize(Vego){
     Vego.Engine = new Engine();
 }
 function _init(config){
+    // 实例不要走一开始创建，会导致uid自增，然后导致绘制顺序出错
     this._uid = uid++;
     const Engine = this.constructor.Engine;
     this._watchers = [];
