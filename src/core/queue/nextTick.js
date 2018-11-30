@@ -1,3 +1,4 @@
+import Vego from '../../../index';
 const callbacks = []
 let pending = false
 
@@ -8,6 +9,7 @@ function flushCallbacks () {
   for (let i = 0; i < copies.length; i++) {
     copies[i]()
   }
+  Vego.Engine.run();
 }
 
 let microTimerFunc

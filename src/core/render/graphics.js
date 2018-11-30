@@ -1,4 +1,8 @@
 import Text from './textRender';
+import { getNewCanvas } from '../../utils'
+
+const GCanvas = getNewCanvas()
+
 class Graphics {
     static getRGB(r, g, b, alpha) {
 		if (r != null && b == null) {
@@ -262,6 +266,8 @@ class Graphics {
 	}
 }
 const G = Graphics;
+G._ctx = GCanvas.ctx;
+GCanvas.canvas.width = GCanvas.canvas.height = 1;
 let p;
 // Command Objects:
 	(G.Text = function(text, config){

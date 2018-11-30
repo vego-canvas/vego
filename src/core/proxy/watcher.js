@@ -27,7 +27,10 @@ class Watcher{
         return this.value;
     }
     update(){
-        this.cb.call(this.vm, this.getter.call(this.vm, this.vm));
+        const oldV = this.value;
+        const newV = this.getter.call(this.vm, this.vm);
+        this.cb.call(this.vm, newV, oldV);
+        this.value = newV
     }
     del(){
         pushTarget(this);

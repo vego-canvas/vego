@@ -14,7 +14,6 @@ class Dep{
     }
     notify(){
         this.targets.forEach(watcher => {
-            // watcher.update();
             queueWatcher(watcher);
         })
     }

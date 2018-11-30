@@ -3,6 +3,7 @@ const step = 30;
 export default {
     name: 'rectangle',
     props: {
+        x: Number,
         height: Number,
         idx: Number,
         color: String,
@@ -21,18 +22,22 @@ export default {
     },
     children(){
         if(this.$data.focus){
+            const t = {
+                ...this.$data.text,
+                x: this.x,
+                color: this.color,
+                text: this.data,
+            }
             console.log('focused')
             return [
                 {
                     key: this.data,
                     comp: textTag,
-                    attrs: Object.assign(this.$data.text, {
-                        color: this.color,
-                        text: this.data,
-                    })
+                    attrs: t
                 }
             ]
         }else{
+            console.log('unfocus')
             return [];
         }
     },
@@ -58,7 +63,7 @@ export default {
         }
         // const padding = Math.PI/180;
         g.clear().beginFill(this.color)
-            .drawRoundRectComplex(0, 20, 20, this.height, 0, 0, 5, 5)
+            .drawRoundRectComplex(this.x, -this.height, 20, this.height, 5, 5, 0, 0)
         // .moveTo(radius2*cos,radius2*sin)
         //     .lineTo(radius*cos,radius*sin)
         //     .arc(0,0,radius,startAngle,endAngle,0)
@@ -66,10 +71,9 @@ export default {
         //     .arc(0,0,radius2,endAngle,startAngle,1)
     },
     mounted(){
-        this.$geometry.x =  this.idx * step;
-        this.$geometry.rotation = 180;
-        this.$geometry.regX = 150;
+        // this.$geometry.rotation = 180;
+        this.$geometry.y = 300;
         this.$geometry.regY = 150;
-        this.$data.text.y = this.height + 50;
+        this.$data.text.y = -this.height - 30;
     }
 };

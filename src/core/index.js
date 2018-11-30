@@ -14,7 +14,6 @@ function initialize(Vego){
 function _init(config){
     // 实例不要走一开始创建，会导致uid自增，然后导致绘制顺序出错
     this._uid = uid++;
-    const Engine = this.constructor.Engine;
     this._watchers = [];
     normalize(this, config);
 
@@ -29,7 +28,7 @@ function _init(config){
         vm: this,
         cb: function() {
             this._update();
-            Engine.run();
+            // Engine.run();
         },
         getter: function() {
             return this.$data;
@@ -48,7 +47,7 @@ function _init(config){
         vm: this,
         cb: function () {
             this._appendTransform();
-            Engine.run();
+            // Engine.run();
         },
         getter: function(){
             return this.$geometry;

@@ -2,13 +2,15 @@ import Dep from './dep';
 import Watcher from './watcher';
 import { isFunction } from '../../utils/index';
 import Vego from '../../../index'
+import { queueWatcher } from '../queue';
 
 function addOBProxy(obj, shallow){
     const isA = Array.isArray(obj);
     const isObj = (obj.constructor && obj.constructor === Object);
     if(!isA && !isObj) return obj;
 
-    const dp = new Dep()
+    // const dp = new Dep()
+    const dp = {};
     if(!shallow){
         let i = 0;
         if(isA){
@@ -23,16 +25,20 @@ function addOBProxy(obj, shallow){
             }
         }
     }
+    // get的时候要区分dep!!!!
     const observeHandlers = {
         get: function(obj, prop){
-            dp.depend();
+            if(!obj.hasOwnProperty(prop)) return obj[prop];
+            if(!dp[prop])
+                dp[prop] = new Dep();
+            dp[prop].depend();
             return obj[prop]
         },
         set: function(obj, prop, value){
             const oldValue = obj[prop];
             if(value !== oldValue){
                 obj[prop] = addOBProxy(value);
-                dp.notify();
+                dp[prop].notify();
             }
             return true
         }
@@ -48,6 +54,17 @@ export function initWatcher(Vego){
         }
         this._mainWatcher.del();
         this._mainGeomWatcher.del();
+    }
+    Vego.prototype.$watch = function(target, f){
+        new Watcher({
+            vm: this,
+            cb: f,
+            getter: () => {
+                return target()
+            },
+            shallow: true,
+        });
+       // this._watchers.push(w);
     }
 }
 export function initData(vm){
@@ -65,10 +82,10 @@ function observeChild (child){
     const attrs = child.attrs;
     const key = child.key;
     comp.$parent = this;
-    // comp.$parentMatrix = this.$matrix;
-    // TODO 嵌套的Props解析
+
     const props = Object.keys(comp.$options.props);
     if(props.length){
+
         props.forEach((prop) => {
             Object.defineProperty(comp, prop, {
                 get(){
@@ -76,82 +93,22 @@ function observeChild (child){
                 }
             });
         });
-        const watcher = new Watcher({
+        new Watcher({
             vm: comp,
             cb: function() {
                 this._update();
-                comp._mainWatcher.get();
+                //comp._mainWatcher.get();???
             },
             getter: function() {
                 return attrs
             }
         });
-        comp._watchers.push(watcher)
     }
+    comp._update();
     return {
         key: key || comp._uid,
         comp
     }
-}
-function observeChildren(children, needChange, vm) {
-    return children.map(child => {
-        const comp = child.comp instanceof Vego ? child.comp: new Vego(child.comp)
-        const attrs = child.attrs;
-        const key = child.key;
-        comp.$parent = this;
-        // comp.$parentMatrix = this.$matrix;
-        // TODO 嵌套的Props解析
-        const props = Object.keys(comp.$options.props);
-        if(props.length){
-            // let defaultVal;
-            // const getters = {};
-            props.forEach((prop) => {
-                console.log(prop);
-                // const getter = attrs[prop];
-                // if(!vm.hasOwnProperty(key)){
-                //     defaultVal = props[prop].default;
-                //     if(defaultVal){
-                //         comp[prop] = defaultVal;
-                //         return
-                //     }
-                //     assert(`attr ${key} is not found in parent and it has no default value!`);
-                //     return;
-                // }
-                // 一些校验逻辑
-
-                Object.defineProperty(comp, prop, {
-                    get(){
-                        return attrs[prop];
-                    }
-                });
-                // getters[prop] = getter.bind(vm);
-            });
-            const watcher = new Watcher({
-                vm: comp,
-                cb: function() {
-                    this._update();
-                    comp._mainWatcher.get();
-                    // Vego.Engine.run();
-                },
-                getter: function() {
-                    return attrs
-                    // const obj = {};
-                    // for (const key in getters) {
-                    //     if (getters.hasOwnProperty(key)) {
-                    //         const getter = getters[key];
-                    //         obj[key] = getter();
-                    //     }
-                    // }
-                    // return obj;
-                }
-            });
-            comp._watchers.push(watcher)
-        }
-        return {
-            key: key || comp._uid,
-            comp
-        }
-    })
 }
 
 
@@ -160,7 +117,7 @@ export function initChildren(vm) {
     if(Array.isArray(children)){
         vm.$children = children.map((child) => {
             observeChild.call(vm,child);
-        })// observeChildren(children, vm);
+        });
     }
     if(isFunction(children)){
         let queue = null;
@@ -176,37 +133,39 @@ export function initChildren(vm) {
                 let newArr = pp.get();
 
                 // 比较新旧的区别
-                const needChange = [];
-                const needChangeKey = [];
+                const recycle = [];
+                const recycleKey = [];
                 const newChildren = newArr.map(({key}, idx) => {
-                    const changed = oldKeys.indexOf(key) === -1;
-                    if(changed){
-                        needChange.push(idx)
-                        needChangeKey.push(key);
+                    // 判断节点是否需要创建
+                    // true 需要创建
+                    const needNew = (oldKeys.indexOf(key) === -1);
+                    if(!needNew){
+                        recycle.push(idx)
+                        recycleKey.push(key);
                     }
 
-                    return changed ? observeChild.call(vm, newArr[idx]) : oldChildren[idx]
-                    //return changed ? newArr[idx] : oldChildren[idx]
+                    return needNew ? observeChild.call(vm, newArr[idx]) : oldChildren[idx]
                 });
+
                 // 销毁不需要的节点的watcher
                 oldChildren.forEach(({key, comp}) => {
-                    if (needChangeKey.indexOf(key) === -1){
+                    // 如果不属于recycle，销毁
+                    if (recycleKey.indexOf(key) === -1){
                         comp.unbindAllWatcher()
                     }
                 });
 
                 // 对新的子节点重新绑定watcher
-                vm.$children = newChildren; //observeChildren(newArr, needChange, vm);
+                vm.$children = newChildren;
                 vm.$children.forEach((child, idx) => {
-                    if(needChange.indexOf(idx) !== -1){
+                    // 如果属于recycle
+                    if(recycle.indexOf(idx) !== -1){
+                        // console.log(Dep.currWatcher)
                         child.comp._update();
                     }
                 })
-
                 // 更新视图
-                vm._mainWatcher.get();
-                // 删除或添加的 vm.$children
-                // Engine.run();
+                queueWatcher(vm._mainWatcher)
             },
             getter: function(){
                 queue = children();
@@ -216,14 +175,22 @@ export function initChildren(vm) {
         });
         // vm._childrenWatcher = childrenWatcher;
         vm.$children = queue.map((child) => {
-            observeChild.call(vm,child);
-        });// observeChildren(queue, vm);
+            return observeChild.call(vm,child);
+        });
+        // observeChildren(queue, vm);
         // childrenComp = observeChildren(queue, vm);
     }
 
     // vm.$children = addOBProxy(childrenComp, true);
 }
 
+// export function initWatchers(vm){
+//     const watchers = vm.$options.watch;
+//     for(let k in watchers){
+//         const f = watchers[k];
+
+//     }
+// }
 export function initProps(vm){
     const keys = Object.keys(vm.$options.props);
     const props = {};
@@ -289,3 +256,63 @@ export function initProps(vm){
 //     }
 // }
 // export default Vego;
+function observeChildren(children, needChange, vm) {
+    return children.map(child => {
+        const comp = child.comp instanceof Vego ? child.comp: new Vego(child.comp)
+        const attrs = child.attrs;
+        const key = child.key;
+        comp.$parent = this;
+        // comp.$parentMatrix = this.$matrix;
+        // TODO 嵌套的Props解析
+        const props = Object.keys(comp.$options.props);
+        if(props.length){
+            // let defaultVal;
+            // const getters = {};
+            props.forEach((prop) => {
+                console.log(prop);
+                // const getter = attrs[prop];
+                // if(!vm.hasOwnProperty(key)){
+                //     defaultVal = props[prop].default;
+                //     if(defaultVal){
+                //         comp[prop] = defaultVal;
+                //         return
+                //     }
+                //     assert(`attr ${key} is not found in parent and it has no default value!`);
+                //     return;
+                // }
+                // 一些校验逻辑
+
+                Object.defineProperty(comp, prop, {
+                    get(){
+                        return attrs[prop];
+                    }
+                });
+                // getters[prop] = getter.bind(vm);
+            });
+            const watcher = new Watcher({
+                vm: comp,
+                cb: function() {
+                    this._update();
+                    comp._mainWatcher.get();
+                    // Vego.Engine.run();
+                },
+                getter: function() {
+                    return attrs
+                    // const obj = {};
+                    // for (const key in getters) {
+                    //     if (getters.hasOwnProperty(key)) {
+                    //         const getter = getters[key];
+                    //         obj[key] = getter();
+                    //     }
+                    // }
+                    // return obj;
+                }
+            });
+            comp._watchers.push(watcher)
+        }
+        return {
+            key: key || comp._uid,
+            comp
+        }
+    })
+}
