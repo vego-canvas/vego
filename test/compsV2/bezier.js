@@ -8,7 +8,6 @@ export default {
     },
 
     render(g){
-        console.log(this.points)
         const {
             begin, cp1, cp2, end
         } = this.points
@@ -19,7 +18,7 @@ export default {
             .bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
     },
     mounted(){
-        this.$geometry.x = 10;
-        this.$geometry.regY = 150;
+        this.$geometry.y = 0;
+        this.$geometry.x = 210;
     }
 };

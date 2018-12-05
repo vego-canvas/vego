@@ -2,7 +2,7 @@ const path = require('path');
 module.exports = {
     mode: 'development',
     entry: {
-        bundle: './chart.js',
+        bundle: './chartV2.js',
     },
     output: {
         path: __dirname + '/',

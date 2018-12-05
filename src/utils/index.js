@@ -1,5 +1,34 @@
+// export function observable(obj){
+//     return Array.isArray(obj) || (obj.constructor && obj.constructor === Object);
+// }
 export function observable(obj){
-    return Array.isArray(obj) || (obj.constructor && obj.constructor === Object);
+    return obj.__isProxy__;
+}
+export function addProxyTag(obj){
+    Object.defineProperty(obj, '__isProxy__', {
+        value: true,
+        configurable: false,
+        enumerable: false,
+    })
+}
+export function reservedAttrs(key){
+    return [
+        '$parent',
+        '$graphic',
+        '$matrix',
+        '$render',
+        'created',
+        'mounted',
+        '_listeners',
+        '_mainWatcher',
+        '_uid',
+        '_watchers',
+        '__isProxy__',
+        '_getProps',
+    ].indexOf(key) !== -1;
+}
+export function shallowAttrs(key){
+    return ['$children'].indexOf(key) !== -1;
 }
 export function noop(){}
 

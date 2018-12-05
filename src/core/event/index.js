@@ -47,7 +47,6 @@ export default function(Vego){
     Vego.prototype._dispatch = function(event) {
         this.$emit(event.type, event);
         if (event.bubble && !event.propagationStopped && this.$parent) {
-
             this.$parent._dispatch(event);
         }
     }
@@ -72,11 +71,11 @@ export default function(Vego){
     }
 }
 
-export function initEvent(vm){
+export function initEvent(vm, options){
 
     const {
         handlers
-    } = vm.$options;
+    } = options;
 
     vm._listeners = {};
     eventTypes.forEach(t => vm._listeners[t] = []);

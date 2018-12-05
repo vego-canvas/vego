@@ -1,4 +1,4 @@
-import Dep, { pushTarget, popTarget } from './dep';
+import { pushTarget, popTarget } from './dep';
 import walk from './walk';
 let uid = 0;
 class Watcher{
@@ -13,6 +13,8 @@ class Watcher{
         this.vm = vm;
         if(render) this.vm._mainWatcher = this;
         this.vm._watchers.push(this);
+
+
         this.cb = cb;
         this.getter = getter;
         this.shallow = !!shallow;

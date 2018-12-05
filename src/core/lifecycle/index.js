@@ -1,10 +1,12 @@
 import  { injectEvent } from '../event'
-function lifecycle(vm){
-    const Vego = vm.constructor;
-    vm.mounted = vm.$options.mountedhook;
-    vm.created = vm.$options.createdhook;
-    vm.$options.mountedhook = null;
-    vm.$mount = (function(el){
+function initLifecycle(vmp, options){
+    vmp.mounted = options.mountedhook.bind(vmp);
+    vmp.created = options.createdhook.bind(vmp);
+}
+export default initLifecycle;
+
+export function lifeCycleMixin(Vego){
+    Vego.prototype.$mount = function(el){
         const ratio = window.devicePixelRatio || 1;
         const canvas = document.getElementById(el);
 
@@ -22,14 +24,12 @@ function lifecycle(vm){
         }
         Vego.Engine.setCanvas(canvas, ratio);
         Vego.Engine._render = this._render.bind(this);
-        vm._update();
-        vm.$children.forEach(({comp}) => {comp._update()})
-        injectEvent(canvas, vm, ratio);
+        this._update();
+        this.$children.forEach(({comp}) => {comp._update()})
+        injectEvent(canvas, this, ratio);
         Vego.Engine.run();
-    }).bind(vm);
+    }
 }
-export default lifecycle;
-
 export function callhook(hook, vm){
     vm[hook]();
 }

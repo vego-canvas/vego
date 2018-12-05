@@ -7,10 +7,8 @@ class Dep{
         this.targets = new Map();
     }
     depend(){
-        if(Dep.currWatcher){
-            Dep.currWatcher._deps.push(this);
-            this.targets.set(Dep.currWatcher.uid, Dep.currWatcher);
-        }
+        Dep.currWatcher._deps.push(this);
+        this.targets.set(Dep.currWatcher.uid, Dep.currWatcher);
     }
     notify(){
         this.targets.forEach(watcher => {

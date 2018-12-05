@@ -1,8 +1,8 @@
 import { mat2d } from 'gl-matrix';
 
-export function injectTransform(vm){
-    vm.$matrix = mat2d.create();
-    vm._geometry = {
+export function injectTransform(vmp){
+    vmp.$matrix = mat2d.create();
+    vmp.$geometry = {
         x: 0,
         y: 0,
         rotation: 0,
@@ -28,7 +28,7 @@ export default function transformMixin(Vego){
     Vego.prototype._appendTransform = function(){
         const {
            x, y, rotation, scaleX, scaleY, skewX, skewY, regX, regY
-        } = this._geometry;
+        } = this.$geometry;
         const mtx = mat2d.create();
         if (rotation%360) {
 			var r = rotation * DEG_TO_RAD;

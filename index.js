@@ -2,13 +2,15 @@ import initialize from './src/core'
 import { rendermixin } from './src/core/render';
 import eventMixin from './src/core/event';
 import { initWatcher } from './src/core/proxy'
-function Vego(config){
-    this._init(config);
+import { lifeCycleMixin } from './src/core/lifecycle'
+function Vego(config, parent){
+    this._init(config, parent);
 };
 
 initialize(Vego);
 rendermixin(Vego);
 eventMixin(Vego);
 initWatcher(Vego);
+lifeCycleMixin(Vego);
 
 export default Vego;

@@ -1,15 +1,15 @@
 import Graphics from './graphics';
 import transformMixin, { injectTransform } from './geometry';
 // import injectCurrentTransform from './contextmtx';
-export default function initRender(vm){
-    vm.$graphic = new Graphics()
+export default function initRender(vmp, options){
+    vmp.$graphic = new Graphics()
     // 绘制对象缓存
     // const graphicCache = getNewCanvas()
     // vm._graphicCacheCanvas = graphicCache.canvas;
     // vm._graphicCacheContext = graphicCache.ctx;
-
+    vmp.$render = options.render.bind(vmp);
     // 自身变形矩阵
-    injectTransform(vm);
+    injectTransform(vmp);
 
 }
 
