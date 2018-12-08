@@ -22,6 +22,7 @@
 //         return this.to;
 //     }
 // }
+import Ease from '../../src/utils/Easing';
 export default {
     name: 'pie',
     props: {
@@ -39,10 +40,15 @@ export default {
     },
     handlers: {
         mouseenter(){
-            this.margin = 40;
+            // this.margin = 40;
+            this.$to({
+                margin: 50
+            }, 400, Ease.easeInCubic);
         },
         mouseleave(){
-            this.margin = 30;
+            this.$to({
+                margin: 30
+            }, 400, Ease.easeInBack);
         }
     },
     mounted(){

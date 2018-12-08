@@ -29,11 +29,7 @@ export function initMethods(vmp, options){
         vmp[f] = methods[f].bind(vmp);
     }
 }
-function propCallBack(k){
-    return function (){
-        this.$parent[k];
-    }
-}
+
 export function initProps(vmp, options){
     const props = options.props;
     vmp._getProps = function(){

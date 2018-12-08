@@ -51,3 +51,6 @@ export function getNewCanvas(){
 export function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
+export function isPureObject(obj){
+    return (obj.constructor && obj.constructor === Object);
+}
