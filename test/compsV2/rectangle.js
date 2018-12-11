@@ -2,7 +2,6 @@ import TextTag from './textTag'
 import Ease from '../../src/utils/Easing';
 export default {
     name: 'rectangle',
-
     props: {
         x: Number,
         height: Number,
@@ -64,10 +63,8 @@ export default {
     },
     mounted(){
         this.$geometry.y = 300;
-        // this.$geometry.x = 200;
         this.$geometry.x = this.x + 210;
         this.$geometry.regX = 10
         this.text.y =  -this.height - 30;
-        //this.$geometry.regY = -300
     }
 };
