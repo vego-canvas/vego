@@ -33,7 +33,6 @@ export function initMethods(vmp, options){
 export function initProps(vmp, options){
     const props = options.props;
     vmp._getProps = function(){
-        // console.log(this)
         for(let k in props){
             if(!this.hasOwnProperty(k)){
                 throw `${k} is not in parent scope!`
@@ -60,7 +59,7 @@ function observeChild (child){
     const scope = child.scope;
     const key = child.key;
 
-    new Watcher({
+    queueWatcher(new Watcher({
         vm: comp,
         cb: function() {
             this._update();
@@ -68,7 +67,8 @@ function observeChild (child){
         getter: function() {
             return  this._getProps.call(scope);
         }
-    });
+    }));
+
     return {
         key: key || comp._uid,
         comp
@@ -136,6 +136,7 @@ export function initChildren(vmp, options) {
 }
 
 function addOBProxy(obj, shallow){
+    if(obj === undefined || obj === null) return obj;
     const isA = Array.isArray(obj);
     const isPureObj = (obj.constructor && obj.constructor === Object);
     if((!isA && !isPureObj) || isFunction(obj) || obj.__isProxy__) return obj;
