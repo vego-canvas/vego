@@ -115,8 +115,9 @@ function commonHandler(vm, type, offsetX, offsetY, event) {
     // vm.$emit(`dom${type}`, event);
     return target;
 }
-export function injectEvent(canvas, vm, ratio){
-    ratio = ratio;
+export function injectEvent(canvas, vm, r){
+    ratio = r;
+    console.log(r);
     let _oldTarget = null;
     let _pinedTarget = null;
     canvas.addEventListener('mousedown', function(event) {

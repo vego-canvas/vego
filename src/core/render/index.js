@@ -56,11 +56,12 @@ class Engine {
         // injectCurrentTransform(this._ctx);
     }
     run(){
-        this._ctx.clearRect(0,0,this._width + 1, this._height + 1);
-        this._ctx.save();
-        this._ctx.scale(this._ratio, this._ratio);
-        this._render(this._ctx);
-        this._ctx.restore();
+        const ctx = this._ctx;
+        ctx.clearRect(0,0,this._width + 1, this._height + 1);
+        ctx.save();
+        ctx.scale(this._ratio, this._ratio);
+        this._render(ctx);
+        ctx.restore();
     }
 }
 export {

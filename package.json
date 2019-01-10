@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node_modules/.bin/webpack-dev-server --config test/webpack.config.js",
+    "dev2": "node_modules/.bin/webpack-dev-server --config test/webpack.config2.js",
     "test": "cross-env NODE_ENV=test mocha \"./src/**/*.test.js\" --require babel-polyfill --require babel-register"
   },
   "author": "",

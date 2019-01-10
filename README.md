@@ -68,6 +68,7 @@ API参考 [graphic](https://createjs.com/docs/easeljs/classes/Graphics.html)
 ## 对象内置方法
 ### 生命周期钩子
 created
+
 mounted
 
 ### $mount
