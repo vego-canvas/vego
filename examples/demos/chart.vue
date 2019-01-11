@@ -97,13 +97,14 @@ export default {
         xstep() {
             return (this.lineEndX - this.lineStartX) / (this.data.length - 1);
         },
+        beziers() {
+            return this.calcbeziers();
+        },
         yaxis() {
             // console.log('yaxis');
             return this.calcyaxis();
         },
-        beziers() {
-            return this.calcbeziers();
-        },
+
     },
     created() {
         this.$watch('beziers.0', (val, oldv) => {

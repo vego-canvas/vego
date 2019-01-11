@@ -19,7 +19,7 @@ npm install vego
 #### Step 1. Use plugin
 
 ```javascript
-import plugin from 'vego/plugin';
+import plugin from 'vego';
 Vue.use(plugin);
 
 // other initialize
@@ -34,11 +34,11 @@ Vue.use(plugin);
 </template>
 <script>
 // arc.vue
-    
+
 export default {
 	name: 'my-arc',
 	props: ['x', 'y', 'r', 'color'],
-    /* 
+    /*
      * function draw is same like render function in Vue
      * @params {CanvasRenderingContext2D} ctx - passing from canvas
      */
@@ -52,7 +52,7 @@ export default {
 		ctx.strokeStyle = color;
 		ctx.arc(x, y, r, 0, 2 * Math.PI);
 		ctx.stroke();
-		ctx.restore();		
+		ctx.restore();
 	},
 };
 </script>
@@ -71,7 +71,7 @@ export default {
 </template>
 
 <script>
-	import circle from './arc.vue'; 
+	import circle from './arc.vue';
 	export default {
 		components: { "my-arc": circle },
 		data(){
@@ -101,13 +101,13 @@ building...
 
 ## Key features
 
-**vego-canvas**: canvas wrapper. It has width, height properties and basic events emiters. And it can fit different devicePixelRatio. All components within this tag must implement draw function which named as  *canvas components*. 
+**vego-canvas**: canvas wrapper. It has width, height properties and basic events emiters. And it can fit different devicePixelRatio. All components within this tag must implement draw function which named as  *canvas components*.
 
 **eventDispatcher**: a mixin mimic mouse event, iucludes click, mousedown, mouseup and ect. It will mixin into *canvas component* when created.
 
-**drawStack**:  a mixin into *canvas component* when created. It injects function `_updateContext` for every *canvas components*. 
+**drawStack**:  a mixin into *canvas component* when created. It injects function `_updateContext` for every *canvas components*.
 
-**tweenMixin**: a mixin used to calculate tweening when declared data changed. 
+**tweenMixin**: a mixin used to calculate tweening when declared data changed.
 
 **spriteSheet**: a *canvas component* to display a sprite sheet.
 
