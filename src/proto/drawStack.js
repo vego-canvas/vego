@@ -15,6 +15,7 @@ export default {
                 this.$options.draw && this.$options.draw.call(this, ctx);
             } else {
                 this._preUpdate(ctx);
+                children.sort((a, b) => b._uid - a._uid);
                 for (let i = 0; i < l; i++) {
                     const child = children[i];
                     child._updateContext(ctx);
