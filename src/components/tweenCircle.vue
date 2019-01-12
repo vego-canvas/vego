@@ -3,11 +3,10 @@
     </div>
 </template>
 <script>
-import tweenMixin from '../proto/tweenMixin.js';
+// import tweenMixin from '../proto/tweenMixin.js';
 // import Vue from 'vue';
 export default {
     name: 'my-circle',
-    mixins: [tweenMixin],
     props: { x: Number, y: Number, r: Number, color: String },
     draw(ctx) {
         const {

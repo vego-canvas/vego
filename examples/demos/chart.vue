@@ -13,9 +13,9 @@
                             :x="lineStartX + xstart + xstep*i - 20"
                             :y="ystart + yaxis.length * ystep"
                             :text="dt.week" fill="black" font="18px serif"></charttext>
-                        <chartData v-for="(bz, i) in beziers" :key="bz.key" :stops="bz.bz" :color="color[i]" :tween="tween"></chartData>
+                        <chartData v-for="(bz, i) in beziers" :key="bz.key" :stops="bz.bz" :color="color[i]"></chartData>
 
-                        <chartlineindicate v-if="mouseX>0" :x="mouseX" :y="ystart" :tx="mouseX" :ty="yend" :tween="tweenline"></chartlineindicate>
+                        <chartlineindicate v-if="mouseX>0" :x="mouseX" :y="ystart" :tx="mouseX" :ty="yend"></chartlineindicate>
                         <container v-if="dataY" :x="mouseX" :y="yend - dataY.a * ydata2coord">
                             <chartPoint :x="0" :y="0" :r="5" color="orange"></chartPoint>
                             <charttext :x="0" :y="-25" :text="`${dataY.week}  ${dataY.a}`" fill="black" font="18px serif"></charttext>
@@ -37,6 +37,7 @@ import tweenline from '@/components/tweenline.vue';
 import text from '@/components/text.vue';
 import bezier from '@/components/bezier.vue';
 import circle from '@/components/circle.vue';
+import Ease from '@/util/Easing';
 
 export default {
     components: {
@@ -79,7 +80,7 @@ export default {
             lineEndX: 700,
             mouseX: 0,
             mouseY: 0,
-
+            yaxis: [],
             dataY: undefined,
             tween: {
                 duration: 1000,
@@ -100,37 +101,55 @@ export default {
         beziers() {
             return this.calcbeziers();
         },
-        yaxis() {
-            // console.log('yaxis');
-            return this.calcyaxis();
-        },
 
     },
     created() {
-        this.$watch('beziers.0', (val, oldv) => {
-            console.log(val, oldv);
-        });
+        // this.$watch('beziers.0', (val, oldv) => {
+        //     console.log(val, oldv);
+        // });
     },
     mounted() {
         // this.yaxis = this.calcyaxis();
         // console.log(this.yaxis)
 
         // this.beziers = this.calcbeziers();
+        // this.$nextTick(() => {
+        //     this.data = [
+        //         { week: '星期一', a: 150, b: 1200 },
+        //         { week: '星期二', a: 300, b: 1200 },
+        //         { week: '星期三', a: 28, b: 1000 },
+        //         { week: '星期四', a: 200, b: 2000 },
+        //         { week: '星期五', a: 74, b: 740 },
+        //         { week: '星期六', a: 532, b: 2000 },
+        //         { week: '星期日', a: 420, b: 5000 },
+        //     ];
+        // });
+        this.yaxis = this.calcyaxis([
+            { a: 150, b: 1200 },
+            { a: 300, b: 1200 },
+            { a: 28, b: 1000 },
+            { a: 200, b: 2000 },
+            { a: 74, b: 740 },
+            { a: 532, b: 2000 },
+            { a: 420, b: 5000 },
+        ]);
+
         this.$nextTick(() => {
-            this.data = [
-                { week: '星期一', a: 150, b: 1200 },
-                { week: '星期二', a: 300, b: 1200 },
-                { week: '星期三', a: 28, b: 1000 },
-                { week: '星期四', a: 200, b: 2000 },
-                { week: '星期五', a: 74, b: 740 },
-                { week: '星期六', a: 532, b: 2000 },
-                { week: '星期日', a: 420, b: 5000 },
-            ];
+            this.$to({
+                data: [
+                    { a: 150, b: 1200 },
+                    { a: 300, b: 1200 },
+                    { a: 28, b: 1000 },
+                    { a: 200, b: 2000 },
+                    { a: 74, b: 740 },
+                    { a: 532, b: 2000 },
+                    { a: 420, b: 5000 },
+                ],
+            }, 1000, Ease.easeOutBounce);
         });
     },
     methods: {
-        calcyaxis() {
-            const d = this.data;
+        calcyaxis(d) {
             const s = this.series;
 
             const all = d.map((dt) => s.map((k) => dt[k])).reduce((accu, n) => accu.concat(n), []);
@@ -149,14 +168,19 @@ export default {
             const xstart = this.lineStartX + this.xstart;
             const yend = this.yend;
             const xstep = this.xstep;
+            const ydata2coord = this.ydata2coord;
             return this.series.map((s) => {
+                // console.log(this.data[s][0].y);
+                // console.log(this.data[0].a);
                 const pts = this.data.map((l, i) => {
                     const dt = l[s];
+                    // console.log(yend, dt * ydata2coord);
                     return {
                         x: xstart + xstep * i,
-                        y: yend - this.ydata2coord * dt,
+                        y: yend - ydata2coord * dt,
                     };
                 });
+                console.log(pts[0].y);
                 return this.bzCurve(s, pts);
             });
         },

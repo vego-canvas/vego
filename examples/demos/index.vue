@@ -32,7 +32,7 @@ export default {
     name: 'my-index',
     data() {
         return {
-            comp: gamecenter,
+            comp: chart,
         };
     },
     methods: {

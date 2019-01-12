@@ -1,7 +1,7 @@
 <template>
 <div class="root">
     <vego-canvas :width="canvasWidth" :height="canvasHeight">
-        <my-circle :config="config" :tween="tween" @tweenend="end"></my-circle>
+        <my-circle :config="config"></my-circle>
     </vego-canvas>
     <div class="grid">
         <pre>
@@ -62,6 +62,7 @@
 <script>
 
 import circle from './components/circleWithDispatcherMixin.vue';
+import Ease from '@/util/Easing';
 export default {
     components: { 'my-circle': circle },
     data() {
@@ -83,11 +84,21 @@ export default {
             direction: -1,
         };
     },
-
+    watch: {
+        // 'config.x'(val) {
+        //     console.log(val);
+        // },
+    },
     mounted() {
-        this.config.x = 100;
-        this.config.y = 150;
-        this.config.color = '#ff00ff';
+        // this.config.x = 100;
+        // this.config.y = 150;
+        // this.config.color = '#ff00ff';
+        this.$to({
+            config: {
+                x: 100,
+                y: 150,
+            },
+        }, 2000, Ease.easeOutBounce);
     },
     methods: {
         end() {

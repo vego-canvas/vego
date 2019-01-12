@@ -13,7 +13,7 @@ import ticker from './proto/ticker';
 import Matrix2D, { symb } from './util/Matrix2D';
 // import mouseEventVM from './proto/mouseEvent';
 import MouseEvent from './proto/mouseEvent.js';
-
+import VegoWatcher from './proto/VegoWatcher';
 export default {
     filters: {
         toPx(num) {
@@ -60,13 +60,17 @@ export default {
 
         const widthActual = width * ratio;
         const heightActual = height * ratio;
-        // this._updateContext(ctx);
-        ticker((t) => {
+        VegoWatcher.prototype.update = () => {
             ctx.clearRect(0, 0, widthActual, heightActual);
-
-            this.$emit('tick', t);
             this._updateContext(ctx);
-        });
+        };
+        // this._updateContext(ctx);
+        // ticker((t) => {
+        //     ctx.clearRect(0, 0, widthActual, heightActual);
+
+        //     this.$emit('tick', t);
+        //     this._updateContext(ctx);
+        // });
     },
     methods: {
         scaleCanvas(canvas, width, height) {

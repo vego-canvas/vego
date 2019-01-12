@@ -3,13 +3,14 @@
     </div>
 </template>
 <script>
-import tweenMixin from '../proto/tweenMixin.js';
+// import tweenMixin from '../proto/tweenMixin.js';
 export default {
     name: 'my-bezier',
-    mixins: [tweenMixin],
-    props: { stops: Array, color: String, tween: Object },
-    dataKeysInDraw: ['stops', 'color'],
+    // mixins: [tweenMixin],
+    props: { stops: Array, color: String },
+    // dataKeysInDraw: ['stops', 'color'],
     draw(ctx) {
+        // console.log('draw bezier');
         const {
             stops, color,
         } = this;

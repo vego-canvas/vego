@@ -2,9 +2,9 @@
 <div :config="config"></div>
 </template>
 <script>
-import tweenMixin from '@/proto/tweenMixin.js';
+// import tweenMixin from '@/proto/tweenMixin.js';
 export default {
-    mixins: [tweenMixin],
+    //  mixins: [tweenMixin],
     props: { config: Object },
     draw(ctx, p) {
         const {

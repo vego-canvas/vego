@@ -1,4 +1,4 @@
-function isFunction(t) {
+export function isFunction(t) {
     return t && Object.prototype.toString.call(t) === '[object Function]';
 }
 
@@ -55,4 +55,8 @@ export function hexToRGB(hex) {
     const g = hex >> 8 & 0xFF;
     const b = hex & 0xFF;
     return [r, g, b];
+}
+
+export function isPureObject(obj) {
+    return (obj.constructor && obj.constructor === Object);
 }

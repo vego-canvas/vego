@@ -4,7 +4,7 @@
         <div class="col-7 col">
             <vego-canvas :style="{backgroundColor: 'black'}" :pause="pause" @tick="tick" :width="canvasWidth" :height="canvasHeight">
                 <sun :x="400" :y="400" :r="sun.sunburn" color="red" @mouseenter="onhit(sun)" @mouseleave="onhitlose(sun)"></sun>
-                <orbits v-for="item in orbits" :key="item.key" :x="item.x" :y="item.y" :r="item.r" :color="item.color"></orbits>
+
                 <container v-for="item in planets" :key="item.key" :x="item.x" :y="item.y">
                     <planet @mouseenter="onhit(item)" @mouseleave="onhitlose(item)" :x="0" :y="0" :r="item.r" :color="item.color"></planet>
                     <orbits v-if="item.children" :x="0" :y="0" :r="50" color="white"></orbits>
@@ -12,7 +12,7 @@
                         <satellite :x="0" :y="0" :r="sata.r" :color="sata.color"></satellite>
                     </container>
                 </container>
-
+                <orbits v-for="item in orbits" :key="item.key" :x="item.x" :y="item.y" :r="item.r" :color="item.color"></orbits>
             </vego-canvas>
         </div>
         <div class="col-5 col">
@@ -34,6 +34,7 @@ import circle from '@/components/circle.vue';
 import container from '@/core/container.vue';
 import arc from './arc.vue';
 
+import ticker from '@/proto/ticker';
 export default {
     components: {
         container,
@@ -92,6 +93,9 @@ export default {
                 },
             ],
         };
+    },
+    mounted() {
+        ticker(this.tick);
     },
     methods: {
         tick(t) {
