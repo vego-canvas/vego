@@ -3,3 +3,5 @@ export default class VegoWatcher {
         this.id = id;
     }
 }
+
+export class VegoGeoWatcher extends VegoWatcher {}

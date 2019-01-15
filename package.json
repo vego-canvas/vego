@@ -6,11 +6,13 @@
   "scripts": {
     "lint": "eslint ./src --fix",
     "dev": "node_modules/.bin/webpack-dev-server --config examples/webpack.config.js",
+    "devv2": "node_modules/.bin/webpack-dev-server --config examples/webpack.config.v2.js",
     "test": "mocha --timeout 5000 ./test/integration.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "gl-matrix": "^3.0.0",
     "vue": "^2.5.17"
   },
   "devDependencies": {
@@ -30,7 +32,7 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.7"
+    "webpack-dev-server": "^3.1.14"
   },
   "homepage": "https://vego-canvas.github.io/vegoDoc/",
   "repository": {

@@ -7,6 +7,7 @@
 export default {
     name: 'my-circle',
     props: { x: Number, y: Number, r: Number, color: String },
+
     draw(ctx, p) {
         const {
             x, y, r, color,

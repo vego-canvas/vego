@@ -180,7 +180,6 @@ export default {
                         y: yend - ydata2coord * dt,
                     };
                 });
-                console.log(pts[0].y);
                 return this.bzCurve(s, pts);
             });
         },

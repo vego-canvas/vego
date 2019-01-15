@@ -28,6 +28,18 @@ export function isCanvasVnode(vm) {
     return vm.$options.draw && isFunction(vm.$options.draw);
 }
 
+export function isCanvasComponent(vm) {
+    let t = vm.$parent;
+    if (!t)
+        return false;
+    do {
+        if ('vegoCanvas' in t)
+            return true;
+        t = t.$parent;
+    } while (t);
+    return false;
+}
+
 export function isCanvasComponentGen() {
     let result;
     return function (vm) {

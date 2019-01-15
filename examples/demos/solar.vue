@@ -95,7 +95,7 @@ export default {
         };
     },
     mounted() {
-        ticker(this.tick);
+        // ticker(this.tick);
     },
     methods: {
         tick(t) {
