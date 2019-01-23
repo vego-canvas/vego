@@ -5,8 +5,7 @@
   "main": "src/plugin.js",
   "scripts": {
     "lint": "eslint ./src --fix",
-    "dev": "node_modules/.bin/webpack-dev-server --config examples/webpack.config.js",
-    "dev-beta": "node_modules/.bin/webpack-dev-server --config examples_beta/webpack.config.js",
+    "dev": "node_modules/.bin/webpack-dev-server --config examples_beta/webpack.config.js",
     "test": "mocha --timeout 5000 ./test/integration.test.js"
   },
   "author": "",
