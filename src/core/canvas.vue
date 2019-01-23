@@ -47,9 +47,10 @@ export default {
             cvs.render();
         };
         this.updateVegoChildren();// this.$children.sort((a, b) => b._uid - a._uid).map(this.getVegoDisplayObject)
-        cvs.render();
+        // console.log('mounted')
+       // cvs.render();
         this.isVegoCanvas = true;
-        console.log(this.$slots.default)
+        console.log(this.vegoDisplayObject)
     },
     methods: {
         onmousemove(){

@@ -6,25 +6,30 @@
   "scripts": {
     "lint": "eslint ./src --fix",
     "dev": "node_modules/.bin/webpack-dev-server --config examples/webpack.config.js",
-    "devv2": "node_modules/.bin/webpack-dev-server --config examples/webpack.config.v2.js",
+    "dev-beta": "node_modules/.bin/webpack-dev-server --config examples_beta/webpack.config.js",
     "test": "mocha --timeout 5000 ./test/integration.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "color-string": "^1.5.3",
+    "css-fruit": "^0.1.4",
     "gl-matrix": "^3.0.0",
+    "vegocore": "0.0.22",
     "vue": "^2.5.17"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "babel-loader": "^8.0.2",
+    "bezier-spline": "^2.0.0",
     "css-loader": "^1.0.0",
     "eslint": "^4.19.1",
     "eslint-config-vusion": "^2.1.3",
     "expect.js": "^0.3.1",
     "file-loader": "^2.0.0",
     "git-commit-translator": "^1.0.5",
+    "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
     "mocha": "^5.2.0",
     "vue-loader": "^15.4.1",

@@ -3,7 +3,14 @@
     <vego-canvas :width="canvasWidth" :height="canvasHeight">
         <my-arc
             v-for="i in circles"
-            :key="i" :x="x" :y="y + 20*i " :r="r" :color="color"
+            :key="i"
+            :geox="x"
+            :geoy="y + 20*i "
+            :reg-x="regX"
+            :reg-y="regY"
+            :rotation="rotation"
+            :r="r"
+            :color="color"
             @mouseenter="enterHandler"
             @mouseleave="leaveHandler"></my-arc>
     </vego-canvas>
@@ -11,7 +18,7 @@
 </template>
 
 <script>
-import circle from './simpleCircle.vue';
+import circle from '../components/circle.vue';
 export default {
     components: { 'my-arc': circle },
     data() {
@@ -21,6 +28,9 @@ export default {
             canvasHeight: 200,
             x: 50,
             y: 50,
+            regX: 0,
+            regY: 0,
+            rotation: 0,
             r: 40,
             color: 'red',
         };
@@ -31,9 +41,23 @@ export default {
         },
     },
     mounted() {
-        this.$to({
-            x: 100,
-        }, 1000, 'easeInOutQuad');
+        // const animate = () => {
+        //     this.$to({
+        //         x: 200,
+        //         color: 'yellow',
+        //         regX: 40,
+        //         regY: 20,
+        //         rotaion: 180,
+        //     }, 1000, 'easeInOutQuad').then(() => this.$to({
+        //         x: 50,
+        //         color: 'red',
+        //         regX: 0,
+        //         regY: 0,
+        //         rotaion: 0,
+        //     }, 1000, 'easeInOutQuad')).then(animate);
+        // };
+        // animate();
+
         // const nextFrame = (t) => {
         //     this.x = 50 * Math.sin(t / 500) + 100;
         //     this.circles = Math.floor(t / 1000) > 10 ? 10 : Math.floor(t / 1000);

@@ -1,91 +1,105 @@
-import { isCanvasComponentGen } from './util/common.js';
-import canvas from './canvas.vue';
-import container from './core/container.vue';
-import spritesheet from './core/spriteSheet.vue';
-import EventDispatcher from './proto/eventDispatcher.js';
-import DrawStack from './proto/drawStack.js';
-// import tweenMixin from './proto/tweenMixin.js';
-import tweenMixin from './tween';
-import { symb } from './util/Matrix2D';
-import VegoWatcher from './proto/VegoWatcher';
+import { isCanvasComponent } from './util/common.js';
+import VegoWatcher, { VegoGeoWatcher } from './proto/VegoWatcher';
 import { queueUpdate } from './util/Engine';
-const VNODE = Symbol('_vCanvasNode');
-
-// 非透明的元素
-function _testHit(ctx) {
-    return ctx.getImageData(0, 0, 1, 1).data[3] > 1;
-}
-
-const plugin = {
-    install(Vue, options) {
+import canvas from './core/canvas.vue';
+// import { DisplayObject } from
+import {
+    DisplayObject,
+    TweenMixin,
+} from 'vegocore';
+export default {
+    install(Vue) {
         Vue.mixin({
-            mixins: [EventDispatcher, DrawStack],
-            created() {
-                this.isCanvasComponent = isCanvasComponentGen();
-                if (this.isCanvasComponent(this)) {
-                    this[symb] = this.$parent[symb];
-                }
-                this.vegoWatcher = new VegoWatcher(this._uid);
+            data() {
+                return {
+                    vegoDisplayObject: undefined,
+                };
             },
             mounted() {
-                if (this.isCanvasComponent(this)) {
-                    const canvas = this._hitTestCanvas = document.createElement('canvas');
-                    this._hitTestContext = canvas.getContext('2d');
-                    canvas.width = canvas.height = 1;
+                this.isCanvasComponent = isCanvasComponent(this);
+                if (this.isCanvasComponent) {
+                    const vegoDisplayObject = new DisplayObject(this._uid, this.$options.draw.bind(this));
+
+                    this.$set(this, 'vegoDisplayObject', vegoDisplayObject);
+                    this.vegoDisplayObject._update();
+                    // console.log(this.$vnode.tag, 'draw line?');
+                    this.vegoGeoWatcher = new VegoGeoWatcher(this._uid);
+                    this.vegoGeoWatcher.update = () => {
+                        this.vegoDisplayObject._appendTransform();
+                    };
+                    this.updateVegoChildren();
+                    this.$watch('vegoDisplayObject.$geometry', () => {
+                        queueUpdate(this.vegoGeoWatcher);
+                        queueUpdate(this.vegoWatcher);
+                    }, { deep: true });
                 }
+                this.vegoWatcher = Object.freeze(new VegoWatcher(`geo_${this._uid}`));
             },
-            destroyed() {
-                if (this.isCanvasComponent(this)) {
-                    this._hitTestCanvas = null;
-                    this._hitTestContext = null;
+            destroy() {
+                this.vegoWatcher = null;
+                this.vegoGeoWatcher = null;
+                this.vegoDisplayObject = null;
+            },
+            updated() {
+                if (this.isCanvasComponent) {
+                    this.updateVegoChildren();
                 }
             },
             methods: {
-                _hitTest(x, y) {
-                    const ratio = window.devicePixelRatio || 1;
+                // updateVegoParent() {
+                //     const VueParent = this.$parent;
+                //     const VegoParent = VueParent.vegoCanvas || VueParent.vegoDisplayObject;
+                //     VegoParent.$children = VueParent.$children.map(this.getVegoDisplayObject);
+                // },
+                updateVegoChildren() {
+                    const target = this.vegoCanvas || this.vegoDisplayObject;
+                    const vegoChildren = target.$children;
+                    // combine children
+                    let VueChildren = this.$slots.default ? this.$slots.default.concat(this.$children) : this.$children;
+                    // console.log(VueChildren);// VueChildren.map((node) => node.componentInstance));
+                    if (!VueChildren)
+                        VueChildren = [];
+                    // TODO 优化子节点变换方法！
+                    let idx = 0;
+                    let lastUniqueId;
+                    VueChildren.map((node) => node.componentInstance || node)
+                        .filter((i) => i._uid)
+                        .sort((a, b) => b._uid - a._uid)
+                        .forEach((child) => {
+                            if (lastUniqueId === child._uid || !child.vegoDisplayObject)
+                                return;
 
-                    const ctx = this._hitTestContext;
-                    const m = this.$parent[symb].clone().prepend(1, 0, 0, 1, -x * ratio, -y * ratio);
-                    ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    this.$options.draw.call(this, ctx);
+                            lastUniqueId = child._uid;
+                            child.vegoDisplayObject.$parent = target;
+                            vegoChildren[idx++] = child.vegoDisplayObject;
+                            // console.log(child.vegoDisplayObject.$parent, child.vegoDisplayObject);
+                        });
 
-                    const hit = _testHit(ctx);
-                    ctx.setTransform();
-                    ctx.clearRect(0, 0, 2, 2);
-
-                    return hit;
+                    vegoChildren.length = this.$children.length;
+                },
+                getVegoDisplayObject(comp) {
+                    return comp.vegoDisplayObject;
                 },
             },
         });
-
+        TweenMixin(Vue.prototype);
         const p = Vue.prototype._render;
         Vue.prototype._render = function () {
-            if (this.isCanvasComponent(this)) {
+            if (this.isCanvasComponent) {
                 const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
                 // just bind draw function to watcher, figure out better method!
-                try {
-                    this.$options.draw.call(this);
-                } catch (error) {
-
-                }
+                this.vegoDisplayObject._update();
                 queueUpdate(this.vegoWatcher);
-                this[VNODE] = vnode;
-                if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
-                    return this._e(); // createEmptyNode
-                }
+                // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
+                //     return this._e(); // createEmptyNode
+                // }
                 return vnode;
             } else {
                 return p.call(this);
             }
         };
-        tweenMixin(Vue);
         Vue.component('vego-canvas', canvas);
-        Vue.component('vego-container', container);
-        Vue.component('vego-sprite-sheet', spritesheet);
+        // Vue.component('vego-container', container);
+        // Vue.component('vego-sprite-sheet', spritesheet);
     },
 };
-
-export default plugin;
-// export {
-//     tweenMixin,
-// };
