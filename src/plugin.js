@@ -2,6 +2,7 @@ import { isCanvasComponent } from './util/common.js';
 import VegoWatcher, { VegoGeoWatcher } from './proto/VegoWatcher';
 import { queueUpdate } from './util/Engine';
 import canvas from './core/canvas.vue';
+import VegoComponent from './core/VegoComponent';
 // import { DisplayObject } from
 import {
     DisplayObject,
@@ -103,3 +104,8 @@ export default {
         // Vue.component('vego-sprite-sheet', spritesheet);
     },
 };
+
+export {
+    VegoComponent,
+}
+;

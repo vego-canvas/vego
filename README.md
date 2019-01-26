@@ -29,60 +29,85 @@ Vue.use(plugin);
 
 ```vue
 <template>
-	<div :x="x" :y="y" :r="r" :color="color">
-	</div>
+    <div :r="r" :color="color">
+    </div>
 </template>
 <script>
-// arc.vue
-
+import { VegoComponent } from 'vego';
 export default {
-	name: 'my-arc',
-	props: ['x', 'y', 'r', 'color'],
-    /*
-     * function draw is same like render function in Vue
-     * @params {CanvasRenderingContext2D} ctx - passing from canvas
-     */
-	draw(ctx){
-		const {
-			x, y, r, color
-		} = this;
-
-		ctx.beginPath();
-		ctx.save();
-		ctx.strokeStyle = color;
-		ctx.arc(x, y, r, 0, 2 * Math.PI);
-		ctx.stroke();
-		ctx.restore();
-	},
+    name: 'my-arc',
+	// 混入
+    mixins: [VegoComponent],
+    props: { r: Number, color: String },
+    mounted() {
+        this.vegoDisplayObject.$regist('mouseenter', (payload) => {
+            this.$emit('mouseenter', payload);
+        });
+        this.vegoDisplayObject.$regist('mouseleave', (payload) => {
+            this.$emit('mouseleave', payload);
+        });
+    },
+    draw(g) {
+        const {
+            r, color,
+        } = this;
+        g.clear()
+            .beginFill(color)
+            .drawCircle(0, 0, r);
+        g.beginFill('#000')
+            .drawCircle(0, 0, 10);
+    },
 };
 </script>
-
 ```
 
 #### Step 3. Apply canvas component within tag vego-canvas
 
 ```vue
 <template>
-	<div class="root">
-		<vego-canvas :width="canvasWidth" :height="canvasHeight">
-			<my-arc :x="x" :y="y" :r="r" :color="color"/>
-		</vego-canvas>
-    </div>
+<div>
+    <vego-canvas :width="canvasWidth" :height="canvasHeight">
+        <my-arc
+            v-for="i in circles"
+            :key="i"
+            :geox="x"
+            :geoy="y + 20*i "
+            :reg-x="regX"
+            :reg-y="regY"
+            :rotation="rotation"
+            :r="r"
+            :color="color"
+            @mouseenter="enterHandler"
+            @mouseleave="leaveHandler"></my-arc>
+    </vego-canvas>
+</div>
 </template>
 
 <script>
-	import circle from './arc.vue';
+	import circle from './circle.vue';
 	export default {
-		components: { "my-arc": circle },
-		data(){
+		components: { 'my-arc': circle },
+		data() {
 			return {
+				circles: 1,
 				canvasWidth: 200,
 				canvasHeight: 200,
 				x: 50,
 				y: 50,
+				regX: 0,
+				regY: 0,
+				rotation: 0,
 				r: 40,
 				color: 'red',
-			}
+			};
+		},
+		methods: {
+			enterHandler() {
+				this.color = 'blue';
+			},
+			leaveHandler() {
+				this.color = 'red';
+			},
 		},
 	}
 </script>
@@ -93,9 +118,7 @@ export default {
 
 ## Supports
 
-Demo: './examples'
-
-building...
+Demo: './examples_beta'
 
 
 
@@ -103,18 +126,10 @@ building...
 
 **vego-canvas**: canvas wrapper. It has width, height properties and basic events emiters. And it can fit different devicePixelRatio. All components within this tag must implement draw function which named as  *canvas components*.
 
-**eventDispatcher**: a mixin mimic mouse event, iucludes click, mousedown, mouseup and ect. It will mixin into *canvas component* when created.
+**VegoComponent**: canvas component mixin which mixin basic geometry properties into ordinary components.
 
-**drawStack**:  a mixin into *canvas component* when created. It injects function `_updateContext` for every *canvas components*.
-
-**tweenMixin**: a mixin used to calculate tweening when declared data changed.
-
-**spriteSheet**: a *canvas component* to display a sprite sheet.
-
-**vego-container**:  a *canvas component* to contain other *canvas components* and it has own coordiantes-origin from left top.
-
-**ticker**: a internal ticker drive stack to draw graphics.
-
+## vegocore
+[vegocore](https://github.com/vego-canvas/vego-core)
 
 
 ## License
