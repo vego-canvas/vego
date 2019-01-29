@@ -15,6 +15,15 @@ export default {
         this.vegoDisplayObject.$regist('mouseleave', (payload) => {
             this.$emit('mouseleave', payload);
         });
+        this.vegoDisplayObject.$regist('pressd', (payload) => {
+            this.$emit('pressd', payload);
+        });
+        this.vegoDisplayObject.$regist('unpressed', (payload) => {
+            this.$emit('unpressed', payload);
+        });
+        this.vegoDisplayObject.$regist('pressmove', (payload) => {
+            this.$emit('pressmove', payload);
+        });
     },
     draw(g) {
         const {

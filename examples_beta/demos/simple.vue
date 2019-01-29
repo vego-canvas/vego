@@ -12,7 +12,10 @@
             :r="r"
             :color="color"
             @mouseenter="enterHandler"
-            @mouseleave="leaveHandler"></my-arc>
+            @mouseleave="leaveHandler"
+            @pressd="mousedownHandler"
+            @pressmove="pressmoveHandler"
+            @unpressed="mouseupHandler"></my-arc>
     </vego-canvas>
 </div>
 </template>
@@ -33,6 +36,7 @@ export default {
             rotation: 0,
             r: 40,
             color: 'red',
+            lastPos: null,
         };
     },
     watch: {
@@ -71,6 +75,23 @@ export default {
         },
         leaveHandler() {
             this.color = 'red';
+        },
+        mousedownHandler() {
+            this.lastPos = {
+                x: this.x,
+                y: this.y,
+            };
+        },
+        pressmoveHandler(payload) {
+            const {
+                vecX,
+                vecY,
+            } = payload;
+            this.x = this.lastPos.x + vecX;
+            this.y = this.lastPos.y + vecY;
+        },
+        mouseupHandler(payload) {
+            this.lastPos = null;
         },
     },
 };

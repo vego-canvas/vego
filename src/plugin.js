@@ -1,15 +1,18 @@
 import { isCanvasComponent } from './util/common.js';
-import VegoWatcher, { VegoGeoWatcher } from './proto/VegoWatcher';
+import VegoWatcher, { VegoGeoWatcher } from './core/vegoWatcher';
 import { queueUpdate } from './util/Engine';
-import canvas from './core/canvas.vue';
+import canvasFac from './core/canvas.js';
 import VegoComponent from './core/VegoComponent';
+import Easing from './util/Easing';
 // import { DisplayObject } from
 import {
     DisplayObject,
     TweenMixin,
 } from 'vegocore';
 export default {
-    install(Vue) {
+    install(Vue, options = {
+        enableMouseOver: 16,
+    }) {
         Vue.mixin({
             data() {
                 return {
@@ -99,7 +102,7 @@ export default {
                 return p.call(this);
             }
         };
-        Vue.component('vego-canvas', canvas);
+        Vue.component('vego-canvas', canvasFac(options));
         // Vue.component('vego-container', container);
         // Vue.component('vego-sprite-sheet', spritesheet);
     },
@@ -107,5 +110,5 @@ export default {
 
 export {
     VegoComponent,
-}
-;
+    Easing,
+};
