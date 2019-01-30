@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="left: 100px;position: absolute;">
     <vego-canvas :width="canvasWidth" :height="canvasHeight">
         <my-arc
             v-for="i in circles"

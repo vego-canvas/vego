@@ -4,7 +4,8 @@ import {
 import VegoWatcher from './vegoWatcher';
 export default function(options){
     const {
-        enableMouseOver
+        enableMouseOver,
+        enableTouch
     } = options;
     return {
         props: {
@@ -31,7 +32,8 @@ export default function(options){
         },
         mounted() {
             const cvs = this.vegoCanvas = new VegoCanvas(this.$el, {
-                enableMouseOver
+                enableMouseOver,
+                enableTouch
             });
             // console.log('mounted')
             VegoWatcher.prototype.update = () => {

@@ -5,6 +5,7 @@ import canvasPlugin from '@/plugin';
 
 Vue.use(canvasPlugin, {
     enableMouseOver: 5,
+    enableTouch: true,
 });
 
 new Vue(index).$mount('#app');

@@ -12,6 +12,7 @@ import {
 export default {
     install(Vue, options = {
         enableMouseOver: 16,
+        enableTouch: false,
     }) {
         Vue.mixin({
             data() {
