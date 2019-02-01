@@ -39,7 +39,17 @@ export function isCanvasComponent(vm) {
     } while (t);
     return false;
 }
-
+export function isCanvasComponentV2(vm) {
+    let t = vm.$parent;
+    if (!t)
+        return false;
+    do {
+        if (t.$vnode && /vego-canvas$/.test(t.$vnode.tag))
+            return true;
+        t = t.$parent;
+    } while (t);
+    return false;
+}
 export function isCanvasComponentGen() {
     let result;
     return function (vm) {
