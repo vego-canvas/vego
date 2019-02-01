@@ -82,7 +82,7 @@ export default {
                             // console.log(child.vegoDisplayObject.$parent, child.vegoDisplayObject);
                         });
 
-                    vegoChildren.length = this.$children.length;
+                    vegoChildren.length = idx;
                 },
                 getVegoDisplayObject(comp) {
                     return comp.vegoDisplayObject;
