@@ -1,5 +1,5 @@
 <template>
-    <div :length="length" :weight="weight"></div>
+    <div :length="length"></div>
 </template>
 
 <script>
@@ -8,23 +8,13 @@ export default {
     mixins: [VegoComponent],
     props: {
         length: Number,
-        weight: {
-            type: Number,
-            default: 1,
-        },
-        color: String,
-        name: String,
     },
     draw(g) {
         const {
-            color, length, weight,
+            length,
         } = this;
-        g.clear()
-            .setStrokeStyle(weight)
-            .beginStroke(color)
-            .moveTo(0, 0)
-            .lineTo(length, 0)
-            .endStroke();
+        g.moveTo(0, 0)
+            .lineTo(length, 0);
     },
 };
 </script>

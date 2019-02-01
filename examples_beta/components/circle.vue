@@ -29,11 +29,10 @@ export default {
         const {
             r, color,
         } = this;
-        g.clear()
-            .beginFill(color)
-            .drawCircle(0, 0, r);
-        g.beginFill('#000')
-            .drawCircle(0, 0, 10);
+        g.beginPath()
+            .setFillStyle(color)
+            .arc(0, 0, r, 0, Math.PI * 2)
+            .fill();
     },
 };
 </script>

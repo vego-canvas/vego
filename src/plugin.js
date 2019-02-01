@@ -23,10 +23,12 @@ export default {
             mounted() {
                 this.isCanvasComponent = isCanvasComponent(this);
                 if (this.isCanvasComponent) {
-                    const vegoDisplayObject = new DisplayObject(this._uid, this.$options.draw.bind(this));
-
+                    const vegoDisplayObject = new DisplayObject(
+                        this._uid,
+                        this.$options.draw.bind(this),
+                        this.$options.afterDraw && this.$options.afterDraw.bind(this));
                     this.$set(this, 'vegoDisplayObject', vegoDisplayObject);
-                    this.vegoDisplayObject._update();
+                    // this.vegoDisplayObject._update();
                     // console.log(this.$vnode.tag, 'draw line?');
                     this.vegoGeoWatcher = new VegoGeoWatcher(this._uid);
                     this.vegoGeoWatcher.update = () => {
@@ -93,7 +95,7 @@ export default {
             if (this.isCanvasComponent) {
                 const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
                 // just bind draw function to watcher, figure out better method!
-                this.vegoDisplayObject._update();
+                // this.vegoDisplayObject._update();
                 queueUpdate(this.vegoWatcher);
                 // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
                 //     return this._e(); // createEmptyNode

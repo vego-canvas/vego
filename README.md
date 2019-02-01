@@ -19,8 +19,25 @@ npm install vego
 #### Step 1. Use plugin
 
 ```javascript
-import plugin from 'vego';
-Vue.use(plugin);
+
+import Vego from 'vego';
+
+Vue.use(Vego, {
+    /*
+     * mouseover firing frequency
+     * set 0 to disable mouseover
+     *
+     * The larger the value, the smaller the CPU usage.
+     * default: 20ms
+     */
+    enableMouseOver: 5,
+     /*
+     * Set true to enable touch and disable mouse event
+     * default: false
+     */
+    enableTouch: false,
+});
+
 
 // other initialize
 ```
@@ -33,10 +50,9 @@ Vue.use(plugin);
     </div>
 </template>
 <script>
-import { VegoComponent } from 'vego';
+import VegoComponent from '@/core/VegoComponent.js';
 export default {
     name: 'my-arc',
-	// 混入
     mixins: [VegoComponent],
     props: { r: Number, color: String },
     mounted() {
@@ -46,19 +62,28 @@ export default {
         this.vegoDisplayObject.$regist('mouseleave', (payload) => {
             this.$emit('mouseleave', payload);
         });
+        this.vegoDisplayObject.$regist('pressd', (payload) => {
+            this.$emit('pressd', payload);
+        });
+        this.vegoDisplayObject.$regist('unpressed', (payload) => {
+            this.$emit('unpressed', payload);
+        });
+        this.vegoDisplayObject.$regist('pressmove', (payload) => {
+            this.$emit('pressmove', payload);
+        });
     },
     draw(g) {
         const {
             r, color,
         } = this;
-        g.clear()
-            .beginFill(color)
-            .drawCircle(0, 0, r);
-        g.beginFill('#000')
-            .drawCircle(0, 0, 10);
+        g.beginPath()
+            .setFillStyle(color)
+            .arc(0, 0, r, 0, Math.PI * 2)
+            .fill();
     },
 };
 </script>
+
 ```
 
 #### Step 3. Apply canvas component within tag vego-canvas
@@ -127,6 +152,8 @@ Demo: './examples_beta'
 **vego-canvas**: canvas wrapper. It has width, height properties and basic events emiters. And it can fit different devicePixelRatio. All components within this tag must implement draw function which named as  *canvas components*.
 
 **VegoComponent**: canvas component mixin which mixin basic geometry properties into ordinary components.
+
+**Graphic**: A thin wrapper for [CanvasRenderingContext2D](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D) API which implement method chaining pattern.
 
 ## vegocore
 [vegocore](https://github.com/vego-canvas/vego-core)

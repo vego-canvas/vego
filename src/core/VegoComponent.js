@@ -77,6 +77,6 @@ export default {
         this.vegoDisplayObject.$geometry.regY = this.regY;
     },
     draw(g){
-        g.clear();
+
     }
 }
