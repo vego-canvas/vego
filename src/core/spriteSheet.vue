@@ -1,9 +1,14 @@
 <template>
-    <div :configs="configs" :pattern="pattern"></div>
+    <div
+        :configs="configs"
+        :fr="fr"
+        :pattern="pattern"></div>
 </template>
 <script>
-import Ticker from '../proto/ticker';
+const nextFrame = window.requestAnimationFrame;
+import VegoComponent from '@/core/VegoComponent.js';
 export default {
+    mixins: [VegoComponent],
     props: {
         configs: Object, pattern: String,
     },
@@ -30,16 +35,18 @@ export default {
             this.lastDue = this.due;
         },
     },
-    draw(ctx) {
+    draw(g) {
         if (this.spriteImage) {
+            // console.log(this.fr)
             const nowFr = this.frames[this.fr];
             const {
                 sx, sy, sWidth, sHeight,
             } = nowFr;
-            ctx.beginPath();
-            ctx.save();
-            ctx.drawImage(this.spriteImage, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
-            ctx.restore();
+            // console.log(sx, sy)
+            g.beginPath()
+                .save()
+                .drawImage(this.spriteImage, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight)
+                .restore();
         }
     },
     mounted() {
@@ -89,15 +96,24 @@ export default {
             }
 
             const timespan = 1000 / framerate;
-            Ticker.regist({
-                tick: (due) => {
-                    this.due = due;
-                    this.fr = this.begin + Math.floor((due - this.lastDue) / timespan) % this.span;
-                    if (this.fr === this.begin + this.span - 1) {
-                        this.decideNextPattern();
-                    }
-                },
-            });
+            const func = (due) => {
+                this.due = due;
+                this.fr = this.begin + Math.floor((due - this.lastDue) / timespan) % this.span;
+                if (this.fr === this.begin + this.span - 1) {
+                    this.decideNextPattern();
+                }
+                nextFrame(func);
+            }
+            nextFrame(func)
+            // Ticker.regist({
+            //     tick: (due) => {
+            //         this.due = due;
+            //         this.fr = this.begin + Math.floor((due - this.lastDue) / timespan) % this.span;
+            //         if (this.fr === this.begin + this.span - 1) {
+            //             this.decideNextPattern();
+            //         }
+            //     },
+            // });
         };
         source.src = image;
     },

@@ -37,6 +37,7 @@ export default function(options){
             });
             // console.log('mounted')
             VegoWatcher.prototype.update = () => {
+                // console.log('render done');
                 cvs.render();
             };
             this.updateVegoChildren();

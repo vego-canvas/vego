@@ -57,8 +57,10 @@ export function nextTick(cb, ctx) {
     if (!pending) {
         pending = true;
         if (useMacroTask) {
+            // console.log('macroTimerFunc');
             macroTimerFunc();
         } else {
+            // console.log('microTimerFunc');
             microTimerFunc();
         }
     }

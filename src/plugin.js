@@ -1,5 +1,5 @@
 import { isCanvasComponent } from './util/common.js';
-import VegoWatcher, { VegoGeoWatcher } from './core/vegoWatcher';
+import { VegoRenderWatcher, VegoGeoWatcher } from './core/vegoWatcher';
 import { queueUpdate } from './util/Engine';
 import canvasFac from './core/canvas.js';
 import VegoComponent from './core/VegoComponent';
@@ -30,28 +30,33 @@ export default {
                     this.$set(this, 'vegoDisplayObject', vegoDisplayObject);
                     // this.vegoDisplayObject._update();
                     // console.log(this.$vnode.tag, 'draw line?');
-                    this.vegoGeoWatcher = new VegoGeoWatcher(this._uid);
+                    this.vegoGeoWatcher = new VegoGeoWatcher(`geo_${this._uid}`);
                     this.vegoGeoWatcher.update = () => {
                         this.vegoDisplayObject._appendTransform();
                     };
                     this.updateVegoChildren();
                     this.$watch('vegoDisplayObject.$geometry', () => {
+                        // console.log('queueUpdate(this.vegoGeoWatcher);');
                         queueUpdate(this.vegoGeoWatcher);
-                        queueUpdate(this.vegoWatcher);
+                        // console.log('queueUpdate(this.vegoWatcher);');
+                        queueUpdate(VegoRenderWatcher);
                     }, { deep: true });
                 }
-                this.vegoWatcher = Object.freeze(new VegoWatcher(`geo_${this._uid}`));
+                // this.vegoWatcher = Object.freeze(new VegoWatcher());
             },
+
             destroy() {
                 this.vegoWatcher = null;
-                this.vegoGeoWatcher = null;
+                // this.vegoGeoWatcher = null;
                 this.vegoDisplayObject = null;
             },
-            updated() {
-                if (this.isCanvasComponent) {
-                    this.updateVegoChildren();
-                }
-            },
+
+            // updated() {
+            //     if (this.isCanvasComponent) {
+            //         this.updateVegoChildren();
+            //     }
+            // },
+
             methods: {
                 // updateVegoParent() {
                 //     const VueParent = this.$parent;
@@ -69,6 +74,7 @@ export default {
                     // TODO 优化子节点变换方法！
                     let idx = 0;
                     let lastUniqueId;
+                    // console.log('updateVegoChildren');
                     VueChildren.map((node) => node.componentInstance || node)
                         .filter((i) => i._uid)
                         .sort((a, b) => b._uid - a._uid)
@@ -81,8 +87,9 @@ export default {
                             vegoChildren[idx++] = child.vegoDisplayObject;
                             // console.log(child.vegoDisplayObject.$parent, child.vegoDisplayObject);
                         });
-
-                    vegoChildren.length = idx;
+                    // console.log('update length');
+                    // vegoChildren.length = idx;
+                    queueUpdate(VegoRenderWatcher);
                 },
                 getVegoDisplayObject(comp) {
                     return comp.vegoDisplayObject;
@@ -96,7 +103,8 @@ export default {
                 const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
                 // just bind draw function to watcher, figure out better method!
                 // this.vegoDisplayObject._update();
-                queueUpdate(this.vegoWatcher);
+                queueUpdate(VegoRenderWatcher);
+
                 // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
                 //     return this._e(); // createEmptyNode
                 // }

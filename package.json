@@ -1,6 +1,6 @@
 {
   "name": "vego",
-  "version": "0.0.62",
+  "version": "0.0.63",
   "description": "",
   "main": "src/plugin.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "color-string": "^1.5.3",
     "css-fruit": "^0.1.4",
     "gl-matrix": "^3.0.0",
-    "vegocore": "^0.0.23",
+    "vegocore": "^0.0.24",
     "vue": "^2.5.17"
   },
   "devDependencies": {

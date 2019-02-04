@@ -45,22 +45,22 @@ export default {
         },
     },
     mounted() {
-        // const animate = () => {
-        //     this.$to({
-        //         x: 200,
-        //         color: 'yellow',
-        //         regX: 40,
-        //         regY: 20,
-        //         rotaion: 180,
-        //     }, 1000, 'easeInOutQuad').then(() => this.$to({
-        //         x: 50,
-        //         color: 'red',
-        //         regX: 0,
-        //         regY: 0,
-        //         rotaion: 0,
-        //     }, 1000, 'easeInOutQuad')).then(animate);
-        // };
-        // animate();
+        const animate = () => {
+            this.$to({
+                x: 200,
+                color: 'yellow',
+                regX: 40,
+                regY: 20,
+                rotaion: 180,
+            }, 1000, 'easeInOutQuad').then(() => this.$to({
+                x: 50,
+                color: 'red',
+                regX: 0,
+                regY: 0,
+                rotaion: 0,
+            }, 1000, 'easeInOutQuad')).then(animate);
+        };
+        animate();
 
         // const nextFrame = (t) => {
         //     this.x = 50 * Math.sin(t / 500) + 100;
