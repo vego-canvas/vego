@@ -4,6 +4,7 @@ import { queueUpdate } from './util/Engine';
 import canvasFac from './core/canvas.js';
 import VegoComponent from './core/VegoComponent';
 import Easing from './util/Easing';
+import SpriteSheet from './core/SpriteSheet.vue';
 // import { DisplayObject } from
 import {
     DisplayObject,
@@ -126,4 +127,5 @@ export default {
 export {
     VegoComponent,
     Easing,
+    SpriteSheet,
 };
