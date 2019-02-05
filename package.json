@@ -1,6 +1,6 @@
 {
   "name": "vego",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "description": "",
   "main": "src/plugin.js",
   "scripts": {

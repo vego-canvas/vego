@@ -21,8 +21,10 @@ export default {
                 };
             },
             mounted() {
-                this.isCanvasComponent = isCanvasComponent(this);
+                const canvas = isCanvasComponent(this);
+                this.isCanvasComponent = !!canvas;
                 if (this.isCanvasComponent) {
+                    this.canvasWatcher = canvas.vegoRenderWatcher;
                     const vegoDisplayObject = new DisplayObject(
                         this._uid,
                         this.$options.draw.bind(this),
@@ -32,6 +34,7 @@ export default {
                     // console.log(this.$vnode.tag, 'draw line?');
                     this.vegoGeoWatcher = new VegoGeoWatcher(`geo_${this._uid}`);
                     this.vegoGeoWatcher.update = () => {
+                        // console.log('transform done');
                         this.vegoDisplayObject._appendTransform();
                     };
                     this.updateVegoChildren();
@@ -39,7 +42,7 @@ export default {
                         // console.log('queueUpdate(this.vegoGeoWatcher);');
                         queueUpdate(this.vegoGeoWatcher);
                         // console.log('queueUpdate(this.vegoWatcher);');
-                        queueUpdate(VegoRenderWatcher);
+                        queueUpdate(this.canvasWatcher);
                     }, { deep: true });
                 }
                 // this.vegoWatcher = Object.freeze(new VegoWatcher());
@@ -89,7 +92,9 @@ export default {
                         });
                     // console.log('update length');
                     // vegoChildren.length = idx;
-                    queueUpdate(VegoRenderWatcher);
+                    // console.log('updateVegoChildren');
+                    // console.log(this.canvasWatcher);
+                    queueUpdate(this.vegoRenderWatcher || this.canvasWatcher);
                 },
                 getVegoDisplayObject(comp) {
                     return comp.vegoDisplayObject;
@@ -103,8 +108,7 @@ export default {
                 const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
                 // just bind draw function to watcher, figure out better method!
                 // this.vegoDisplayObject._update();
-                queueUpdate(VegoRenderWatcher);
-
+                queueUpdate(this.canvasWatcher);
                 // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
                 //     return this._e(); // createEmptyNode
                 // }

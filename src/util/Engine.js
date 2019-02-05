@@ -12,16 +12,27 @@ function flushSchedulerQueue() {
     flushing = true;
     let customWatcher;
     let id;
+    const vwid = [];
 
     // console.log(queue.length);
     for (index = 0; index < queue.length; index++) {
         customWatcher = queue[index];
-        id = customWatcher.uid;
+        id = customWatcher.id;
+        if (/VegoWatcher/.test(id)) {
+            vwid.push(index);
+            continue;
+        }
         has[id] = null;
-        // console.log('update: ' + id);
         customWatcher.update();
     }
-    // console.log('flushSchedulerQueue');
+    if (vwid.length > 0) {
+        vwid.forEach((vid) => {
+            customWatcher = queue[vid];
+            id = customWatcher.id;
+            has[id] = null;
+            customWatcher.update();
+        });
+    }
 
     resetSchedulerState();
 }

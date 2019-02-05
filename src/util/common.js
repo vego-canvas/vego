@@ -34,7 +34,7 @@ export function isCanvasComponent(vm) {
         return false;
     do {
         if ('vegoCanvas' in t)
-            return true;
+            return t;
         t = t.$parent;
     } while (t);
     return false;

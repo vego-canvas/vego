@@ -30,15 +30,20 @@ export default function(options){
         updated(){
             this.updateVegoChildren();
         },
+        created(){
+            this.vegoRenderWatcher = new VegoWatcher(`VegoWatcher${this._uid}`)
+        },
         mounted() {
             const cvs = this.vegoCanvas = new VegoCanvas(this.$el, {
                 enableMouseOver,
                 enableTouch
             });
             // console.log('mounted')
-            VegoWatcher.prototype.update = () => {
-                // console.log('render done');
+            // VegoWatcher.prototype.update = () => {
+            // console.log('vegoRenderWatcher mounted', this.vegoRenderWatcher)
+            this.vegoRenderWatcher.update = () => {
                 cvs.render();
+                // console.log('render done');
             };
             this.updateVegoChildren();
             this.isVegoCanvas = true;
