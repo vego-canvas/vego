@@ -1,5 +1,5 @@
 import { isCanvasComponent } from './util/common.js';
-import { VegoRenderWatcher, VegoGeoWatcher } from './core/vegoWatcher';
+import { VegoGeoWatcher } from './core/vegoWatcher';
 import { queueUpdate } from './util/Engine';
 import canvasFac from './core/canvas.js';
 import VegoComponent from './core/VegoComponent';

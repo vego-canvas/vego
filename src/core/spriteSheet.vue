@@ -6,7 +6,7 @@
 </template>
 <script>
 const nextFrame = window.requestAnimationFrame;
-import VegoComponent from '@/core/VegoComponent.js';
+import VegoComponent from './VegoComponent.js';
 export default {
     mixins: [VegoComponent],
     props: {
