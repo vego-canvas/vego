@@ -83,7 +83,7 @@ export default {
                         let lastUniqueId;
                         VueChildren.map((node) => node.componentInstance || node)
                             .filter((i) => i._uid)
-                            .sort((a, b) => b._uid - a._uid)
+                            .sort((a, b) => a._uid - b._uid)
                             .forEach((child) => {
                                 if (lastUniqueId === child._uid || !child.vegoDisplayObject)
                                     return;

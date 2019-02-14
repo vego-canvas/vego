@@ -10,7 +10,20 @@
             :reg-y="regY"
             :rotation="rotation"
             :r="r"
-            :color="color"
+            :color="colors[i]"
+            @mouseenter="enterHandler"
+            @mouseleave="leaveHandler"
+            @pressd="mousedownHandler"
+            @pressmove="pressmoveHandler"
+            @unpressed="mouseupHandler"></my-arc>
+        <my-arc
+            :geox="x"
+            :geoy="y + 20 "
+            :reg-x="regX"
+            :reg-y="regY"
+            :rotation="rotation"
+            :r="r"
+            :color="'red'"
             @mouseenter="enterHandler"
             @mouseleave="leaveHandler"
             @pressd="mousedownHandler"
@@ -22,11 +35,12 @@
 
 <script>
 import circle from '../components/circle.vue';
+const colors = ['red', 'green', 'blue', 'yellow', 'black'];
 export default {
     components: { 'my-arc': circle },
     data() {
         return {
-            circles: 1,
+            circles: 4,
             canvasWidth: 200,
             canvasHeight: 200,
             x: 50,
@@ -35,6 +49,7 @@ export default {
             regY: 0,
             rotation: 0,
             r: 40,
+            colors,
             color: 'red',
             lastPos: null,
         };
