@@ -76,21 +76,24 @@ export default {
                     if (!VueChildren)
                         VueChildren = [];
                     // TODO 优化子节点变换方法！
-                    let idx = 0;
-                    let lastUniqueId;
-                    // console.log('updateVegoChildren');
-                    VueChildren.map((node) => node.componentInstance || node)
-                        .filter((i) => i._uid)
-                        .sort((a, b) => b._uid - a._uid)
-                        .forEach((child) => {
-                            if (lastUniqueId === child._uid || !child.vegoDisplayObject)
-                                return;
+                    if (VueChildren.length === 0) {
+                        target.$children = [];
+                    } else {
+                        let idx = 0;
+                        let lastUniqueId;
+                        VueChildren.map((node) => node.componentInstance || node)
+                            .filter((i) => i._uid)
+                            .sort((a, b) => b._uid - a._uid)
+                            .forEach((child) => {
+                                if (lastUniqueId === child._uid || !child.vegoDisplayObject)
+                                    return;
 
-                            lastUniqueId = child._uid;
-                            child.vegoDisplayObject.$parent = target;
-                            vegoChildren[idx++] = child.vegoDisplayObject;
-                            // console.log(child.vegoDisplayObject.$parent, child.vegoDisplayObject);
-                        });
+                                lastUniqueId = child._uid;
+                                child.vegoDisplayObject.$parent = target;
+                                vegoChildren[idx++] = child.vegoDisplayObject;
+                                // console.log(child.vegoDisplayObject.$parent, child.vegoDisplayObject);
+                            });
+                    }
                     // console.log('update length');
                     // vegoChildren.length = idx;
                     // console.log('updateVegoChildren');
