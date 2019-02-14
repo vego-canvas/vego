@@ -55,11 +55,11 @@ export default {
                 this.vegoDisplayObject = null;
             },
 
-            // updated() {
-            //     if (this.isCanvasComponent) {
-            //         this.updateVegoChildren();
-            //     }
-            // },
+            updated() {
+                if (this.isCanvasComponent) {
+                    this.updateVegoChildren();
+                }
+            },
 
             methods: {
                 // updateVegoParent() {
@@ -72,7 +72,7 @@ export default {
                     const vegoChildren = target.$children;
                     // combine children
                     let VueChildren = this.$slots.default ? this.$slots.default.concat(this.$children) : this.$children;
-                    // console.log(VueChildren);// VueChildren.map((node) => node.componentInstance));
+                    // console.log(target.uid, VueChildren);// VueChildren.map((node) => node.componentInstance));
                     if (!VueChildren)
                         VueChildren = [];
                     // TODO 优化子节点变换方法！
@@ -93,9 +93,11 @@ export default {
                                 vegoChildren[idx++] = child.vegoDisplayObject;
                                 // console.log(child.vegoDisplayObject.$parent, child.vegoDisplayObject);
                             });
+                        vegoChildren.length = idx;
                     }
+                    // console.log(vegoChildren)
                     // console.log('update length');
-                    // vegoChildren.length = idx;
+
                     // console.log('updateVegoChildren');
                     // console.log(this.canvasWatcher);
                     queueUpdate(this.vegoRenderWatcher || this.canvasWatcher);
