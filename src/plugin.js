@@ -71,7 +71,8 @@ export default {
                     const target = this.vegoCanvas || this.vegoDisplayObject;
                     const vegoChildren = target.$children;
                     // combine children
-                    let VueChildren = this.$slots.default ? this.$slots.default.concat(this.$children) : this.$children;
+                    let VueChildren = this.$children; // 其实不需要处理 slots 最后都会被放进$children
+                    // console.log(this.$children);
                     // console.log(target.uid, VueChildren);// VueChildren.map((node) => node.componentInstance));
                     if (!VueChildren)
                         VueChildren = [];
@@ -81,8 +82,9 @@ export default {
                     } else {
                         let idx = 0;
                         let lastUniqueId;
-                        VueChildren.map((node) => node.componentInstance || node)
-                            .filter((i) => i._uid)
+                        VueChildren
+                            // .map((node) => node.componentInstance || node)
+                            // .filter((i) => i._uid)
                             .sort((a, b) => a._uid - b._uid)
                             .forEach((child) => {
                                 if (lastUniqueId === child._uid || !child.vegoDisplayObject)
@@ -95,7 +97,7 @@ export default {
                             });
                         vegoChildren.length = idx;
                     }
-                    // console.log(vegoChildren)
+                    // console.log(vegoChildren);
                     // console.log('update length');
 
                     // console.log('updateVegoChildren');

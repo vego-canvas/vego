@@ -2,6 +2,11 @@
 <div>
     <vego-canvas class="canvas" :width="canvasWidth" :height="canvasHeight">
         <vego-axis :geox="50" :geoy="50">
+            <template slot="header">
+                <my-arc
+                    :r="20"
+                    color="red"></my-arc>
+            </template>
             <curve-graph :data="l1" :weight="3" color="red"></curve-graph>
             <curve-graph :data="l2" :weight="3" color="blue"></curve-graph>
         </vego-axis>

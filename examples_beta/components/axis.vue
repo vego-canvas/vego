@@ -1,5 +1,6 @@
 <template>
     <div>
+        <slot name="header"></slot>
         <axis-back
             :xsteps="xsteps"
             :lines="lines"
