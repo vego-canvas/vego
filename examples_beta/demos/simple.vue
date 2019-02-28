@@ -1,7 +1,7 @@
 <template>
 <div style="left: 100px;position: absolute;">
     <vego-canvas :width="canvasWidth" :height="canvasHeight">
-        <my-arc
+        <!-- <my-arc
             v-for="i in circles"
             :key="i"
             :geox="x"
@@ -15,7 +15,7 @@
             @mouseleave="leaveHandler"
             @pressd="mousedownHandler"
             @pressmove="pressmoveHandler"
-            @unpressed="mouseupHandler"></my-arc>
+            @unpressed="mouseupHandler"></my-arc> -->
         <my-arc
             :geox="x"
             :geoy="y + 20 "
@@ -23,7 +23,7 @@
             :reg-y="regY"
             :rotation="rotation"
             :r="r"
-            :color="'red'"
+            :color="color"
             @mouseenter="enterHandler"
             @mouseleave="leaveHandler"
             @pressd="mousedownHandler"
@@ -55,8 +55,8 @@ export default {
         };
     },
     watch: {
-        circles(val) {
-            // console.log(val);
+        color(val) {
+            console.log(val);
         },
     },
     mounted() {
@@ -86,9 +86,11 @@ export default {
     },
     methods: {
         enterHandler() {
+            console.log('enter');
             this.color = 'blue';
         },
         leaveHandler() {
+            console.log('leave');
             this.color = 'red';
         },
         mousedownHandler() {

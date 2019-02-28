@@ -18,6 +18,11 @@ export default {
         enableTouch: false,
         plugins: [],
     }) {
+        options = Object.assign({
+            enableMouseOver: 16,
+            enableTouch: false,
+            plugins: [],
+        }, options);
         Vue.mixin({
             mixins: options.plugins ? options.plugins.map((p) => p.global).filter((p) => !!p) : [],
             data() {
@@ -132,7 +137,7 @@ export default {
         Vue.component('vego-canvas', canvasFac(options));
         // Vue.component('vego-container', container);
         // Vue.component('vego-sprite-sheet', spritesheet);
-        options.plugins.forEach((p) => {
+        options.plugins && options.plugins.forEach((p) => {
             p.install && p.install(Vue);
         });
     },
