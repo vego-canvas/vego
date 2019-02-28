@@ -8,11 +8,15 @@
     "dev": "node_modules/.bin/webpack-dev-server --config examples_beta/webpack.config.js",
     "test": "mocha --timeout 5000 ./test/integration.test.js"
   },
+  "keywords": [
+    "vue","canvas","vego", "graphic", "graphics"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "color-string": "^1.5.3",
     "css-fruit": "^0.1.4",
+    "d3": "^5.9.1",
     "gl-matrix": "^3.0.0",
     "vegocore": "^0.0.24",
     "vue": "^2.5.17"

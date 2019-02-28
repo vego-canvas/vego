@@ -10,12 +10,16 @@ import {
     DisplayObject,
     TweenMixin,
 } from 'vegocore';
+export { default as d3Geo } from './plugins/d3.geo.js';
+export { default as d3Shape } from './plugins/d3.shape.js';
 export default {
     install(Vue, options = {
         enableMouseOver: 16,
         enableTouch: false,
+        plugins: [],
     }) {
         Vue.mixin({
+            mixins: options.plugins ? options.plugins.map((p) => p.global).filter((p) => !!p) : [],
             data() {
                 return {
                     vegoDisplayObject: undefined,
@@ -128,6 +132,9 @@ export default {
         Vue.component('vego-canvas', canvasFac(options));
         // Vue.component('vego-container', container);
         // Vue.component('vego-sprite-sheet', spritesheet);
+        options.plugins.forEach((p) => {
+            p.install && p.install(Vue);
+        });
     },
 };
 
