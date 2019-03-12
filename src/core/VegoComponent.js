@@ -78,5 +78,9 @@ export default {
     },
     draw(g){
 
+    },
+    render(createElement){
+        // console.log(this);
+        return createElement('div', this.$options.propsData, this.$children);
     }
 }

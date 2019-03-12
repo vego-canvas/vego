@@ -29,8 +29,12 @@ export default function(options){
                 vegoCanvas: null,
             };
         },
+        // beforeUpdate(){
+        //     this.
+        // },
         updated(){
             this.updateVegoChildren();
+            this.clearDom();
         },
         created(){
             this.vegoRenderWatcher = new VegoWatcher(`VegoWatcher${this._uid}`)
@@ -51,6 +55,7 @@ export default function(options){
             this.vegoCanvas.canvas.addEventListener('mouseleave', this.domMouseLeave)
             this.updateVegoChildren();
             this.isVegoCanvas = true;
+            this.clearDom();
         },
         render(_c){
             return _c(
@@ -77,6 +82,12 @@ export default function(options){
             },
             domMouseLeave(event){
                 this.$emit('domMouseleave', this.getPointFromEvent(event));
+            },
+            clearDom(){
+                const el = this.$el;
+                while (el.firstChild) {
+                    el.removeChild(el.firstChild);
+                }
             }
         }
     }

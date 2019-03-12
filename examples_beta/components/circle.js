@@ -1,8 +1,3 @@
-<template>
-    <div :r="r" :color="color">
-    </div>
-</template>
-<script>
 import VegoComponent from '@/core/VegoComponent.js';
 export default {
     name: 'my-arc',
@@ -35,4 +30,3 @@ export default {
             .fill();
     },
 };
-</script>

@@ -119,21 +119,21 @@ export default {
             },
         });
         TweenMixin(Vue.prototype);
-        const p = Vue.prototype._render;
-        Vue.prototype._render = function () {
-            if (this.isCanvasComponent) {
-                const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
-                // just bind draw function to watcher, figure out better method!
-                // this.vegoDisplayObject._update();
-                queueUpdate(this.canvasWatcher);
-                // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
-                //     return this._e(); // createEmptyNode
-                // }
-                return vnode;
-            } else {
-                return p.call(this);
-            }
-        };
+        // const p = Vue.prototype._render;
+        // Vue.prototype._render = function () {
+        //     if (this.isCanvasComponent) {
+        //         const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
+        //         // just bind draw function to watcher, figure out better method!
+        //         // this.vegoDisplayObject._update();
+        //         queueUpdate(this.canvasWatcher);
+        //         // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
+        //         //     return this._e(); // createEmptyNode
+        //         // }
+        //         return vnode;
+        //     } else {
+        //         return p.call(this);
+        //     }
+        // };
         Vue.component('vego-canvas', canvasFac(options));
         // Vue.component('vego-container', container);
         // Vue.component('vego-sprite-sheet', spritesheet);

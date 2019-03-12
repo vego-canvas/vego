@@ -1,8 +1,3 @@
-<template>
-    <div></div>
-</template>
-
-<script>
 const colorsP = ['#828b20', '#b0ac31', '#cbc53d', '#fad779', '#f9e4ad', '#faf2db', '#563512', '#9b4a0b', '#d36600', '#fe8a00', '#f9a71f'];
 const rings = 40;
 const radius = 50;
@@ -34,8 +29,3 @@ export default {
         }
     },
 };
-</script>
-
-<style>
-
-</style>

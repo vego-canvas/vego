@@ -1,7 +1,7 @@
 <template>
 <div style="left: 100px;position: absolute;">
     <vego-canvas :width="canvasWidth" :height="canvasHeight">
-        <!-- <my-arc
+        <my-arc
             v-for="i in circles"
             :key="i"
             :geox="x"
@@ -15,7 +15,7 @@
             @mouseleave="leaveHandler"
             @pressd="mousedownHandler"
             @pressmove="pressmoveHandler"
-            @unpressed="mouseupHandler"></my-arc> -->
+            @unpressed="mouseupHandler"></my-arc>
         <my-arc
             :geox="x"
             :geoy="y + 20 "
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import circle from '../components/circle.vue';
+import circle from '../components/circle';
 const colors = ['red', 'green', 'blue', 'yellow', 'black'];
 export default {
     components: { 'my-arc': circle },

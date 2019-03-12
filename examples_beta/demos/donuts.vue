@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import Donut from '../components/donut.vue';
-const num = 200;
+import Donut from '../components/donut.js';
+const num = 300;
 const nextFrame = window.requestAnimationFrame;
 export default {
     components: {
