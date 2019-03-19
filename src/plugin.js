@@ -7,7 +7,6 @@ import Easing from './util/Easing';
 import SpriteSheet from './core/SpriteSheet.vue';
 // import { DisplayObject } from
 import {
-    DisplayObject,
     TweenMixin,
 } from 'vegocore';
 export { default as d3Geo } from './plugins/d3.geo.js';
@@ -31,36 +30,12 @@ export default {
                 };
             },
             mounted() {
-                const canvas = isCanvasComponent(this);
-                this.isCanvasComponent = !!canvas;
-                if (this.isCanvasComponent) {
-                    this.canvasWatcher = canvas.vegoRenderWatcher;
-                    const vegoDisplayObject = new DisplayObject(
-                        this._uid,
-                        this.$options.draw.bind(this),
-                        this.$options.afterDraw && this.$options.afterDraw.bind(this));
-                    this.$set(this, 'vegoDisplayObject', vegoDisplayObject);
-                    // this.vegoDisplayObject._update();
-                    // console.log(this.$vnode.tag, 'draw line?');
-                    this.vegoGeoWatcher = new VegoGeoWatcher(`geo_${this._uid}`);
-                    this.vegoGeoWatcher.update = () => {
-                        // console.log('transform done');
-                        this.vegoDisplayObject._appendTransform();
-                    };
-                    this.updateVegoChildren();
-                    this.$watch('vegoDisplayObject.$geometry', () => {
-                        // console.log('queueUpdate(this.vegoGeoWatcher);');
-                        queueUpdate(this.vegoGeoWatcher);
-                        // console.log('queueUpdate(this.vegoWatcher);');
-                        queueUpdate(this.canvasWatcher);
-                    }, { deep: true });
-                }
-                // this.vegoWatcher = Object.freeze(new VegoWatcher());
+                this.canvasParent = isCanvasComponent(this);
+                this.isCanvasComponent = !!this.canvasParent;
             },
 
             destroy() {
                 this.vegoWatcher = null;
-                // this.vegoGeoWatcher = null;
                 this.vegoDisplayObject = null;
             },
 
@@ -71,11 +46,6 @@ export default {
             },
 
             methods: {
-                // updateVegoParent() {
-                //     const VueParent = this.$parent;
-                //     const VegoParent = VueParent.vegoCanvas || VueParent.vegoDisplayObject;
-                //     VegoParent.$children = VueParent.$children.map(this.getVegoDisplayObject);
-                // },
                 updateVegoChildren() {
                     const target = this.vegoCanvas || this.vegoDisplayObject;
                     const vegoChildren = target.$children;
@@ -119,24 +89,7 @@ export default {
             },
         });
         TweenMixin(Vue.prototype);
-        // const p = Vue.prototype._render;
-        // Vue.prototype._render = function () {
-        //     if (this.isCanvasComponent) {
-        //         const vnode = this.$options.render.call(this._renderProxy, this.$createElement);
-        //         // just bind draw function to watcher, figure out better method!
-        //         // this.vegoDisplayObject._update();
-        //         queueUpdate(this.canvasWatcher);
-        //         // if (this._e && (vnode.data.attrs && !vnode.data.attrs.hasOwnProperty('canvascontainer'))) {
-        //         //     return this._e(); // createEmptyNode
-        //         // }
-        //         return vnode;
-        //     } else {
-        //         return p.call(this);
-        //     }
-        // };
         Vue.component('vego-canvas', canvasFac(options));
-        // Vue.component('vego-container', container);
-        // Vue.component('vego-sprite-sheet', spritesheet);
         options.plugins && options.plugins.forEach((p) => {
             p.install && p.install(Vue);
         });

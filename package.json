@@ -1,15 +1,19 @@
 {
   "name": "vego",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "description": "",
   "main": "src/plugin.js",
   "scripts": {
     "lint": "eslint ./src --fix",
-    "dev": "node_modules/.bin/webpack-dev-server --config examples_beta/webpack.config.js",
+    "dev": "node_modules/.bin/webpack-dev-server --config examples_beta2/webpack.config.js",
     "test": "mocha --timeout 5000 ./test/integration.test.js"
   },
   "keywords": [
-    "vue","canvas","vego", "graphic", "graphics"
+    "vue",
+    "canvas",
+    "vego",
+    "graphic",
+    "graphics"
   ],
   "files": [
     "src/**/*"
@@ -22,7 +26,12 @@
     "d3": "^5.9.1",
     "gl-matrix": "^3.0.0",
     "vegocore": "^0.0.27",
-    "vue": "^2.5.17"
+    "vue": "^2.6.9",
+    "vue-template-compiler": "^2.6.9"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.9",
+    "vue-template-compiler": "^2.6.9"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -40,7 +49,6 @@
     "mocha": "^5.2.0",
     "vue-loader": "^15.4.1",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.14"
