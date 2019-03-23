@@ -1,10 +1,8 @@
 import {
     VegoCanvas,
+    matchDevicePixelRatioWH,
 } from 'vegocore';
-
-import {
-    VegoWatcher,
-} from './utils/Engine';
+import { queueUpdate, VegoWatcher } from './utils/Engine';
 
 export default function (options) {
     const {
@@ -32,6 +30,17 @@ export default function (options) {
                 default: 400,
             },
         },
+        computed: {
+            wAndh() {
+                return [this.width, this.height];
+            },
+        },
+        watch: {
+            wAndh([width, height]) {
+                queueUpdate(this.vegoRenderWatcher);
+                matchDevicePixelRatioWH(this.vegoInstance.canvas, width, height);
+            },
+        },
         updated() {
             this.updateVegoChildren();
             this.clearDom();
@@ -48,17 +57,13 @@ export default function (options) {
         render(_c) {
             return _c(
                 'canvas',
-                {
-                    attrs: {
-                        width: `${this.width}px`,
-                        height: `${this.height}px`,
-                    },
-                },
                 this.$slots.default,
             );
         },
         methods: {
             initVegoComponet() {
+                this.$el.width = this.width;
+                this.$el.height = this.height;
                 const cvs = this.vegoInstance = new VegoCanvas(this.$el, {
                     enableMouseOver,
                     enableTouch,
